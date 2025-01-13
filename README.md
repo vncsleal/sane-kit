@@ -1,6 +1,6 @@
 # Sanity Scaffolding Template
 
-A minimal scaffolding template for creating your own [Sanity.io](https://www.sanity.io/) template, Intended for template creators—customize as needed!
+A minimal scaffolding template for creating your own [Sanity](https://www.sanity.io/) template, Intended for template creators—customize as needed!
 
 ## Folder Structure
 
@@ -12,7 +12,7 @@ A minimal scaffolding template for creating your own [Sanity.io](https://www.san
 
 ## Getting Started
 
-> A more in-depth guide is available in the [Sanity.io documentation](https://www.sanity.io/docs).
+> A more in-depth guide is available in the [Sanity documentation](https://www.sanity.io/docs).
 > Need inspiration or help creating a template? Join the [#creators channel in Sanity’s Slack community](https://slack.sanity.io) to connect with others and get feedback.
 
 ### Clone the Repository

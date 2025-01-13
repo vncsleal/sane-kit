@@ -8,7 +8,7 @@ const dataset = process.env.SANITY_STUDIO_DATASET;
 
 export default defineConfig({
   name: "default",
-  title: "testing-template",
+  title: "Studio",
   projectId,
   dataset,
   plugins: [structureTool(), visionTool()],
