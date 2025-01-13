@@ -1,4 +1,4 @@
-# Sanity Monorepo Template
+# Sanity Scaffolding Template
 
 A minimal scaffolding template for creating [Sanity.io](https://www.sanity.io/) projects in a monorepo. Intended for template creators—customize as needed!
 
