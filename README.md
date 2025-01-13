@@ -48,6 +48,36 @@ For Next.js projects, prefix the variables with `NEXT_PUBLIC_`:
 NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
 ```
+### Run the app
+
+```bash
+npm run dev
+```
+
+## Deployment
+
+### Deploy Studio
+
+To deploy your Sanity Studio to production:
+
+1. Make sure you're logged in to your Sanity account:
+```bash
+npx sanity login
+```
+
+2. Deploy the studio:
+```bash
+npm run deploy:studio
+```
+
+### Deploy Frontend
+
+You have the freedom to deploy your app to your hosting provider of choice. With Vercel and GitHub being a popular choice, we'll cover the basics of that approach:
+
+1. Create a GitHub repository from this project. Learn more.
+2. Create a new Vercel project and connect it to your Github repository.
+3. Set the Root Directory to your `app` directory.
+4. Configure your Environment Variables.
 
 ### Validate Template
 
