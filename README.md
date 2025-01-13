@@ -5,7 +5,7 @@ A minimal scaffolding template for creating your own [Sanity](https://www.sanity
 ## Folder Structure
 
 ```plaintext
-├── app/               # Your frontend application
+├── frontend/               # Your frontend application
 ├── studio/            # Sanity Studio
 └── package.json       # Root workspace configuration
 ```
@@ -25,14 +25,14 @@ npm install
 ```
 
 ### Add a Frontend Framework
-Install your preferred frontend framework. The command below installs a new Next.js project in the `app` directory.
+Install your preferred frontend framework. The command below installs a new Next.js project in the `frontend` directory.
 
 ```bash
-npx create-next-app@latest app
+npx create-next-app@latest frontend
 ```
 
 ### Customize Frontend Package
-The app package is already defined as a workspace in the root `package.json`, but you may need to customize as needed.
+The frontend package is already defined as a workspace in the root `package.json`, but you may need to customize as needed.
 
 ### Configure Environment Variables
 Create an `.env.example` file in your frontend directory with the following variables:
@@ -76,7 +76,7 @@ You have the freedom to deploy your app to your hosting provider of choice. With
 
 1. Create a GitHub repository from this project. Learn more.
 2. Create a new Vercel project and connect it to your Github repository.
-3. Set the Root Directory to your `app` directory.
+3. Set the Root Directory to your `frontend` directory.
 4. Configure your Environment Variables.
 
 ### Validate Template

@@ -2,13 +2,13 @@
   "name": "my-sanity-template",
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
-    "dev:app": "cd studio && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
     "dev:studio": "cd studio && npm run dev",
     "deploy:studio": "cd studio && sanity deploy",
     "validate": "sanity-template-validate"
   },
   "workspaces": [
-    "app",
+    "frontend",
     "studio"
   ],
   "devDependencies": {
