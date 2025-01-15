@@ -5,7 +5,7 @@ A minimal scaffolding template for creating your own [Sanity](https://www.sanity
 ## Folder Structure
 
 ```plaintext
-├── frontend/               # Your frontend application
+├── frontend/          # Your frontend application
 ├── studio/            # Sanity Studio
 └── package.json       # Root workspace configuration
 ```
