@@ -1,4 +1,4 @@
-# Sanity Scaffolding Template
+# Sanity Template Kit
 
 A minimal scaffolding template for creating your own [Sanity](https://www.sanity.io/) template, Intended for template creators—customize as needed!
 
