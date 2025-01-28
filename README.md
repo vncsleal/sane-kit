@@ -1,6 +1,6 @@
 # Sanity Template Kit
 
-A minimal scaffolding template for creating your own [Sanity template](https://www.sanity.io/docs/create-your-own-sanity-template). Intended for template creators—customize as needed!
+A minimal scaffolding template for creating your own [Sanity template](https://www.sanity.io/docs/create-your-own-sanity-template). Intended for template creators — customize as needed!
 
 ## Folder Structure
 
