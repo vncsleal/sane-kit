@@ -10,7 +10,7 @@
 
 A feature-rich starter template combining Next.js 15 (with Turbopack) for the frontend and Sanity v3 for the backend CMS. Designed for rapid development with pre-built components and internationalization support.
 
-This template utilizes components inspired by [TWBlocks](https://tw-blocks.com/) (built with Shadcn/ui and Tailwind CSS) for a modern and customizable UI.
+This template utilizes components inspired by [TWBlocks](https://twblocks.com/) (built with Shadcn/ui and Tailwind CSS) for a modern and customizable UI.
 
 ## Technologies Used
 
@@ -20,7 +20,7 @@ This template utilizes components inspired by [TWBlocks](https://tw-blocks.com/)
   - [TypeScript](https://www.typescriptlang.org/)
   - [Tailwind CSS](https://tailwindcss.com/)
   - [Shadcn/ui](https://ui.shadcn.com/) Components
-  - [TWBlocks](https://tw-blocks.com/) Component Designs
+  - [TWBlocks](https://twblocks.com/) Component Designs
   - [next-sanity](https://www.sanity.io/docs/connect-your-content-to-next-js) for Sanity integration
   - Internationalization Ready (Client & Server Components)
 - **Studio (CMS):**
