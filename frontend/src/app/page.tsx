@@ -80,7 +80,7 @@ export async function generateMetadata() {
 		description?: string;
 		openGraph?: { images: string[] };
 	} = {
-		title: localizedTitle || "Home", // Fallback title
+		title: localizedTitle || "Home",
 	};
 
 	if (localizedDescription) {

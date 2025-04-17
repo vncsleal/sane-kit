@@ -2,6 +2,7 @@ import type { SanityPage } from "@/sanity/types/schema";
 import { client } from "@/sanity/client";
 import { notFound } from "next/navigation";
 import RenderSection from "@/components/sections/RenderSection";
+import { urlFor } from "@/sanity/client";
 // Assume a server-side helper exists, e.g., in '@/lib/localization-server'
 import { getLocalizedValueServer } from "@/lib/localization-server";
 import { headers } from "next/headers"; // Import headers function
@@ -108,10 +109,10 @@ export async function generateMetadata({ params }: PageProps) {
 	// Add Open Graph image if available
 	if (page.ogImage?.asset?._ref) {
 		// Assuming imageUrlBuilder is available server-side or imported
-		// import { imageUrlBuilder } from "@/sanity/client";
-		// metadata.openGraph = {
-		//   images: [imageUrlBuilder(page.ogImage.asset._ref).width(1200).height(630).url()],
-		// };
+
+		metadata.openGraph = {
+			images: [urlFor(page.ogImage.asset._ref).width(1200).height(630).url()],
+		};
 	}
 
 	return metadata;

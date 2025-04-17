@@ -13,6 +13,7 @@
 # misc
 .DS_Store
 *.pem
+/studio/dist
 
 # debug
 npm-debug.log*

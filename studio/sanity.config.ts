@@ -29,4 +29,10 @@ export default defineConfig({
 	schema: {
 		types: schemaTypes,
 	},
+	beta: {
+		create: {
+			// Required for Create integration
+			fallbackStudioOrigin: "sane-demo.sanity.studio",
+		},
+	},
 });
