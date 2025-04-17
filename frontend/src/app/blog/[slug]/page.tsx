@@ -1,4 +1,4 @@
-import { client } from "@/sanity/client";
+import { client, urlFor } from "@/sanity/client"; // Import urlFor
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import BlogPostPage from "@/components/blog/BlogPostPage";
@@ -75,9 +75,16 @@ export async function generateMetadata({
 		title: localizedTitle,
 		description:
 			localizedExcerpt || `${localizedTitle} - Read more on our blog`,
-		openGraph: post.mainImage?.asset?._ref
+		openGraph: post.mainImage // Check if mainImage exists
 			? {
-					images: [{ url: `${post.mainImage.asset._ref}` }],
+					images: [
+						{
+							url: urlFor(post.mainImage) // Use urlFor here
+								.width(1200)
+								.height(630)
+								.url(),
+						},
+					],
 				}
 			: undefined,
 	};
