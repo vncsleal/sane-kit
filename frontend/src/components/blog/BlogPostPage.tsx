@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BlogCodeBlock } from "./BlogCodeBlock";
+import { CodeBlock } from "./CodeBlock";
 import {
 	PortableText,
 	type PortableTextReactComponents,
@@ -38,10 +38,18 @@ interface ExpandedBlogPost
 // Define interface for Sanity code block value
 interface CodeBlockValue {
 	_type: "codeBlock";
-	code: string;
+	code: string | {
+		_type: "code";
+		code: string;
+		language?: string;
+		filename?: string;
+	};
 	language?: string;
 	filename?: string;
 	showLineNumbers?: boolean;
+	title?: string;         // Added missing property
+	highlightLines?: string; // Added missing property
+	caption?: string;       // Added missing property
 }
 
 interface BlogPostPageProps {
@@ -84,12 +92,37 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 				</figure>
 			),
 			codeBlock: ({ value }: PortableTextComponentProps<CodeBlockValue>) => {
+				// Handle case where code is an object from Sanity code-input plugin
+				if (typeof value.code === "object" && value.code !== null) {
+					return (
+						<CodeBlock
+							code={value.code.code || ""}
+							language={value.code.language || value.language || "typescript"}
+							filename={value.code.filename || value.filename || ""}
+							title={value.title || ""}
+							highlightLines={value.highlightLines}
+							showLineNumbers={
+								value.showLineNumbers !== undefined
+									? value.showLineNumbers
+									: true
+							}
+							caption={value.caption || ""}
+						/>
+					);
+				}
+
+				// Handle string code (original format)
 				return (
-					<BlogCodeBlock
-						text={value.code}
+					<CodeBlock
+						code={typeof value.code === "string" ? value.code : ""}
 						language={value.language || "typescript"}
-						filename={value.filename}
-						showLineNumbers={value.showLineNumbers !== false} // Default to true if not explicitly set to false
+						filename={value.filename || ""}
+						title={value.title || ""}
+						highlightLines={value.highlightLines}
+						showLineNumbers={
+							value.showLineNumbers !== undefined ? value.showLineNumbers : true
+						}
+						caption={value.caption || ""}
 					/>
 				);
 			},
@@ -130,7 +163,8 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 							? children.join("")
 							: String(children || "");
 
-				return <BlogCodeBlock text={codeString} />;
+				// Properly handle the string value
+				return <CodeBlock code={codeString} />;
 			},
 		},
 		marks: {
@@ -138,7 +172,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 				// For inline code, keep it simple
 				return (
 					<code className="px-1.5 py-0.5 bg-muted text-sm font-mono rounded">
-						{children}
+						{typeof children === "string" ? children : String(children)}
 					</code>
 				);
 			},

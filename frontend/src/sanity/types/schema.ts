@@ -1,3 +1,12 @@
+// Define the internationalized string array type to match Sanity schema
+export interface InternationalizedString {
+  _key: string;
+  value: string;
+  language: string; // e.g., 'pt_BR'
+}
+
+export type InternationalizedStringArray = InternationalizedString[];
+
 // Common types
 export interface SanityAsset {
 	_ref: string;
@@ -8,9 +17,9 @@ export interface SanityImage {
 	_type: "image";
 	asset: SanityAsset;
 	alt?: string;
-	i18n_alt?: Record<string, string>;
+	i18n_alt?: InternationalizedStringArray;
 	caption?: string;
-	i18n_caption?: Record<string, string>;
+	i18n_caption?: InternationalizedStringArray;
 }
 
 export interface SanityButton {
@@ -33,7 +42,20 @@ export interface SanityLocalizedCode {
 	_key: string;
 	_type: "localizedCode";
 	language: string; // e.g., 'pt_BR'
-	content: string;
+	content: {
+		_type: "code";
+		code: string;
+		language?: string;
+		filename?: string;
+	};
+}
+
+// Code type interface (for the new code input format)
+export interface SanityCodeInput {
+	_type: "code";
+	code: string;
+	language?: string;
+	filename?: string;
 }
 
 // Code Block type (used within Portable Text)
@@ -41,14 +63,13 @@ export interface SanityCodeBlock {
 	_type: "codeBlock";
 	_key: string;
 	title?: string;
-	i18n_title?: Record<string, string>;
-	language: string;
-	code: string;
+	i18n_title?: InternationalizedStringArray;
+	code: SanityCodeInput;
 	i18n_code?: SanityLocalizedCode[];
 	highlightLines?: string;
 	showLineNumbers?: boolean;
 	caption?: string;
-	i18n_caption?: Record<string, string>;
+	i18n_caption?: InternationalizedStringArray;
 }
 
 // Hero section types
@@ -501,9 +522,9 @@ export interface PortableTextImage {
 	_key: string;
 	asset: SanityAsset;
 	alt?: string;
-	i18n_alt?: Record<string, string>;
+	i18n_alt?: InternationalizedStringArray;
 	caption?: string;
-	i18n_caption?: Record<string, string>;
+	i18n_caption?: InternationalizedStringArray;
 }
 
 // Update PortableTextContent to include SanityCodeBlock

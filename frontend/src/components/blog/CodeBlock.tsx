@@ -9,26 +9,33 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Check, FileCode } from "lucide-react";
 import { useState, useEffect } from "react";
-import { CodeBlock } from "react-code-blocks";
+import { CodeBlock as Code } from "react-code-blocks";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
 
 interface CodeBlockProps {
-	text: string;
+	code: string;
 	language?: string;
 	filename?: string;
+	title?: string;
+	highlightLines?: string;
+	caption?: string;
 	showLineNumbers?: boolean;
 }
 
-export function BlogCodeBlock({
-	text,
+export function CodeBlock({
+	code = "",
 	language = "typescript",
 	filename,
+	title,
+	highlightLines,
+	caption,
 	showLineNumbers = true,
 }: CodeBlockProps) {
 	const [copied, setCopied] = useState(false);
 	useTheme();
 	const [mounted, setMounted] = useState(false);
+	const displayTitle = title || filename;
 
 	// Only render theme-dependent UI after mounting to prevent hydration mismatch
 	useEffect(() => {
@@ -36,7 +43,7 @@ export function BlogCodeBlock({
 	}, []);
 
 	const handleCopy = async () => {
-		await navigator.clipboard.writeText(text);
+		await navigator.clipboard.writeText(code);
 		setCopied(true);
 		toast.success("Copied to clipboard");
 		setTimeout(() => setCopied(false), 2000);
@@ -84,10 +91,10 @@ export function BlogCodeBlock({
 
 	// Update custom style to conditionally apply border radius
 	const customStyle = {
-		// Apply different border radius based on whether filename exists
-		borderRadius: filename
-			? "0 0 var(--radius-md) var(--radius-md)" // Only round bottom corners when filename exists
-			: "var(--radius-md)", // Round all corners when no filename
+		// Apply different border radius based on whether title/filename exists
+		borderRadius: displayTitle
+			? "0 0 var(--radius-md) var(--radius-md)" // Only round bottom corners when title exists
+			: "var(--radius-md)", // Round all corners when no title
 		padding: "1rem 1rem",
 		fontSize: "0.875rem",
 		fontFamily: "var(--font-mono)",
@@ -96,11 +103,11 @@ export function BlogCodeBlock({
 
 	return (
 		<div className="relative my-6">
-			{/* Filename header */}
-			{filename && (
+			{/* Title/Filename header */}
+			{displayTitle && (
 				<div className="flex items-center gap-2 bg-[#25292E] px-4 py-2.5 text-sm font-mono text-white/50 rounded-t-md">
 					<FileCode className="h-4 w-4 text-white/50" />
-					<span className="flex-1 truncate">{filename}</span>
+					<span className="flex-1 truncate">{displayTitle}</span>
 					{language && (
 						<span className="mr-6 px-2 text-xs text-muted-foreground">
 							{language}
@@ -111,24 +118,38 @@ export function BlogCodeBlock({
 			{/* No need for dynamic class on this wrapper div since we're handling in customStyle */}
 			<div className="overflow-hidden">
 				{/* Render the CodeBlock with custom theme only after mounting */}
-				{mounted && (
-					<CodeBlock
-						text={text}
+				{mounted ? (
+					<Code
+						text={code}
 						language={language}
 						showLineNumbers={showLineNumbers}
 						theme={customTheme}
 						customStyle={customStyle}
+						highlight={highlightLines}
 					/>
+				) : (
+					<div
+						className="bg-[#25292E] text-[#f0f6fc] p-4 rounded-md"
+						style={customStyle}
+					>
+						Loading code editor...
+					</div>
 				)}
 			</div>
-			{/* Copy button with tooltip - moved outside inner div */}
+
+			{/* Caption if provided */}
+			{caption && (
+				<div className="mt-2 text-sm text-muted-foreground">{caption}</div>
+			)}
+
+			{/* Copy button with tooltip */}
 			<TooltipProvider>
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
 							variant="ghost"
 							size="sm"
-							className="absolute text-white hover:text-primary hover:bg-transparent  top-1.5 right-2 h-8 w-8 p-0 z-10"
+							className="absolute text-white hover:text-primary hover:bg-transparent top-1.5 right-2 h-8 w-8 p-0 z-10"
 							onClick={handleCopy}
 						>
 							{copied ? (

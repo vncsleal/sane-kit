@@ -2,7 +2,8 @@ import type { PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/client";
-import type { SanityImage } from "@/sanity/types/schema"; // Assuming SanityImage type exists
+import type { SanityImage } from "@/sanity/types/schema";
+import { CodeBlock } from "./CodeBlock";
 
 // Basic components, customize as needed
 export const portableTextComponents: PortableTextComponents = {
@@ -27,8 +28,50 @@ export const portableTextComponents: PortableTextComponents = {
 				</div>
 			);
 		},
-		// Add custom components like codeBlock if needed
-		// codeBlock: ({ value }) => { ... }
+		// Fixed codeBlock component with proper property passing
+		codeBlock: ({ value }) => {
+			// With additional defensive null checks
+			if (!value) {
+				return null;
+			}
+
+			// Handle direct string code (legacy format)
+			if (typeof value.code === "string") {
+				return (
+					<CodeBlock
+						code={value.code}
+						title={value.title || ""}
+						language={value.language || "typescript"}
+						showLineNumbers={value.showLineNumbers}
+						highlightLines={value.highlightLines}
+						caption={value.caption}
+					/>
+				);
+			}
+
+			// Handle new code input format ({_type: 'code', code: '...', language: '...'})
+			if (typeof value.code === "object" && value.code !== null) {
+				// Extract simple string from the code object
+				const codeText = value.code.code || "";
+				const language = value.code.language || value.language || "typescript";
+				const filename = value.code.filename || "";
+
+				return (
+					<CodeBlock
+						code={codeText}
+						filename={filename}
+						title={value.title || ""}
+						language={language}
+						showLineNumbers={value.showLineNumbers}
+						highlightLines={value.highlightLines}
+						caption={value.caption}
+					/>
+				);
+			}
+
+			// Fallback for unexpected format
+			return <p>Error: Invalid code block format</p>;
+		},
 	},
 	marks: {
 		link: ({ children, value }) => {

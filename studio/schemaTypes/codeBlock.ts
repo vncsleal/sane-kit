@@ -40,13 +40,14 @@ export const codeBlock = defineType({
 			description: "Optional translated title for this code snippet",
 		}),
 		defineField({
-			name: "language",
-			title: "Language",
-			type: "string",
+			name: "code",
+			title: "Code",
+			type: "code",
 			options: {
-				list: [
-					{ title: "JavaScript", value: "javascript" },
+				language: "typescript",
+				languageAlternatives: [
 					{ title: "TypeScript", value: "typescript" },
+					{ title: "JavaScript", value: "javascript" },
 					{ title: "HTML", value: "html" },
 					{ title: "CSS", value: "css" },
 					{ title: "SCSS", value: "scss" },
@@ -64,16 +65,10 @@ export const codeBlock = defineType({
 					{ title: "C++", value: "cpp" },
 					{ title: "C#", value: "csharp" },
 					{ title: "Plain Text", value: "text" },
+					{ title: "Brazilian Portuguese", value: "pt_BR" },
 				],
+				withFilename: true,
 			},
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "code",
-			title: "Code",
-			type: "text",
-			rows: 10,
 			validation: (rule) => rule.required(),
 			group: "content",
 		}),
@@ -97,9 +92,33 @@ export const codeBlock = defineType({
 						},
 						{
 							name: "content",
-							type: "text",
+							type: "code",
 							title: "Code",
-							rows: 10,
+							options: {
+								language: "typescript",
+								languageAlternatives: [
+									{ title: "TypeScript", value: "typescript" },
+									{ title: "JavaScript", value: "javascript" },
+									{ title: "HTML", value: "html" },
+									{ title: "CSS", value: "css" },
+									{ title: "SCSS", value: "scss" },
+									{ title: "JSX", value: "jsx" },
+									{ title: "TSX", value: "tsx" },
+									{ title: "Shell", value: "shell" },
+									{ title: "Markdown", value: "markdown" },
+									{ title: "JSON", value: "json" },
+									{ title: "Python", value: "python" },
+									{ title: "Ruby", value: "ruby" },
+									{ title: "PHP", value: "php" },
+									{ title: "Go", value: "go" },
+									{ title: "Java", value: "java" },
+									{ title: "C", value: "c" },
+									{ title: "C++", value: "cpp" },
+									{ title: "C#", value: "csharp" },
+									{ title: "Plain Text", value: "text" },
+								],
+								withFilename: true,
+							},
 						},
 					],
 					preview: {
@@ -148,18 +167,18 @@ export const codeBlock = defineType({
 	preview: {
 		select: {
 			title: "title",
-			language: "language",
 			code: "code",
 		},
-		prepare({ title, language, code }) {
-			const shortCode = code
-				? code.length > 50
-					? `${code.slice(0, 50)}...`
-					: code
+		prepare({ title, code }) {
+			const language = code?.language || "text";
+			const shortCode = code?.code
+				? code.code.length > 50
+					? `${code.code.slice(0, 50)}...`
+					: code.code
 				: "";
 			return {
 				title: title || "Code Block",
-				subtitle: `${language || "text"}: ${shortCode}`,
+				subtitle: `${language}: ${shortCode}`,
 				media: CodeIcon,
 			};
 		},
