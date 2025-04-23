@@ -57,7 +57,7 @@ async function getPage(slug: string): Promise<SanityPage | null> {
 	return client.fetch(
 		pageQuery,
 		{ slug },
-		{ cache: "no-store" }, // Example: revalidate every hour
+		{ next: { revalidate: 2592000 } }, //revalidate every month
 	);
 }
 
