@@ -47,9 +47,9 @@ const pageQuery = `*[_type == "page" && slug.current == $slug][0]{
 }`;
 
 interface PageProps {
-	params: Promise<{
+	params: {
 		slug: string;
-	}>;
+	};
 }
 
 async function getPage(slug: string): Promise<SanityPage | null> {
@@ -62,7 +62,7 @@ async function getPage(slug: string): Promise<SanityPage | null> {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-	const { slug } = await params; // Await params here
+	const { slug } = params; // No need to await params
 	const page = await getPage(slug);
 
 	if (!page) {
@@ -119,7 +119,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function Page({ params }: PageProps) {
-	const { slug } = await params; // Await params here
+	const { slug } = params; // No need to await params
 	const page = await getPage(slug);
 
 	if (!page) {

@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,27 @@ import type {
 	PortableTextImage as SanityPortableTextImage,
 } from "@/sanity/types/schema";
 import { BlogShareButton } from "./BlogShareButton";
+import { useLanguage } from "@/lib/language-context";
+
+// Define translations for static text
+const staticText = {
+	aboutTheAuthor: {
+		en: "About the author",
+		pt_BR: "Sobre o autor",
+	},
+	minRead: {
+		en: "min read",
+		pt_BR: "min de leitura",
+	},
+	noImage: {
+		en: "No image",
+		pt_BR: "Sem imagem",
+	},
+	unknownType: {
+		en: "Unknown type",
+		pt_BR: "Tipo desconhecido",
+	},
+};
 
 // Define the structure that represents post data after it's been fetched
 // and references have been expanded
@@ -38,18 +60,20 @@ interface ExpandedBlogPost
 // Define interface for Sanity code block value
 interface CodeBlockValue {
 	_type: "codeBlock";
-	code: string | {
-		_type: "code";
-		code: string;
-		language?: string;
-		filename?: string;
-	};
+	code:
+		| string
+		| {
+				_type: "code";
+				code: string;
+				language?: string;
+				filename?: string;
+		  };
 	language?: string;
 	filename?: string;
 	showLineNumbers?: boolean;
-	title?: string;         // Added missing property
+	title?: string; // Added missing property
 	highlightLines?: string; // Added missing property
-	caption?: string;       // Added missing property
+	caption?: string; // Added missing property
 }
 
 interface BlogPostPageProps {
@@ -67,6 +91,18 @@ const SocialIcons = {
 } as const;
 
 export default function BlogPostPage({ post }: BlogPostPageProps) {
+	const { language } = useLanguage();
+
+	// Get localized static text
+	const localizedAboutAuthor =
+		staticText.aboutTheAuthor[language] || staticText.aboutTheAuthor.en;
+	const localizedMinRead =
+		staticText.minRead[language] || staticText.minRead.en;
+	const localizedNoImage =
+		staticText.noImage[language] || staticText.noImage.en;
+	const localizedUnknownType =
+		staticText.unknownType[language] || staticText.unknownType.en;
+
 	// PortableText components for rendering blog content with improved styling
 	const components: PortableTextReactComponents = {
 		types: {
@@ -203,10 +239,9 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 			bullet: ({ children }) => <li className="mb-2">{children}</li>,
 			number: ({ children }) => <li className="mb-2">{children}</li>,
 		},
-		// Add missing required properties
 		hardBreak: () => <br />, // Handle line breaks
 		unknownMark: ({ children }) => <>{children}</>, // Fallback for unknown marks
-		unknownType: () => <div>Unknown type</div>, // Fallback for unknown types
+		unknownType: () => <div>{localizedUnknownType}</div>, // Use localized text for unknown types
 		unknownBlockStyle: ({ children }) => <div>{children}</div>, // Fallback for unknown block styles
 		unknownList: ({ children }) => <ul>{children}</ul>, // Fallback for unknown lists
 		unknownListItem: ({ children }) => <li>{children}</li>, // Fallback for unknown list items
@@ -281,8 +316,8 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 													})
 													.join(" ")
 													.split(/\s+/).length / 200,
-											)} min read`
-										: "3 min read"}
+											)} ${localizedMinRead}`
+										: `3 ${localizedMinRead}`}
 								</span>
 							</div>
 						</div>
@@ -295,7 +330,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 				</div>
 
 				{/* Featured image */}
-				{post.mainImage?.asset?._ref && (
+				{post.mainImage?.asset?._ref ? (
 					<div className="relative aspect-video w-full mb-10 rounded-lg overflow-hidden">
 						<Image
 							src={urlFor(post.mainImage.asset._ref).url()}
@@ -304,6 +339,10 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 							priority
 							className="object-cover"
 						/>
+					</div>
+				) : (
+					<div className="w-full aspect-video mb-10 bg-muted rounded-lg flex items-center justify-center">
+						<span className="text-muted-foreground">{localizedNoImage}</span>
 					</div>
 				)}
 			</header>
@@ -320,7 +359,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 			{/* Author bio */}
 			{post.author.bio && (
 				<div className="mt-16 pt-8 border-t">
-					<h2 className="text-xl font-semibold mb-4">About the author</h2>
+					<h2 className="text-xl font-semibold mb-4">{localizedAboutAuthor}</h2>
 					<div className="p-6 bg-muted/30 rounded-lg">
 						<div className="flex flex-col md:flex-row gap-6">
 							<Avatar className="h-20 w-20">
