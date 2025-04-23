@@ -18,7 +18,7 @@ const compareFeatureGroups = [
 export const compareFeature = defineType({
 	name: "compareFeature",
 	title: "Compare Feature",
-	type: "object",
+	type: "document", // Changed from "object" to "document"
 	icon: ComposeIcon,
 	groups: compareFeatureGroups,
 	fields: [
@@ -33,6 +33,7 @@ export const compareFeature = defineType({
 			name: "i18n_title",
 			title: "Feature Title (Translated)",
 			type: "internationalizedArrayString",
+			group: "translations",
 		}),
 		defineField({
 			name: "description",
@@ -45,110 +46,20 @@ export const compareFeature = defineType({
 			name: "i18n_description",
 			title: "Description (Translated)",
 			type: "internationalizedArrayText",
-		}),
-		defineField({
-			name: "options",
-			title: "Feature Options",
-			type: "array",
-			validation: (rule) => rule.required().min(2),
-			of: [
-				{
-					type: "object",
-					fields: [
-						defineField({
-							name: "name",
-							title: "Option Name",
-							type: "string",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_name",
-							title: "Option Name (Translated)",
-							type: "internationalizedArrayString",
-						}),
-						defineField({
-							name: "status",
-							title: "Status",
-							type: "string",
-							options: {
-								list: [
-									{ title: "Included", value: "included" },
-									{ title: "Not Included", value: "not-included" },
-									{ title: "Partial", value: "partial" },
-									{ title: "Custom Value", value: "custom" },
-								],
-							},
-							initialValue: "included",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "customValue",
-							title: "Custom Value",
-							type: "string",
-							description:
-								"Custom text to display (only used when status is 'custom')",
-							hidden: ({ parent }) => parent?.status !== "custom",
-						}),
-						defineField({
-							name: "i18n_customValue",
-							title: "Custom Value (Translated)",
-							type: "internationalizedArrayString",
-							description:
-								"Translated custom text to display (only used when status is 'custom')",
-							hidden: ({ parent }) => parent?.status !== "custom",
-						}),
-					],
-					preview: {
-						select: {
-							name: "name",
-							status: "status",
-							customValue: "customValue",
-						},
-						prepare({ name, status, customValue }) {
-							const getStatusIcon = (
-								status: "included" | "not-included" | "partial" | "custom",
-							) => {
-								switch (status) {
-									case "included":
-										return "✅";
-									case "not-included":
-										return "❌";
-									case "partial":
-										return "⚠️";
-									case "custom":
-										return "🔤";
-									default:
-										return "❓";
-								}
-							};
-
-							return {
-								title: name || "Option",
-								subtitle:
-									status === "custom"
-										? `Custom: ${customValue || ""}`
-										: status || "included",
-								media: () => getStatusIcon(status),
-							};
-						},
-					},
-				},
-			],
-			group: "content",
+			group: "translations",
 		}),
 	],
 	preview: {
 		select: {
 			title: "title",
 			description: "description",
-			optionsCount: "options.length",
 		},
-		prepare({ title, description, optionsCount = 0 }) {
+		prepare({ title, description }) {
 			return {
 				title: title || "Compare Feature",
-				subtitle: `${optionsCount} option${optionsCount === 1 ? "" : "s"} · ${
-					description ? `${description.substring(0, 50)}...` : "No description"
-				}`,
+				subtitle: description
+					? `${description.substring(0, 80)}${description.length > 80 ? "..." : ""}`
+					: "No description",
 				media: ComposeIcon,
 			};
 		},

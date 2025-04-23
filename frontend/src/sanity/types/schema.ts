@@ -1,8 +1,8 @@
 // Define the internationalized string array type to match Sanity schema
 export interface InternationalizedString {
-  _key: string;
-  value: string;
-  language: string; // e.g., 'pt_BR'
+	_key: string;
+	value: string;
+	language: string; // e.g., 'pt_BR'
 }
 
 export type InternationalizedStringArray = InternationalizedString[];
@@ -109,13 +109,17 @@ export interface SanityHeroSection {
 	_type: "heroSection";
 	variant: "buttonBanner" | "badgeBanner" | "gridGallery";
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
-	bannerButton?: Omit<HeroButtonType, "variant" | "icon">;
+	i18n_subheading?: InternationalizedStringArray;
+	bannerButton?: Omit<HeroButtonType, "variant" | "icon"> & {
+		i18n_label?: InternationalizedStringArray;
+	};
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
-	buttons?: HeroButtonType[];
+	i18n_badgeText?: InternationalizedStringArray;
+	buttons?: (HeroButtonType & {
+		i18n_label?: InternationalizedStringArray;
+	})[];
 	media?: HeroMedia;
 }
 
@@ -123,7 +127,7 @@ export interface SanityHeroSection {
 export interface SanityHeaderButton {
 	_key: string;
 	label: string;
-	i18n_label?: Record<string, string>;
+	i18n_label?: InternationalizedStringArray;
 	url: string;
 	variant?: "default" | "outline" | "secondary" | "ghost" | "link";
 }
@@ -131,17 +135,17 @@ export interface SanityHeaderButton {
 export interface SanityHeaderSubItem {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	href: string;
 }
 
 export interface SanityNavigationItem {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	href?: string;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	items?: SanityHeaderSubItem[];
 }
 
@@ -150,11 +154,11 @@ export interface SanityHeader {
 	_type: "header";
 	variant?: "default" | "centered" | "minimal" | "transparent";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	navigationItems: SanityNavigationItem[];
 	ctaButtons?: SanityHeaderButton[];
 	dropdownCTALabel?: string;
-	i18n_dropdownCTALabel?: Record<string, string>;
+	i18n_dropdownCTALabel?: InternationalizedStringArray;
 	dropdownCTAUrl?: string;
 }
 
@@ -162,7 +166,7 @@ export interface SanityHeader {
 export interface SanityLegalLink {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	url: string;
 }
 
@@ -170,9 +174,9 @@ export interface SanityFooter {
 	_id: string;
 	_type: "footer";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	address?: string[];
 	legalLinks?: SanityLegalLink[];
 	navigationItems: SanityNavigationItem[];
@@ -183,7 +187,7 @@ export interface SanityFooter {
 export interface SanityCTAButton {
 	_key: string;
 	label: string;
-	i18n_label?: Record<string, string>;
+	i18n_label?: InternationalizedStringArray;
 	url: string;
 	variant?: "default" | "secondary" | "outline" | "ghost" | "link";
 	icon?: "none" | "arrowRight" | "phone" | "plus";
@@ -194,20 +198,20 @@ export interface SanityCTASection {
 	_type: "ctaSection";
 	variant?: "default" | "highlight" | "minimal" | "full";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	buttons: SanityCTAButton[];
 }
 
 export interface SanityFeature {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	image?: SanityImage;
 	icon?:
 		| "user"
@@ -237,11 +241,11 @@ export interface SanityFeatureSection {
 		| "carouselFeature"
 		| "slidingComparison";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	features: SanityFeature[];
 	image?: SanityImage;
 	comparisonImage?: SanityImage;
@@ -251,7 +255,7 @@ export interface SanityFeatureSection {
 export interface SanityCase {
 	_key: string;
 	name?: string;
-	i18n_name?: Record<string, string>;
+	i18n_name?: InternationalizedStringArray;
 	logo?: SanityImage;
 	url?: string;
 }
@@ -261,9 +265,9 @@ export interface SanityCasesSection {
 	_type: "casesSection";
 	variant: "logoCarousel" | "compactSlider";
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	cases?: SanityCase[];
 }
 
@@ -271,13 +275,13 @@ export interface SanityCasesSection {
 export interface SanityTestimonial {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	content: string;
-	i18n_content?: Record<string, string>;
+	i18n_content?: InternationalizedStringArray;
 	author: string;
-	i18n_author?: Record<string, string>;
+	i18n_author?: InternationalizedStringArray;
 	role?: string;
-	i18n_role?: Record<string, string>;
+	i18n_role?: InternationalizedStringArray;
 	avatar?: SanityImage;
 }
 
@@ -286,9 +290,9 @@ export interface SanityTestimonialsSection {
 	_type: "testimonialsSection";
 	variant: "carousel" | "grid" | "masonry-grid";
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	testimonials?: SanityTestimonial[];
 }
 
@@ -296,25 +300,25 @@ export interface SanityTestimonialsSection {
 export interface SanityPricingFeature {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 }
 
 export interface SanityPricingPlan {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	highlighted?: boolean;
 	price: string;
-	i18n_price?: Record<string, string>;
+	i18n_price?: InternationalizedStringArray;
 	billingPeriod?: string;
-	i18n_billingPeriod?: Record<string, string>;
+	i18n_billingPeriod?: InternationalizedStringArray;
 	features: SanityPricingFeature[];
 	buttonText: string;
-	i18n_buttonText?: Record<string, string>;
+	i18n_buttonText?: InternationalizedStringArray;
 	buttonUrl: string;
 	buttonIcon?: "arrowRight" | "phone" | "plus";
 	buttonVariant?: "default" | "outline" | "secondary";
@@ -324,77 +328,64 @@ export interface SanityPricingSection {
 	_key: string;
 	_type: "pricingSection";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	plans: SanityPricingPlan[];
 }
 
 // Compare Features section types
-export interface SanityCompareFeatureOption {
-	_key: string;
-	name: string;
-	i18n_name?: Record<string, string>;
-	status: "included" | "not-included" | "partial" | "custom";
-	customValue?: string;
-	i18n_customValue?: Record<string, string>;
-}
-
 export interface SanityCompareFeature {
-	_id: string; // Assuming it's fetched as a document or referenced with _id
+	_id: string;
 	_type: "compareFeature";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
-	options: SanityCompareFeatureOption[];
+	i18n_description?: InternationalizedStringArray;
 }
 
 export interface SanityFeatureValue {
 	_key?: string;
-	featureRef: SanityAsset & {
-		// Assuming featureRef is a reference, add _ref
-		_id?: string; // Include _id if the reference is expanded in the query
-	};
+	featureRef: SanityCompareFeature;
 	value: "true" | "false" | "custom";
 	customText?: string;
-	// No i18n_customText in schema
+	i18n_customText?: InternationalizedStringArray;
 }
 
 export interface SanityComparePlan {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	price: string;
-	i18n_price?: Record<string, string>;
+	i18n_price?: InternationalizedStringArray;
 	billingPeriod?: string;
-	i18n_billingPeriod?: Record<string, string>; // Added based on pricing plan
+	i18n_billingPeriod?: InternationalizedStringArray;
 	highlighted?: boolean;
 	featureValues?: SanityFeatureValue[];
 	buttonText: string;
-	i18n_buttonText?: Record<string, string>;
+	i18n_buttonText?: InternationalizedStringArray;
 	buttonUrl: string;
 	buttonIcon?: "arrowRight" | "phone" | "plus";
+	buttonVariant?: "default" | "secondary" | "outline" | "ghost" | "link";
 }
 
 export interface SanityCompareFeaturesSection {
 	_key: string;
 	_type: "compareFeaturesSection";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>; // Added based on pricing section
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
-	features: SanityCompareFeature[]; // Changed from (SanityAsset & { _id?: string })[]
+	i18n_subheading?: InternationalizedStringArray;
+	features: SanityCompareFeature[];
 	plans: SanityComparePlan[];
 	footnote?: string;
-	i18n_footnote?: Record<string, string>;
-	theme?: "light" | "dark";
+	i18n_footnote?: InternationalizedStringArray;
 }
 
 // Stats section types
@@ -402,7 +393,7 @@ export interface SanityStat {
 	_key: string;
 	value: string;
 	label: string;
-	i18n_label?: Record<string, string>;
+	i18n_label?: InternationalizedStringArray;
 	trendDirection?: "up" | "down" | "none";
 	trendValue?: string;
 	color?: "primary" | "success" | "warning" | "destructive" | "muted";
@@ -413,15 +404,15 @@ export interface SanityStatsSection {
 	_type: "statsSection";
 	variant?: "grid" | "withContent";
 	heading?: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	contentHeading?: string;
-	i18n_contentHeading?: Record<string, string>;
+	i18n_contentHeading?: InternationalizedStringArray;
 	contentText?: string;
-	i18n_contentText?: Record<string, string>;
+	i18n_contentText?: InternationalizedStringArray;
 	stats: SanityStat[];
 }
 
@@ -429,9 +420,9 @@ export interface SanityStatsSection {
 export interface SanityFAQItem {
 	_key: string;
 	question: string;
-	i18n_question?: Record<string, string>;
-	answer: string; // Assuming answer is simple text based on schema
-	i18n_answer?: Record<string, string>;
+	i18n_question?: InternationalizedStringArray;
+	answer: string;
+	i18n_answer?: InternationalizedStringArray;
 }
 
 export interface SanityFAQSection {
@@ -439,13 +430,13 @@ export interface SanityFAQSection {
 	_type: "faqSection";
 	variant?: "sideBySide" | "centered";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	buttonText?: string;
-	i18n_buttonText?: Record<string, string>;
+	i18n_buttonText?: InternationalizedStringArray;
 	buttonUrl?: string;
 	buttonIcon?: "none" | "phone" | "arrowRight" | "plus" | "check";
 	faqItems: SanityFAQItem[];
@@ -469,16 +460,16 @@ export interface SanityAuthor {
 	_id: string;
 	_type: "author";
 	name: string;
-	i18n_name?: Record<string, string>;
+	i18n_name?: InternationalizedStringArray;
 	slug: {
 		current: string;
 	};
 	avatar?: SanityImage;
 	role?: string;
-	i18n_role?: Record<string, string>;
+	i18n_role?: InternationalizedStringArray;
 	bio?: string;
-	i18n_bio?: Record<string, string>;
-	fullBio?: PortableTextContent; // Simple block content
+	i18n_bio?: InternationalizedStringArray;
+	fullBio?: PortableTextContent;
 	i18n_fullBio?: SanityLocalizedPortableText[];
 	socialLinks?: SanityAuthorSocialLink[];
 	email?: string;
@@ -489,12 +480,12 @@ export interface SanityCategory {
 	_id: string;
 	_type: "category";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	slug: {
 		current: string;
 	};
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 }
 
 export interface PortableTextBlock {
@@ -510,7 +501,7 @@ export interface PortableTextBlock {
 		_key: string;
 		_type: string;
 		href?: string;
-		blank?: boolean; // Added for links
+		blank?: boolean;
 	}[];
 	style?: string;
 	listItem?: string;
@@ -527,7 +518,6 @@ export interface PortableTextImage {
 	i18n_caption?: InternationalizedStringArray;
 }
 
-// Update PortableTextContent to include SanityCodeBlock
 export type PortableTextContent = (
 	| PortableTextBlock
 	| PortableTextImage
@@ -538,16 +528,16 @@ export interface SanityBlogPost {
 	_id: string;
 	_type: "blogPost";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	slug: {
 		current: string;
 	};
 	publishedAt: string;
 	excerpt?: string;
-	i18n_excerpt?: Record<string, string>;
-	author: SanityAsset & { _id?: string }; // Reference
+	i18n_excerpt?: InternationalizedStringArray;
+	author: SanityAsset & { _id?: string };
 	mainImage?: SanityImage;
-	categories?: (SanityAsset & { _id?: string })[]; // Array of references
+	categories?: (SanityAsset & { _id?: string })[];
 	body?: PortableTextContent;
 	i18n_body?: SanityLocalizedPortableText[];
 	featured?: boolean;
@@ -557,9 +547,9 @@ export interface SanityBlogSection {
 	_key: string;
 	_type: "blogSection";
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	postsToShow?: number;
 	showFeaturedPostLarge?: boolean;
 	featuredPostsOnly?: boolean;
@@ -567,40 +557,40 @@ export interface SanityBlogSection {
 	viewAllButton?: boolean;
 	viewAllUrl?: string;
 	viewAllButtonText?: string;
-	i18n_viewAllButtonText?: Record<string, string>;
+	i18n_viewAllButtonText?: InternationalizedStringArray;
 }
 
 // Contact section types
 export interface SanityContactFeature {
 	_key: string;
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 }
 
 export interface SanityContactSection {
 	_key: string;
 	_type: "contactSection";
 	badgeText: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	features: SanityContactFeature[];
 	formTitle?: string;
-	i18n_formTitle?: Record<string, string>;
+	i18n_formTitle?: InternationalizedStringArray;
 	formFields?: {
 		showDate?: boolean;
 		showFirstName?: boolean;
 		showLastName?: boolean;
 		showFileUpload?: boolean;
 		fileUploadLabel?: string;
-		i18n_fileUploadLabel?: Record<string, string>;
+		i18n_fileUploadLabel?: InternationalizedStringArray;
 	};
 	buttonText: string;
-	i18n_buttonText?: Record<string, string>;
+	i18n_buttonText?: InternationalizedStringArray;
 	buttonIcon?: "arrowRight" | "phone" | "none";
 }
 
@@ -610,20 +600,20 @@ export interface SanityNewsletterSection {
 	_type: "newsletterSection";
 	variant?: "default" | "highlight" | "minimal" | "full";
 	badgeText?: string;
-	i18n_badgeText?: Record<string, string>;
+	i18n_badgeText?: InternationalizedStringArray;
 	heading: string;
-	i18n_heading?: Record<string, string>;
+	i18n_heading?: InternationalizedStringArray;
 	subheading?: string;
-	i18n_subheading?: Record<string, string>;
+	i18n_subheading?: InternationalizedStringArray;
 	inputPlaceholder?: string;
-	i18n_inputPlaceholder?: Record<string, string>;
+	i18n_inputPlaceholder?: InternationalizedStringArray;
 	buttonText: string;
-	i18n_buttonText?: Record<string, string>;
+	i18n_buttonText?: InternationalizedStringArray;
 	buttonIcon?: "none" | "arrowRight" | "plus" | "mail";
 	successMessage?: string;
-	i18n_successMessage?: Record<string, string>;
+	i18n_successMessage?: InternationalizedStringArray;
 	privacyText?: string;
-	i18n_privacyText?: Record<string, string>;
+	i18n_privacyText?: InternationalizedStringArray;
 }
 
 // Union type for all section types
@@ -646,13 +636,13 @@ export interface SanityPage {
 	_id: string;
 	_type: "page";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	slug: {
 		current: string;
 	};
-	description?: string; // SEO Meta Description
-	i18n_description?: Record<string, string>; // Translated SEO Meta Description
-	ogImage?: SanityImage; // SEO Social Image
+	description?: string;
+	i18n_description?: InternationalizedStringArray;
+	ogImage?: SanityImage;
 	pageBuilder: SanitySection[];
 }
 
@@ -661,17 +651,17 @@ export interface SanityBlogPage {
 	_id: string;
 	_type: "blogPage";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray;
 	description?: string;
-	i18n_description?: Record<string, string>;
+	i18n_description?: InternationalizedStringArray;
 	layout?: "grid" | "featured" | "compact";
 	postsPerPage?: number;
 	featuredPostsCount?: number;
 	showOnlyFeaturedPosts?: boolean;
 	seo?: {
 		metaTitle?: string;
-		i18n_metaTitle?: Record<string, string>;
+		i18n_metaTitle?: InternationalizedStringArray;
 		metaDescription?: string;
-		i18n_metaDescription?: Record<string, string>;
+		i18n_metaDescription?: InternationalizedStringArray;
 	};
 }

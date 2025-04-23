@@ -6,7 +6,12 @@ import {
 	TranslateIcon,
 	ComposeIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import {
+	defineField,
+	defineType,
+	type ValidationContext,
+	type PathSegment,
+} from "sanity"; // Import PathSegment
 
 // Define field groups
 const compareFeaturesGroups = [
@@ -30,10 +35,6 @@ const compareFeaturesGroups = [
 		name: "translations",
 		title: "Translations",
 		icon: TranslateIcon,
-	},
-	{
-		name: "settings",
-		title: "Settings",
 	},
 ];
 
@@ -153,6 +154,13 @@ export const compareFeaturesSection = defineType({
 							group: "content",
 						}),
 						defineField({
+							name: "i18n_billingPeriod",
+							title: "Billing Period (Translated)",
+							type: "internationalizedArrayString",
+							description: "Translated billing period text (e.g. /mês)",
+							group: "translations",
+						}),
+						defineField({
 							name: "highlighted",
 							type: "boolean",
 							title: "Highlight This Plan",
@@ -164,7 +172,8 @@ export const compareFeaturesSection = defineType({
 							name: "featureValues",
 							type: "array",
 							title: "Feature Values",
-							description: "Select the applicable status for each feature.",
+							description:
+								"Define the status or value of each feature for this plan.",
 							group: "content",
 							of: [
 								{
@@ -172,6 +181,11 @@ export const compareFeaturesSection = defineType({
 									name: "featureValue",
 									groups: [
 										{ name: "content", title: "Content", default: true },
+										{
+											name: "translations",
+											title: "Translations",
+											icon: TranslateIcon,
+										},
 									],
 									fields: [
 										defineField({
@@ -181,17 +195,34 @@ export const compareFeaturesSection = defineType({
 											to: [{ type: "compareFeature" }],
 											validation: (rule) => rule.required(),
 											group: "content",
+											options: {
+												filter: ({ parent }) => {
+													const existingRefs = (
+														parent as {
+															_key: string;
+															featureRef?: { _ref: string };
+														}[]
+													)
+														.filter((item) => item.featureRef?._ref)
+														.map((item) => item.featureRef?._ref);
+													return {
+														filter: "!(_id in $existingRefs)",
+														params: { existingRefs },
+													};
+												},
+											},
 										}),
 										defineField({
 											name: "value",
 											type: "string",
-											title: "Status",
-											description: "Select the status for this feature",
+											title: "Status / Value",
+											description:
+												"Select status or provide a custom value for this feature.",
 											options: {
 												list: [
 													{ title: "✓ Included", value: "true" },
 													{ title: "✗ Not included", value: "false" },
-													{ title: "Custom", value: "custom" },
+													{ title: "Custom Text", value: "custom" },
 												],
 												layout: "radio",
 											},
@@ -202,11 +233,19 @@ export const compareFeaturesSection = defineType({
 										defineField({
 											name: "customText",
 											type: "string",
-											title: "Custom Value",
+											title: "Custom Text",
 											description:
-												"Enter custom text (e.g. '5 users') if using custom value",
+												"Enter custom text (e.g. '5 users', 'Basic support') if using 'Custom Text' status.",
 											hidden: ({ parent }) => parent?.value !== "custom",
 											group: "content",
+										}),
+										defineField({
+											name: "i18n_customText",
+											title: "Custom Text (Translated)",
+											type: "internationalizedArrayString",
+											description: "Translated custom text.",
+											hidden: ({ parent }) => parent?.value !== "custom",
+											group: "translations",
 										}),
 									],
 									preview: {
@@ -226,7 +265,7 @@ export const compareFeaturesSection = defineType({
 												subtitle = "✗ Not included";
 												media = CloseCircleIcon;
 											} else if (value === "custom") {
-												subtitle = customText || "Custom";
+												subtitle = customText || "Custom Text";
 											}
 
 											return {
@@ -239,22 +278,90 @@ export const compareFeaturesSection = defineType({
 								},
 							],
 							validation: (rule) =>
-								rule.custom((featureValues, context) => {
-									const allFeatures = context.document?.features || [];
-									if (!Array.isArray(allFeatures) || allFeatures.length === 0)
+								rule
+									.required()
+									.min(1)
+									.unique() // Ensures unique featureRef._ref per plan
+									.custom((featureValues, context: ValidationContext) => {
+										// Safely access document and pageBuilder
+										const pageBuilder = context.document
+											?.pageBuilder as unknown; // Cast to unknown first for safety
+										const currentPath = context.path;
+
+										// Ensure pageBuilder is an array and path exists and has enough segments
+										if (
+											!Array.isArray(pageBuilder) ||
+											!currentPath ||
+											currentPath.length < 2
+										) {
+											// Cannot determine parent section, skip validation or return an error
+											// console.warn("Could not determine parent section for validation.");
+											return true; // Or return specific error message if needed
+										}
+
+										// Safely access the key of the parent section in the path
+										const parentPathSegment = currentPath[1];
+										const parentSectionKey =
+											typeof parentPathSegment === "object" &&
+											parentPathSegment !== null &&
+											"_key" in parentPathSegment
+												? parentPathSegment._key
+												: undefined;
+
+										if (!parentSectionKey) {
+											// console.warn("Could not determine parent section key.");
+											return true; // Or return specific error message
+										}
+
+										// Find the parent section using the key
+										const parentSection = pageBuilder.find(
+											(
+												section: unknown,
+											): section is {
+												_key?: string;
+												_type?: string;
+												features?: { _ref: string }[];
+											} =>
+												typeof section === "object" &&
+												section !== null &&
+												"_key" in section &&
+												section._key === parentSectionKey,
+										);
+
+										const allFeaturesRefs =
+											parentSection?.features?.map((f) => f._ref) || [];
+
+										// If no features are defined in the section yet, validation passes
+										if (allFeaturesRefs.length === 0) return true;
+
+										// Get the _ref of features defined within this plan's featureValues
+										const definedFeatureRefs = (
+											featureValues as
+												| { featureRef?: { _ref: string } }[]
+												| undefined // Allow undefined
+										)?.map((fv) => fv.featureRef?._ref);
+
+										// Check if any features defined in the section are missing from the plan
+										const missingRefs = allFeaturesRefs.filter(
+											(ref) => !definedFeatureRefs?.includes(ref),
+										);
+
+										if (missingRefs.length > 0) {
+											// Provide a more informative error message if possible
+											// (Getting feature titles here is complex, so using refs)
+											return `Missing values for some features. Please define a status/value for all features listed in the 'Features to Compare' tab. Missing feature refs: ${missingRefs.join(", ")}`;
+										}
+
+										// Check for duplicate featureRefs within the same plan (unique() rule handles this, but double-check)
+										const refs = definedFeatureRefs?.filter(
+											Boolean,
+										) as string[];
+										if (new Set(refs).size !== refs.length) {
+											return "Each feature can only be listed once per plan.";
+										}
+
 										return true;
-									const usedRefs = Array.isArray(featureValues)
-										? (
-												featureValues as { featureRef: { _ref?: string } }[]
-											).map((fv) => fv.featureRef?._ref || "")
-										: [];
-									const missing = allFeatures.filter(
-										(f) => !usedRefs.includes(f._ref),
-									);
-									return missing.length === 0
-										? true
-										: `Missing feature values for: ${missing.map((f) => f.name || f._key).join(", ")}`;
-								}),
+									}),
 						}),
 						defineField({
 							name: "buttonText",
@@ -287,6 +394,22 @@ export const compareFeaturesSection = defineType({
 								],
 							},
 							initialValue: "arrowRight",
+							group: "content",
+						}),
+						defineField({
+							name: "buttonVariant",
+							type: "string",
+							title: "Button Variant",
+							options: {
+								list: [
+									{ title: "Default", value: "default" },
+									{ title: "Secondary", value: "secondary" },
+									{ title: "Outline", value: "outline" },
+									{ title: "Ghost", value: "ghost" },
+									{ title: "Link", value: "link" },
+								],
+							},
+							initialValue: "default",
 							group: "content",
 						}),
 					],
@@ -322,19 +445,6 @@ export const compareFeaturesSection = defineType({
 			type: "internationalizedArrayText",
 			description:
 				"Translated footnote text at the bottom of the comparison table",
-		}),
-		defineField({
-			name: "theme",
-			title: "Theme",
-			type: "string",
-			options: {
-				list: [
-					{ title: "Light", value: "light" },
-					{ title: "Dark", value: "dark" },
-				],
-			},
-			initialValue: "light",
-			group: "settings",
 		}),
 	],
 	preview: {
