@@ -33,10 +33,9 @@ export interface BlogPostData {
 	categories?: SanityCategory[];
 }
 
+// Update PageProps to use Promise for params
 interface PageProps {
-	params: {
-		slug: string;
-	};
+	params: Promise<{ slug: string }>;
 }
 
 async function getPage(slug: string): Promise<BlogPostData | null> {
@@ -86,9 +85,9 @@ async function getPage(slug: string): Promise<BlogPostData | null> {
 	);
 }
 
-// Renamed function to avoid conflict with imported component
+// Update function signature and use await params
 export default async function BlogPostPageRoute({ params }: PageProps) {
-	const { slug } = params;
+	const { slug } = await params; // Await the promise here
 	const post = await getPage(slug);
 
 	if (!post) {
@@ -103,10 +102,11 @@ export default async function BlogPostPageRoute({ params }: PageProps) {
 	);
 }
 
+// Update function signature and use await params
 export async function generateMetadata({
 	params,
 }: PageProps): Promise<Metadata> {
-	const { slug } = params;
+	const { slug } = await params; // Await the promise here
 
 	const post = await getPage(slug);
 

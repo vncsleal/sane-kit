@@ -15,16 +15,16 @@ interface ExpandedBlogPost extends Omit<SanityBlogPost, "categories"> {
 	categories?: SanityCategory[];
 }
 
+// Define PageProps with Promise for params
+interface PageProps {
+	params: Promise<{ slug: string }>;
+}
+
 // Generate metadata for SEO
 export async function generateMetadata({
 	params,
-}: {
-	params: { slug: string };
-}): Promise<Metadata> {
-	// Ensure params is fully resolved before using slug
-	const resolvedParams = await Promise.resolve(params);
-	const slug = resolvedParams.slug;
-
+}: PageProps): Promise<Metadata> {
+	const { slug } = await params; // Await the promise here
 	const author = await getAuthor(slug);
 
 	if (!author) {
@@ -122,13 +122,8 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function AuthorPage({
-	params,
-}: { params: { slug: string } }) {
-	// Ensure params is fully resolved before using slug
-	const resolvedParams = await Promise.resolve(params);
-	const slug = resolvedParams.slug;
-
+export default async function AuthorPage({ params }: PageProps) {
+	const { slug } = await params; // Await the promise here
 	const author = await getAuthor(slug);
 
 	if (!author) {

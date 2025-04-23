@@ -3,9 +3,9 @@ import { client } from "@/sanity/client";
 import { notFound } from "next/navigation";
 import RenderSection from "@/components/sections/RenderSection";
 import { urlFor } from "@/sanity/client";
-// Assume a server-side helper exists, e.g., in '@/lib/localization-server'
 import { getLocalizedValueServer } from "@/lib/localization-server";
-import { headers } from "next/headers"; // Import headers function
+import { headers } from "next/headers";
+import type { Metadata } from "next"; // Import Metadata type
 
 // Update query to fetch i18n fields for metadata
 const pageQuery = `*[_type == "page" && slug.current == $slug][0]{
@@ -46,10 +46,10 @@ const pageQuery = `*[_type == "page" && slug.current == $slug][0]{
   }
 }`;
 
+// Define the PageProps interface with params as a Promise
 interface PageProps {
-	params: {
-		slug: string;
-	};
+	params: Promise<{ slug: string }>;
+	// searchParams?: { [key: string]: string | string[] | undefined }; // Optional
 }
 
 async function getPage(slug: string): Promise<SanityPage | null> {
@@ -61,8 +61,11 @@ async function getPage(slug: string): Promise<SanityPage | null> {
 	);
 }
 
-export async function generateMetadata({ params }: PageProps) {
-	const { slug } = params; // No need to await params
+// Use PageProps and await params in generateMetadata
+export async function generateMetadata({
+	params,
+}: PageProps): Promise<Metadata> {
+	const { slug } = await params; // Await the promise here
 	const page = await getPage(slug);
 
 	if (!page) {
@@ -73,7 +76,7 @@ export async function generateMetadata({ params }: PageProps) {
 	}
 
 	// Determine language key within generateMetadata
-	const headersList = await headers(); // Let TypeScript infer the type
+	const headersList = await headers();
 	const acceptLanguage = headersList.get("accept-language");
 	const preferredLanguage = acceptLanguage?.split(",")[0].split(";")[0];
 	let langKey = "en"; // Default language
@@ -86,19 +89,16 @@ export async function generateMetadata({ params }: PageProps) {
 	const localizedTitle = getLocalizedValueServer(
 		page.i18n_title,
 		page.title,
-		langKey, // Pass langKey
+		langKey,
 	);
 	const localizedDescription = getLocalizedValueServer(
 		page.i18n_description,
 		page.description,
-		langKey, // Pass langKey
+		langKey,
 	);
 
-	const metadata: {
-		title: string;
-		description?: string;
-		openGraph?: { images: string[] };
-	} = {
+	// Ensure the return type matches Metadata or Promise<Metadata>
+	const metadata: Metadata = {
 		title: localizedTitle || "Page", // Fallback title
 	};
 
@@ -108,8 +108,6 @@ export async function generateMetadata({ params }: PageProps) {
 
 	// Add Open Graph image if available
 	if (page.ogImage?.asset?._ref) {
-		// Assuming imageUrlBuilder is available server-side or imported
-
 		metadata.openGraph = {
 			images: [urlFor(page.ogImage.asset._ref).width(1200).height(630).url()],
 		};
@@ -118,8 +116,9 @@ export async function generateMetadata({ params }: PageProps) {
 	return metadata;
 }
 
+// Use PageProps and await params in the Page component
 export default async function Page({ params }: PageProps) {
-	const { slug } = params; // No need to await params
+	const { slug } = await params; // Await the promise here
 	const page = await getPage(slug);
 
 	if (!page) {

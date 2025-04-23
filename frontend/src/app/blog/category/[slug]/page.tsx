@@ -7,16 +7,16 @@ import type { SanityCategory } from "@/sanity/types/schema"; // Import correct t
 import CategoryPageUI from "@/components/blog/CategoryPageUI";
 import type { BlogPostData } from "@/app/blog/[slug]/page";
 
-// Generate metadata for SEO
+// Define PageProps with Promise for params
+interface PageProps {
+	params: Promise<{ slug: string }>;
+}
+
+// Update function signature and use await params
 export async function generateMetadata({
 	params,
-}: {
-	params: { slug: string };
-}): Promise<Metadata> {
-	// Ensure params is fully resolved before using slug
-	const resolvedParams = await Promise.resolve(params);
-	const slug = resolvedParams.slug;
-
+}: PageProps): Promise<Metadata> {
+	const { slug } = await params; // Await the promise here
 	const category = await getCategory(slug);
 
 	if (!category) {
@@ -131,13 +131,9 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function CategoryPage({
-	params,
-}: { params: { slug: string } }) {
-	// Ensure params is fully resolved before using slug
-	const resolvedParams = await Promise.resolve(params);
-	const slug = resolvedParams.slug;
-
+// Update function signature and use await params
+export default async function CategoryPage({ params }: PageProps) {
+	const { slug } = await params; // Await the promise here
 	const category = await getCategory(slug);
 
 	if (!category) {
