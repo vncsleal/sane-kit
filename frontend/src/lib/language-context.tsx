@@ -7,32 +7,17 @@ import React, {
 	useEffect,
 	type ReactNode,
 } from "react";
+import type { InternationalizedStringArray } from "@/sanity/types/schema"; // Import the correct type
 
 // Define the supported languages
 export type Language = "en" | "pt_BR";
-
-// Internationalized array type from the Sanity plugin
-export interface I18nText {
-	_type:
-		| "localizedString"
-		| "localizedText"
-		| "internationalizedArrayString"
-		| "internationalizedArrayText";
-	_key?: string;
-	value?: Array<{
-		_key: string;
-		_type: "locale";
-		language: string;
-		value: string;
-	}>;
-}
 
 // Context interface
 interface LanguageContextType {
 	language: Language;
 	setLanguage: (lang: Language) => void;
 	getLocalizedValue: <T>(
-		field?: Record<string, T> | I18nText | null | undefined,
+		field?: Record<string, T> | InternationalizedStringArray | null | undefined,
 		fallback?: T,
 	) => T | undefined;
 	isLoading: boolean;
@@ -129,58 +114,46 @@ export function LanguageProvider({
 
 	// Helper function to get a localized value from a field
 	const getLocalizedValue = <T,>(
-		field?:
-			| Record<string, T>
-			| I18nText
-			| Array<{ _key: string; value: T; _type: string }>
-			| null
-			| undefined,
+		field?: Record<string, T> | InternationalizedStringArray | null | undefined,
 		fallback?: T,
 	): T | undefined => {
 		if (!field) return fallback;
 
-		// If field is provided as an array (e.g. internationalizedArrayString)
+		// Handle InternationalizedStringArray
 		if (Array.isArray(field)) {
-			// Try to find a translation for the current language
-			const translation = field.find((item) => item._key === language);
-			if (translation?.value) return translation.value as T;
-			// Fallback to English translation
-			const enTranslation = field.find((item) => item._key === "en");
-			if (enTranslation?.value) return enTranslation.value as T;
-			// Fallback to the first item
-			return field[0]?.value || fallback;
+			// Check if it matches the InternationalizedStringArray structure
+			if (
+				field.length > 0 &&
+				typeof field[0] === "object" &&
+				"language" in field[0] &&
+				"value" in field[0]
+			) {
+				const typedField = field as InternationalizedStringArray;
+				// Try to find a translation for the current language
+				const translation = typedField.find(
+					(item) => item.language === language,
+				);
+				if (translation?.value) return translation.value as T;
+				// Fallback to English translation
+				const enTranslation = typedField.find((item) => item.language === "en");
+				if (enTranslation?.value) return enTranslation.value as T;
+				// Fallback to the first item if no 'en' found
+				return (typedField[0]?.value as T) || fallback;
+			}
 		}
 
-		// Check for the Sanity plugin's internationalized object structure
-		if (
-			typeof field === "object" &&
-			"_type" in field &&
-			(field._type === "internationalizedArrayString" ||
-				field._type === "internationalizedArrayText" ||
-				field._type === "localizedString" ||
-				field._type === "localizedText") &&
-			"value" in field &&
-			Array.isArray(field.value)
-		) {
-			const currentLang = field.value.find(
-				(item) => item.language === language,
-			);
-			if (currentLang?.value) return currentLang.value as T;
-			const enLang = field.value.find((item) => item.language === "en");
-			if (enLang?.value) return enLang.value as T;
-			return field.value[0]?.value as T;
-		}
-
-		// Fallback for legacy record object
-		if (typeof field === "object" && !("_type" in field)) {
+		// Handle Record<string, T> (legacy or simple i18n fields)
+		if (typeof field === "object" && !Array.isArray(field)) {
 			const recordField = field as Record<string, T>;
 			if (language in recordField)
 				return recordField[language] || recordField.en || fallback;
 			return recordField.en || fallback;
 		}
 
+		// If field is neither Array nor Record (shouldn't happen with correct types, but acts as a safeguard)
 		return fallback;
 	};
+
 	return (
 		<LanguageContext.Provider
 			value={{ language, setLanguage, getLocalizedValue, isLoading }}

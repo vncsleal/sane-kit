@@ -4,6 +4,7 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemaTypes";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { codeInput } from "@sanity/code-input";
+import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-project-id";
 const dataset = process.env.SANITY_STUDIO_DATASET || "production";
@@ -17,6 +18,7 @@ export default defineConfig({
 		structureTool(),
 		visionTool(),
 		codeInput(),
+		unsplashImageAsset(),
 		internationalizedArray({
 			languages: [
 				{ id: "en", title: "English" },

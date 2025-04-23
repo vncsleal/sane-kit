@@ -40,7 +40,7 @@ async function getHomePage(): Promise<SanityPage | null> {
 	return client.fetch(
 		homePageQuery,
 		{}, // No params needed as slug is hardcoded in query
-		{ next: { revalidate: 3600 } }, // Example: revalidate every hour
+		{ cache: "no-store" }, // Example: revalidate every hour
 	);
 }
 

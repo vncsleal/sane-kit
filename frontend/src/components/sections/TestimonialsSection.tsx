@@ -161,6 +161,7 @@ const TestimonialsCarousel = ({
 																alt={
 																	localizedAvatarAlt || localizedAuthor || ""
 																}
+																className="object-cover" // Add object-cover
 															/>
 														) : (
 															<AvatarFallback>
@@ -252,6 +253,7 @@ const TestimonialsGrid = ({
 												<AvatarImage
 													src={urlFor(testimonial.avatar).url()} // Use urlFor
 													alt={localizedAvatarAlt || localizedAuthor || ""}
+													className="object-cover" // Add object-cover
 												/>
 											) : (
 												<AvatarFallback>
@@ -354,6 +356,7 @@ const TestimonialsMasonryGrid = ({
 													<AvatarImage
 														src={urlFor(testimonial.avatar).url()} // Use urlFor
 														alt={localizedAvatarAlt || localizedAuthor || ""}
+														className="object-cover" // Add object-cover
 													/>
 												) : (
 													<AvatarFallback>

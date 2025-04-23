@@ -133,8 +133,10 @@ export default function HeroSection({
 				{buttons.length > 0 && (
 					<div
 						className={`flex ${
-							variant === "gridGallery" ? "flex-row gap-4" : "flex-row gap-3"
-						}`}
+							variant === "gridGallery"
+								? "flex-row gap-4"
+								: "flex-row gap-3 justify-center"
+						} flex-wrap`}
 					>
 						{buttons.map((button) => {
 							const Icon = button.icon ? IconMap[button.icon] : null;
@@ -499,7 +501,7 @@ export default function HeroSection({
 								)}
 							</div>
 							{buttons.length > 0 && (
-								<div className="flex flex-row gap-3">
+								<div className="flex flex-row gap-3 flex-wrap justify-center">
 									{buttons.map((button) => {
 										const Icon = button.icon ? IconMap[button.icon] : null;
 										const localizedButtonLabel = getLocalizedValue(
