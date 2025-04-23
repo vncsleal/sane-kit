@@ -36,11 +36,27 @@ function getInitials(name?: string) {
 		.substring(0, 2);
 }
 
+// Define translations for static text
+const staticText = {
+	noArticlesFound: {
+		en: "No articles found in this category.",
+		pt_BR: "Nenhum artigo encontrado nesta categoria.",
+	},
+	viewAllBlogPosts: {
+		en: "View all blog posts",
+		pt_BR: "Ver todos os posts",
+	},
+	noImage: {
+		en: "No image",
+		pt_BR: "Sem imagem",
+	},
+};
+
 export default function CategoryPageUI({
 	category,
 	posts,
 }: CategoryPageUIProps) {
-	const { getLocalizedValue } = useLanguage();
+	const { getLocalizedValue, language } = useLanguage();
 
 	const localizedCategoryTitle = getLocalizedValue(
 		category.i18n_title,
@@ -50,6 +66,14 @@ export default function CategoryPageUI({
 		category.i18n_description,
 		category.description,
 	);
+
+	// Localize static text
+	const localizedNoArticles =
+		staticText.noArticlesFound[language] || staticText.noArticlesFound.en;
+	const localizedViewAll =
+		staticText.viewAllBlogPosts[language] || staticText.viewAllBlogPosts.en;
+	const localizedNoImage =
+		staticText.noImage[language] || staticText.noImage.en;
 
 	return (
 		<main className="container mx-auto px-4 md:px-6 py-12">
@@ -72,10 +96,10 @@ export default function CategoryPageUI({
 					{posts.length === 0 ? (
 						<div className="text-center py-20">
 							<p className="text-muted-foreground text-lg">
-								No articles found in this category.
+								{localizedNoArticles}
 							</p>
 							<Button asChild className="mt-8">
-								<Link href="/blog">View all blog posts</Link>
+								<Link href="/blog">{localizedViewAll}</Link>
 							</Button>
 						</div>
 					) : (
@@ -120,7 +144,7 @@ export default function CategoryPageUI({
 												) : (
 													<div className="w-full h-full bg-muted flex items-center justify-center">
 														<span className="text-muted-foreground">
-															No image
+															{localizedNoImage}
 														</span>
 													</div>
 												)}
@@ -170,7 +194,7 @@ export default function CategoryPageUI({
 
 							<div className="flex justify-center pt-8">
 								<Button asChild>
-									<Link href="/blog">View all blog posts</Link>
+									<Link href="/blog">{localizedViewAll}</Link>
 								</Button>
 							</div>
 						</>

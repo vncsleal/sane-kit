@@ -15,8 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/client";
 import { MoveRight } from "lucide-react";
-import { useLanguage } from "@/lib/language-context"; // Import useLanguage
-import { useState, useEffect } from "react"; // Import useState and useEffect for client-side fetching
+import { useLanguage } from "@/lib/language-context";
+import { useState, useEffect } from "react";
 
 // Interface for fetched post data
 export interface BlogPostWithData

@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useLanguage } from "@/lib/language-context"; // Import useLanguage
 import type { SanityFooter } from "@/sanity/types/schema";
-import { useLanguage } from "@/lib/language-context";
 import LanguageSwitcher from "@/components/global/LanguageSwitcher";
+
+// Define translations for static text
+const staticText = {
+	allRightsReserved: {
+		en: "All rights reserved.",
+		pt_BR: "Todos os direitos reservados.",
+	},
+};
 
 type FooterProps = SanityFooter;
 
@@ -17,13 +25,17 @@ export default function Footer({
 	navigationItems = [],
 	variant = "simple",
 }: FooterProps) {
-	const { getLocalizedValue } = useLanguage();
+	const { getLocalizedValue, language } = useLanguage(); // Use the hook
 
 	// Get localized site title
 	const siteTitle = getLocalizedValue(i18n_title, title);
 
 	// Get localized description
 	const localizedDescription = getLocalizedValue(i18n_description, description);
+
+	// Get localized "All rights reserved" text
+	const localizedRightsText =
+		staticText.allRightsReserved[language] || staticText.allRightsReserved.en;
 
 	// For tiny variant (ultra-compact footer with light background)
 	if (variant === "tiny") {
@@ -51,7 +63,7 @@ export default function Footer({
 						{/* Copyright and Language Switcher */}
 						<div className="flex items-center gap-4">
 							<p className="text-muted-foreground">
-								© {new Date().getFullYear()}
+								© {new Date().getFullYear()} {siteTitle}. {localizedRightsText}
 							</p>
 							<LanguageSwitcher variant="minimal" />
 						</div>
@@ -87,7 +99,7 @@ export default function Footer({
 						{/* Copyright */}
 						<div className="flex items-center gap-4">
 							<p className="text-sm text-background/60">
-								© {new Date().getFullYear()} {siteTitle}
+								© {new Date().getFullYear()} {siteTitle}. {localizedRightsText}
 							</p>
 							<LanguageSwitcher variant="footer" />
 						</div>
@@ -193,7 +205,7 @@ export default function Footer({
 				<div className="mt-16 py-8 border-t border-background/10">
 					<div className="flex flex-col md:flex-row justify-between items-center">
 						<p className="text-sm text-background/60">
-							© {new Date().getFullYear()} {siteTitle}. All rights reserved.
+							© {new Date().getFullYear()} {siteTitle}. {localizedRightsText}
 						</p>
 						<div className="mt-4 md:mt-0">
 							<LanguageSwitcher variant="footer" />

@@ -17,7 +17,12 @@ interface LanguageContextType {
 	language: Language;
 	setLanguage: (lang: Language) => void;
 	getLocalizedValue: <T>(
-		field?: Record<string, T> | InternationalizedStringArray | null | undefined,
+		// Updated type signature to include InternationalizedStringArray
+		field?:
+			| Record<string, T>
+			| InternationalizedStringArray // Added InternationalizedStringArray
+			| null
+			| undefined,
 		fallback?: T,
 	) => T | undefined;
 	isLoading: boolean;
@@ -69,12 +74,8 @@ export function LanguageProvider({
 			// Detect from browser settings as fallback
 			else {
 				const browserLang = navigator.language.toLowerCase();
-				console.log("Browser language:", browserLang);
 				if (browserLang.startsWith("pt")) {
 					setLanguageState("pt_BR");
-					console.log(
-						"Detected Portuguese from browser; setting language to pt_BR",
-					);
 				}
 			}
 		} catch (error) {
@@ -87,13 +88,6 @@ export function LanguageProvider({
 
 	// Function to update language state and storage
 	const setLanguage = (newLanguage: Language) => {
-		console.log(
-			"setLanguage called. Old language:",
-			language,
-			"New language:",
-			newLanguage,
-		);
-
 		setLanguageState(newLanguage);
 
 		if (isClient) {
@@ -102,10 +96,6 @@ export function LanguageProvider({
 				// Update HTML lang attribute for accessibility and SEO
 				document.documentElement.lang =
 					newLanguage === "pt_BR" ? "pt-BR" : "en";
-
-				console.log(
-					"Language preference saved to localStorage and HTML <html> lang updated.",
-				);
 			} catch (error) {
 				console.error("Error saving language preference:", error);
 			}
@@ -119,38 +109,82 @@ export function LanguageProvider({
 	): T | undefined => {
 		if (!field) return fallback;
 
-		// Handle InternationalizedStringArray
-		if (Array.isArray(field)) {
-			// Check if it matches the InternationalizedStringArray structure
-			if (
-				field.length > 0 &&
-				typeof field[0] === "object" &&
-				"language" in field[0] &&
-				"value" in field[0]
-			) {
-				const typedField = field as InternationalizedStringArray;
-				// Try to find a translation for the current language
-				const translation = typedField.find(
-					(item) => item.language === language,
-				);
-				if (translation?.value) return translation.value as T;
-				// Fallback to English translation
-				const enTranslation = typedField.find((item) => item.language === "en");
-				if (enTranslation?.value) return enTranslation.value as T;
-				// Fallback to the first item if no 'en' found
-				return (typedField[0]?.value as T) || fallback;
-			}
+		// Handle InternationalizedStringArray (which is Array<{ _key, value, language }>)
+		if (
+			Array.isArray(field) &&
+			field.length > 0 &&
+			typeof field[0] === "object" &&
+			"language" in field[0] && // Check for the structure of InternationalizedString
+			"value" in field[0]
+		) {
+			const typedField = field as InternationalizedStringArray; // Cast to the correct type
+			// Try to find a translation for the current language
+			const translation = typedField.find((item) => item.language === language);
+			if (translation?.value) return translation.value as T;
+			// Fallback to English translation
+			const enTranslation = typedField.find((item) => item.language === "en");
+			if (enTranslation?.value) return enTranslation.value as T;
+			// Fallback to the first item if no 'en' found
+			return (typedField[0]?.value as T) || fallback;
 		}
 
-		// Handle Record<string, T> (legacy or simple i18n fields)
-		if (typeof field === "object" && !Array.isArray(field)) {
+		// Check for the Sanity plugin's internationalized object structure (I18nText)
+		if (
+			typeof field === "object" &&
+			!Array.isArray(field) && // Ensure it's not the array type handled above
+			"_type" in field &&
+			(field._type === "internationalizedArrayString" ||
+				field._type === "internationalizedArrayText" ||
+				field._type === "localizedString" ||
+				field._type === "localizedText") &&
+			"value" in field &&
+			Array.isArray(field.value)
+		) {
+			const currentLang = field.value.find(
+				(item) => item.language === language,
+			);
+			if (currentLang?.value) return currentLang.value as T;
+			const enLang = field.value.find((item) => item.language === "en");
+			if (enLang?.value) return enLang.value as T;
+			// Fallback to the first item in the 'value' array if no specific language match
+			return (field.value[0]?.value as T) || fallback;
+		}
+
+		// Fallback for legacy record object
+		if (
+			typeof field === "object" &&
+			!Array.isArray(field) &&
+			!("_type" in field)
+		) {
 			const recordField = field as Record<string, T>;
 			if (language in recordField)
 				return recordField[language] || recordField.en || fallback;
 			return recordField.en || fallback;
 		}
 
-		// If field is neither Array nor Record (shouldn't happen with correct types, but acts as a safeguard)
+		// If it's an array but doesn't match InternationalizedStringArray structure (less likely)
+		if (Array.isArray(field)) {
+			// Attempt the previous array logic as a last resort for arrays
+			const genericArray = field as Array<{
+				_key?: string;
+				value: T;
+				language?: string;
+			}>;
+			let translation = genericArray.find((item) => item.language === language);
+			if (!translation) {
+				translation = genericArray.find((item) => item._key === language);
+			}
+			if (translation?.value) return translation.value as T;
+
+			let enTranslation = genericArray.find((item) => item.language === "en");
+			if (!enTranslation) {
+				enTranslation = genericArray.find((item) => item._key === "en");
+			}
+			if (enTranslation?.value) return enTranslation.value as T;
+
+			return (genericArray[0]?.value as T) || fallback;
+		}
+
 		return fallback;
 	};
 

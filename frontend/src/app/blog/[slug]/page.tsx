@@ -11,19 +11,20 @@ import type {
 	SanityImage,
 	SanityLocalizedPortableText,
 	PortableTextContent,
+	InternationalizedStringArray, // Import InternationalizedStringArray
 } from "@/sanity/types/schema";
 
 export interface BlogPostData {
 	_id: string;
 	_type: "blogPost";
 	title: string;
-	i18n_title?: Record<string, string>;
+	i18n_title?: InternationalizedStringArray; // Changed from Record<string, string>
 	slug: {
 		current: string;
 	};
 	publishedAt: string;
 	excerpt?: string;
-	i18n_excerpt?: Record<string, string>;
+	i18n_excerpt?: InternationalizedStringArray; // Changed from Record<string, string>
 	mainImage?: SanityImage;
 	body?: PortableTextContent;
 	i18n_body?: SanityLocalizedPortableText[];

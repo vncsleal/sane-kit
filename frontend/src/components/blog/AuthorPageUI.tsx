@@ -22,23 +22,27 @@ import type {
 	SanityCategory,
 	SanityLocalizedPortableText,
 	SanityAuthorSocialLink,
+	InternationalizedStringArray,
 } from "@/sanity/types/schema";
 import { useLanguage } from "@/lib/language-context";
 import { portableTextComponents } from "./PortableTextComponents";
-// Define Author type with i18n fields
+
+// Define Author type with i18n fields using InternationalizedStringArray
 interface AuthorDetails extends Omit<SanityAuthor, "fullBio"> {
-	i18n_name?: Record<string, string>;
-	i18n_role?: Record<string, string>;
-	i18n_bio?: Record<string, string>;
-	fullBio?: SanityAuthor["fullBio"]; // Keep original type
-	i18n_fullBio?: SanityLocalizedPortableText[]; // Add i18n for fullBio
+	i18n_name?: InternationalizedStringArray;
+	i18n_role?: InternationalizedStringArray;
+	i18n_bio?: InternationalizedStringArray;
+	fullBio?: SanityAuthor["fullBio"];
+	i18n_fullBio?: SanityLocalizedPortableText[];
 }
 
-// Define a type for blog post with expanded fields and i18n
+// Define a type for blog post with expanded fields and i18n using InternationalizedStringArray
 interface ExpandedBlogPost extends Omit<SanityBlogPost, "categories"> {
-	i18n_title?: Record<string, string>;
-	i18n_excerpt?: Record<string, string>;
-	categories?: (SanityCategory & { i18n_title?: Record<string, string> })[];
+	i18n_title?: InternationalizedStringArray;
+	i18n_excerpt?: InternationalizedStringArray;
+	categories?: (SanityCategory & {
+		i18n_title?: InternationalizedStringArray;
+	})[];
 }
 
 interface AuthorPageUIProps {
@@ -77,6 +81,30 @@ function getInitials(name?: string) {
 		.substring(0, 2);
 }
 
+// Define translations for static text
+const staticText = {
+	articlesBy: {
+		en: "Articles by",
+		pt_BR: "Artigos por",
+	},
+	noArticlesFound: {
+		en: "No articles found.",
+		pt_BR: "Nenhum artigo encontrado.",
+	},
+	viewAllBlogPosts: {
+		en: "View all blog posts",
+		pt_BR: "Ver todos os posts",
+	},
+	email: {
+		en: "Email",
+		pt_BR: "E-mail",
+	},
+	noImage: {
+		en: "No image",
+		pt_BR: "Sem imagem",
+	},
+};
+
 export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 	const { getLocalizedValue, language } = useLanguage();
 
@@ -96,6 +124,17 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 	const localizedFullBioContent =
 		author.i18n_fullBio?.find((bio) => bio.language === language)?.content ||
 		author.fullBio;
+
+	// Localize static text
+	const localizedArticlesBy =
+		staticText.articlesBy[language] || staticText.articlesBy.en;
+	const localizedNoArticles =
+		staticText.noArticlesFound[language] || staticText.noArticlesFound.en;
+	const localizedViewAll =
+		staticText.viewAllBlogPosts[language] || staticText.viewAllBlogPosts.en;
+	const localizedEmailLabel = staticText.email[language] || staticText.email.en;
+	const localizedNoImage =
+		staticText.noImage[language] || staticText.noImage.en;
 
 	return (
 		<main className="container mx-auto px-4 md:px-6 py-12">
@@ -146,9 +185,11 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-											<Icon className="h-4 w-4 mr-2" />
-											<span>
-												{platform.charAt(0).toUpperCase() + platform.slice(1)}
+											<span className="flex items-center">
+												<Icon className="h-4 w-4 mr-2" />
+												<span>
+													{platform.charAt(0).toUpperCase() + platform.slice(1)}
+												</span>
 											</span>
 										</Link>
 									</Button>
@@ -157,8 +198,10 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 							{author.email && (
 								<Button variant="ghost" size="sm" className="h-8 px-2" asChild>
 									<Link href={`mailto:${author.email}`}>
-										<Mail className="h-4 w-4 mr-2" />
-										<span>Email</span>
+										<span className="flex items-center">
+											<Mail className="h-4 w-4 mr-2" />
+											<span>{localizedEmailLabel}</span>
+										</span>
 									</Link>
 								</Button>
 							)}
@@ -191,11 +234,11 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 				{/* Author's Posts */}
 				<div className="flex flex-col gap-8 max-w-7xl mx-auto w-full">
 					<h2 className="text-3xl font-semibold tracking-tight">
-						Articles by {localizedName}
+						{localizedArticlesBy} {localizedName}
 					</h2>
 
 					{posts.length === 0 ? (
-						<p className="text-muted-foreground">No articles found.</p>
+						<p className="text-muted-foreground">{localizedNoArticles}</p>
 					) : (
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 							{posts.map((post) => {
@@ -234,7 +277,7 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 											) : (
 												<div className="w-full h-full bg-muted flex items-center justify-center">
 													<span className="text-muted-foreground">
-														No image
+														{localizedNoImage}
 													</span>
 												</div>
 											)}
@@ -268,7 +311,7 @@ export default function AuthorPageUI({ author, posts }: AuthorPageUIProps) {
 
 					<div className="flex justify-center pt-8">
 						<Button asChild>
-							<Link href="/blog">View all blog posts</Link>
+							<Link href="/blog">{localizedViewAll}</Link>
 						</Button>
 					</div>
 				</div>
