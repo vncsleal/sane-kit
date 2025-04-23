@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useLanguage } from "@/lib/language-context"; // Import useLanguage
+import Image from "next/image";
+import { useLanguage } from "@/lib/language-context";
 import type { SanityFooter } from "@/sanity/types/schema";
 import LanguageSwitcher from "@/components/global/LanguageSwitcher";
+import { urlFor } from "@/sanity/client";
 
 // Define translations for static text
 const staticText = {
@@ -18,6 +20,7 @@ type FooterProps = SanityFooter;
 export default function Footer({
 	title,
 	i18n_title,
+	logo,
 	description,
 	i18n_description,
 	address = [],
@@ -25,7 +28,7 @@ export default function Footer({
 	navigationItems = [],
 	variant = "simple",
 }: FooterProps) {
-	const { getLocalizedValue, language } = useLanguage(); // Use the hook
+	const { getLocalizedValue, language } = useLanguage();
 
 	// Get localized site title
 	const siteTitle = getLocalizedValue(i18n_title, title);
@@ -33,9 +36,29 @@ export default function Footer({
 	// Get localized description
 	const localizedDescription = getLocalizedValue(i18n_description, description);
 
+	// Get localized logo alt text
+	const logoAlt = getLocalizedValue(logo?.i18n_alt, logo?.alt) || siteTitle;
+
 	// Get localized "All rights reserved" text
 	const localizedRightsText =
 		staticText.allRightsReserved[language] || staticText.allRightsReserved.en;
+
+	// Logo or site name component to reuse
+	const LogoOrSiteTitle = ({ className = "" }) => (
+		<>
+			{logo?.asset?._ref ? (
+				<Image
+					src={urlFor(logo.asset._ref).url()}
+					alt={logoAlt || ""}
+					width={140}
+					height={40}
+					className={`object-contain max-h-10 ${className}`}
+				/>
+			) : (
+				<p className={className}>{siteTitle}</p>
+			)}
+		</>
+	);
 
 	// For tiny variant (ultra-compact footer with light background)
 	if (variant === "tiny") {
@@ -43,7 +66,7 @@ export default function Footer({
 			<footer className="w-full py-6 bg-background border-t">
 				<div className="container mx-auto ">
 					<div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
-						<p className="font-medium">{siteTitle}</p>
+						<LogoOrSiteTitle className="font-medium" />
 
 						{/* Legal links in a row */}
 						{legalLinks.length > 0 && (
@@ -79,7 +102,7 @@ export default function Footer({
 			<footer className="w-full py-8 bg-foreground text-background">
 				<div className="container mx-auto ">
 					<div className="flex flex-col md:flex-row justify-between items-center gap-4">
-						<p className="font-semibold text-lg">{siteTitle}</p>
+						<LogoOrSiteTitle className="font-semibold text-lg" />
 
 						{/* Legal links in a row */}
 						{legalLinks.length > 0 && (
@@ -117,9 +140,9 @@ export default function Footer({
 					{/* Left Column - Branding and Info */}
 					<div className="flex gap-8 flex-col items-start">
 						<div className="flex gap-2 flex-col">
-							<h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular text-left">
-								{siteTitle}
-							</h2>
+							<div className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular text-left">
+								<LogoOrSiteTitle />
+							</div>
 							{(description || i18n_description) && (
 								<p className="text-lg max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
 									{localizedDescription}

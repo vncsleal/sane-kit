@@ -12,6 +12,7 @@ import {
 import { Menu, MoveRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { SanityHeader } from "@/sanity/types/schema";
 import {
@@ -22,12 +23,14 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import { useLanguage } from "@/lib/language-context";
+import { urlFor } from "@/sanity/client";
 
 type HeaderProps = SanityHeader;
 
 export default function Header({
 	title,
 	i18n_title,
+	logo,
 	navigationItems = [],
 	ctaButtons = [],
 	dropdownCTALabel,
@@ -45,6 +48,8 @@ export default function Header({
 		i18n_dropdownCTALabel,
 		dropdownCTALabel || "Book a call today",
 	);
+	// Get localized alt text for logo
+	const logoAlt = getLocalizedValue(logo?.i18n_alt, logo?.alt) || siteName;
 
 	useEffect(() => {
 		if (variant !== "transparent") return;
@@ -62,6 +67,29 @@ export default function Header({
 		"bg-background/80 backdrop-blur-md": variant === "transparent" && scrolled,
 		"bg-transparent": variant === "transparent" && !scrolled,
 	});
+
+	// Logo or site name component to reuse
+	const LogoOrSiteName = () => (
+		<>
+			{logo?.asset?._ref ? (
+				<Image
+					src={urlFor(logo.asset._ref).url()}
+					alt={logoAlt || ""}
+					width={140}
+					height={40}
+					className="object-contain max-h-10"
+				/>
+			) : (
+				<p
+					className={cn("font-semibold", {
+						"text-white": variant === "transparent" && !scrolled,
+					})}
+				>
+					{siteName}
+				</p>
+			)}
+		</>
+	);
 
 	return (
 		<header className={headerClasses}>
@@ -165,20 +193,14 @@ export default function Header({
 					</div>
 				) : (
 					<div className="flex justify-start">
-						<p className="font-semibold">{siteName}</p>
+						<LogoOrSiteName />
 					</div>
 				)}
 
 				{/* MIDDLE COLUMN */}
 				{variant === "centered" || variant === "transparent" ? (
 					<div className="flex lg:justify-center">
-						<p
-							className={cn("font-semibold", {
-								"text-white": variant === "transparent" && !scrolled,
-							})}
-						>
-							{siteName}
-						</p>
+						<LogoOrSiteName />
 					</div>
 				) : (
 					variant === "default" && (
@@ -315,7 +337,19 @@ export default function Header({
 						</SheetTrigger>
 						<SheetContent className="w-[300px] sm:w-[350px] px-4 sm:px-6">
 							<SheetHeader>
-								<SheetTitle>{siteName}</SheetTitle>
+								<SheetTitle>
+									{logo?.asset?._ref ? (
+										<Image
+											src={urlFor(logo.asset._ref).url()}
+											alt={logoAlt || ""}
+											width={140}
+											height={40}
+											className="object-contain max-h-8"
+										/>
+									) : (
+										siteName
+									)}
+								</SheetTitle>
 							</SheetHeader>
 							<div className="flex flex-col gap-6 py-6">
 								{navigationItems.map((item) => (

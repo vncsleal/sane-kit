@@ -58,6 +58,31 @@ export const header = defineType({
 			type: "internationalizedArrayString",
 			group: "basic",
 		}),
+		// Add logo field
+		defineField({
+			name: "logo",
+			type: "image",
+			title: "Logo",
+			description:
+				"Upload a logo to display instead of the site name. If no logo is provided, site name text will be used.",
+			options: {
+				hotspot: true,
+			},
+			fields: [
+				{
+					name: "alt",
+					type: "string",
+					title: "Alternative Text",
+					description: "Important for SEO and accessibility",
+				},
+				{
+					name: "i18n_alt",
+					title: "Alternative Text (Translated)",
+					type: "internationalizedArrayString",
+				},
+			],
+			group: "basic",
+		}),
 		defineField({
 			name: "variant",
 			type: "string",

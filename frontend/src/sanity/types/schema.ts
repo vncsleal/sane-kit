@@ -155,6 +155,7 @@ export interface SanityHeader {
 	variant?: "default" | "centered" | "minimal" | "transparent";
 	title: string;
 	i18n_title?: InternationalizedStringArray;
+	logo?: SanityImage;
 	navigationItems: SanityNavigationItem[];
 	ctaButtons?: SanityHeaderButton[];
 	dropdownCTALabel?: string;
@@ -175,6 +176,7 @@ export interface SanityFooter {
 	_type: "footer";
 	title: string;
 	i18n_title?: InternationalizedStringArray;
+	logo?: SanityImage;
 	description?: string;
 	i18n_description?: InternationalizedStringArray;
 	address?: string[];
