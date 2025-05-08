@@ -9,6 +9,10 @@ import { ThemeProvider } from "@/components/global/ThemeProvider";
 import { ThemeToggle } from "@/components/global/ThemeToggle";
 import { LanguageProvider, type Language } from "@/lib/language-context";
 import type { SanityFooter, SanityHeader } from "@/sanity/types/schema";
+// Import the PostHogProvider
+import { PostHogProvider } from "@/components/PostHogProvider";
+// Import the GoogleAnalytics component
+import { GoogleAnalytics } from "@/components/global/GoogleAnalytics";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -54,22 +58,27 @@ export default async function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<LanguageProvider defaultLanguage={initialLang}>
-						{header && <Header {...header} />}
-						<div className="mt-20 px-4 md:px-2">{children}</div>
-						{footer && <Footer {...footer} />}
-						<div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
-							<ThemeToggle />
-						</div>
-						<Toaster position="top-center" />
-					</LanguageProvider>
-				</ThemeProvider>
+				{/* Google Analytics */}
+				<GoogleAnalytics />
+				
+				<PostHogProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<LanguageProvider defaultLanguage={initialLang}>
+							{header && <Header {...header} />}
+							<div className="mt-20 px-4 md:px-2">{children}</div>
+							{footer && <Footer {...footer} />}
+							<div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
+								<ThemeToggle />
+							</div>
+							<Toaster position="top-center" />
+						</LanguageProvider>
+					</ThemeProvider>
+				</PostHogProvider>
 			</body>
 		</html>
 	);
