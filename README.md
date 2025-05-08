@@ -12,6 +12,34 @@ A feature-rich starter template combining Next.js 15 (with Turbopack) for the fr
 
 This template utilizes components inspired by [TWBlocks](https://twblocks.com/) (built with Shadcn/ui and Tailwind CSS) for a modern and customizable UI.
 
+## Features
+
+- **Comprehensive Page Builder**: Create complex pages with 12+ pre-built section types
+- **Powerful Component Library**: Feature-rich, responsive components for all common UI patterns
+- **Fully Typed Schema**: Complete TypeScript definitions for all Sanity schema types
+- **Internationalization Ready**: Built-in support for multiple languages with sanity-plugin-internationalized-array
+- **Modern UI Framework**: Built with Shadcn/ui components and Tailwind CSS
+- **Analytics Built-in**: Integrated Google Analytics and PostHog for comprehensive user tracking
+- **Optimized Performance**: Next.js App Router and Turbopack for fast development and production builds
+- **SEO Optimized**: Structured metadata, OpenGraph support, and more
+
+## Pre-built Section Components
+
+The kit includes the following section types for building pages:
+
+- **Hero Sections**: Multiple variants including Button Banner, Badge Banner, and Grid Gallery
+- **Feature Sections**: 9 layout variants (Default, With Image, Left/Right Image, Image Cards, etc.)
+- **Blog Sections**: Display your blog posts with multiple layout options
+- **Stats Sections**: Display key metrics and statistics with trend indicators
+- **Testimonials**: Showcase customer testimonials with various display options
+- **Pricing Sections**: Create pricing plans with feature comparisons
+- **CTA (Call-to-Action)**: Engage users with prominent action buttons
+- **FAQ Sections**: Organized question and answer sections
+- **Cases/Logos**: Display client logos or case studies
+- **Compare Features**: Create detailed feature comparison tables
+- **Contact Sections**: Forms with customizable fields and validation
+- **Newsletter Sections**: Email signup forms with multiple variants
+
 ## Technologies Used
 
 - **Frontend:**
@@ -22,6 +50,8 @@ This template utilizes components inspired by [TWBlocks](https://twblocks.com/) 
   - [Shadcn/ui](https://ui.shadcn.com/) Components
   - [TWBlocks](https://twblocks.com/) Component Designs
   - [next-sanity](https://www.sanity.io/docs/connect-your-content-to-next-js) for Sanity integration
+  - [PostHog](https://posthog.com/) for product analytics
+  - [Google Analytics](https://analytics.google.com/) for website traffic insights
   - Internationalization Ready (Client & Server Components)
 - **Studio (CMS):**
   - [Sanity](https://www.sanity.io/) v3
@@ -65,9 +95,14 @@ NEXT_PUBLIC_SANITY_PROJECT_ID="YOUR_PROJECT_ID"
 NEXT_PUBLIC_SANITY_DATASET="production" # or your dataset name
 # Optional: Add a read token for drafts if needed for preview
 # SANITY_API_READ_TOKEN="YOUR_READ_TOKEN"
+
+# Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID="G-XXXXXXXXXX" # Your Google Analytics measurement ID
+NEXT_PUBLIC_POSTHOG_KEY="phc_XXXXXXXXXXXX" # Your PostHog project API key
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com" # Or your self-hosted PostHog instance URL
 ```
 
-Replace `"YOUR_PROJECT_ID"` with your actual Sanity project ID. You can find this in your Sanity project settings or by running `sanity manage` in the `studio` directory.
+Replace the placeholder values with your actual project IDs and API keys. You can find your Sanity project ID in your Sanity project settings or by running `sanity manage` in the `studio` directory.
 
 ### 4. Run the Development Servers
 
@@ -81,6 +116,23 @@ npm run dev
 - Your Sanity Studio will be running at [http://localhost:3333](http://localhost:3333) (or the port specified in the root `package.json`)
 
 Log in to the Studio using your Sanity account.
+
+## Content Management
+
+### Page Building
+
+1. Create new pages in the Sanity Studio by adding new Page documents
+2. Use the Page Builder field to construct your page with various section components
+3. Each section type offers multiple variants and customization options
+4. Create reusable components like Headers and Footers that can be shared across pages
+
+### Internationalization
+
+The kit comes with built-in support for multiple languages:
+
+- Default language is English with Brazilian Portuguese as a secondary language
+- Add more languages by modifying the language configuration in `sanity.config.ts`
+- Use the `i18n_` prefixed fields to add translations for various content elements
 
 ## Deployment
 
@@ -117,6 +169,28 @@ Located in `frontend/.env.example`:
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`: Your Sanity project ID.
 - `NEXT_PUBLIC_SANITY_DATASET`: Your Sanity dataset name (e.g., `production`).
 - `SANITY_API_READ_TOKEN` (Optional): Your Sanity API read token, required for fetching draft content if you implement preview functionality.
+- `NEXT_PUBLIC_GA_MEASUREMENT_ID`: Your Google Analytics measurement ID.
+- `NEXT_PUBLIC_POSTHOG_KEY`: Your PostHog project API key.
+- `NEXT_PUBLIC_POSTHOG_HOST`: The URL of your PostHog instance (default is https://app.posthog.com).
+
+## Analytics Capabilities
+
+Sane-Kit comes with both Google Analytics and PostHog implementations:
+
+### Google Analytics
+- Page view tracking across your site
+- Event tracking capabilities
+- Configured for privacy compliance
+- Compatible with Google Analytics 4 (GA4)
+
+### PostHog
+- Open source analytics platform
+- Feature flags and A/B testing capabilities
+- Session recordings and heatmaps
+- User identification and custom properties tracking
+- Self-hostable for complete data ownership
+
+To disable either analytics platform, simply remove the corresponding environment variables or set them to empty strings.
 
 ## Contributing
 
