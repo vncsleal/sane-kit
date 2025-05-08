@@ -55,11 +55,14 @@ export default async function RootLayout({
 
 	return (
 		<html lang={htmlLang} suppressHydrationWarning>
+			<head>
+				{/* Google Analytics */}
+				<GoogleAnalytics />
+			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				{/* Google Analytics */}
-				<GoogleAnalytics />
+				
 				
 				<PostHogProvider>
 					<ThemeProvider
