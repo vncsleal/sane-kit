@@ -5,13 +5,15 @@ import { schemaTypes } from "./schemaTypes";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { codeInput } from "@sanity/code-input";
 import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
+import Logo from "./components/Logo";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-project-id";
 const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 
 export default defineConfig({
+	icon: Logo,
 	name: "default",
-	title: "Studio",
+	title: "Sane Kit Studio",
 	projectId,
 	dataset,
 	plugins: [

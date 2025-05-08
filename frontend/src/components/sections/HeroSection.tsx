@@ -180,13 +180,13 @@ export default function HeroSection({
 									""
 								}
 								fill
+								priority
 								className="object-cover"
 							/>
 						</div>
 					</div>
 				);
 			}
-
 			if (media.type === "video" && media.video?.url) {
 				return (
 					<div className="w-full max-w-md mx-auto mt-8">

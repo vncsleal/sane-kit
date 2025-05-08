@@ -53,11 +53,11 @@ interface PageProps {
 }
 
 async function getPage(slug: string): Promise<SanityPage | null> {
-	// Ensure the client fetch uses appropriate cache/revalidation settings
+	// Ensure the client fetch uses appropriate settings
 	return client.fetch(
 		pageQuery,
-		{ slug },
-		{ next: { revalidate: 2592000 } }, //revalidate every month
+		{ slug }
+		// Removed revalidation - will use webhooks instead
 	);
 }
 

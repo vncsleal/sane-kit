@@ -39,8 +39,8 @@ async function getHomePage(): Promise<SanityPage | null> {
 	// Fetch the homepage data
 	return client.fetch(
 		homePageQuery,
-		{}, // No params needed as slug is hardcoded in query
-		{ next: { revalidate: 2592000 } }, // revalidate every moth
+		{} // No params needed as slug is hardcoded in query
+		// Removed revalidation - will use webhooks instead
 	);
 }
 
