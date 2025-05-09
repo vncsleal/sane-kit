@@ -13,6 +13,8 @@ import type { SanityFooter, SanityHeader } from "@/sanity/types/schema";
 import { PostHogProvider } from "@/components/PostHogProvider";
 // Import the GoogleAnalytics component
 import { GoogleAnalytics } from "@/components/global/GoogleAnalytics";
+import { CookieConsent } from "@/components/global/CookieConsent";
+// Import the CookieConsent component
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -61,9 +63,7 @@ export default async function RootLayout({
 			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
-				
-				
+				>
 				<PostHogProvider>
 					<ThemeProvider
 						attribute="class"
@@ -79,6 +79,7 @@ export default async function RootLayout({
 								<ThemeToggle />
 							</div>
 							<Toaster position="top-center" />
+							<CookieConsent />
 						</LanguageProvider>
 					</ThemeProvider>
 				</PostHogProvider>
