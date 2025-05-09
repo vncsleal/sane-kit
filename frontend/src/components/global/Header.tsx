@@ -118,15 +118,9 @@ export default function Header({
 											{item.href ? (
 												<NavigationMenuLink asChild>
 													<Button variant="ghost" asChild>
-														<Link
-															href={
-																item.href.startsWith("/")
-																	? item.href
-																	: `/${item.href}`
-															}
-														>
-															{navTitle || item.title}
-														</Link>
+															<Link href={item.href}>
+																{navTitle || item.title}
+															</Link>
 													</Button>
 												</NavigationMenuLink>
 											) : (
@@ -149,25 +143,15 @@ export default function Header({
 																	</p>
 																</div>
 																<Button size="sm" className="mt-10" asChild>
-																	<Link
-																		href={
-																			dropdownCTAUrl.startsWith("/")
-																				? dropdownCTAUrl
-																				: `/${dropdownCTAUrl}`
-																		}
-																	>
-																		{localizedDropdownCTALabel}
-																	</Link>
+																		<Link href={dropdownCTAUrl}>
+																			{localizedDropdownCTALabel}
+																		</Link>
 																</Button>
 															</div>
 															<div className="flex flex-col text-sm h-full justify-end">
 																{item.items?.map((subItem) => (
 																	<NavigationMenuLink
-																		href={
-																			subItem.href.startsWith("/")
-																				? subItem.href
-																				: `/${subItem.href}`
-																		}
+																		href={subItem.href}
 																		key={subItem._key}
 																		className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
 																	>
@@ -212,15 +196,9 @@ export default function Header({
 											{item.href ? (
 												<NavigationMenuLink asChild>
 													<Button variant="ghost" asChild>
-														<Link
-															href={
-																item.href.startsWith("/")
-																	? item.href
-																	: `/${item.href}`
-															}
-														>
-															{getLocalizedValue(item.i18n_title, item.title)}
-														</Link>
+															<Link href={item.href}>
+																{getLocalizedValue(item.i18n_title, item.title)}
+															</Link>
 													</Button>
 												</NavigationMenuLink>
 											) : (
@@ -246,25 +224,15 @@ export default function Header({
 																	</p>
 																</div>
 																<Button size="sm" className="mt-10" asChild>
-																	<Link
-																		href={
-																			dropdownCTAUrl.startsWith("/")
-																				? dropdownCTAUrl
-																				: `/${dropdownCTAUrl}`
-																		}
-																	>
-																		{localizedDropdownCTALabel}
-																	</Link>
+																		<Link href={dropdownCTAUrl}>
+																			{localizedDropdownCTALabel}
+																		</Link>
 																</Button>
 															</div>
 															<div className="flex flex-col text-sm h-full justify-end">
 																{item.items?.map((subItem) => (
 																	<NavigationMenuLink
-																		href={
-																			subItem.href.startsWith("/")
-																				? subItem.href
-																				: `/${subItem.href}`
-																		}
+																		href={subItem.href}
 																		key={subItem._key}
 																		className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
 																	>
@@ -311,13 +279,9 @@ export default function Header({
 								})}
 								asChild
 							>
-								<Link
-									href={
-										button.url.startsWith("/") ? button.url : `/${button.url}`
-									}
-								>
-									{getLocalizedValue(button.i18n_label, button.label)}
-								</Link>
+									<Link href={button.url}>
+										{getLocalizedValue(button.i18n_label, button.label)}
+									</Link>
 							</Button>
 						))}
 					</div>
@@ -356,11 +320,7 @@ export default function Header({
 									<div key={item._key} className="flex flex-col gap-2">
 										{item.href ? (
 											<Link
-												href={
-													item.href.startsWith("/")
-														? item.href
-														: `/${item.href}`
-												}
+												href={item.href}
 												className="text-lg font-medium hover:text-primary flex justify-between items-center"
 											>
 												<span>
@@ -386,11 +346,7 @@ export default function Header({
 										{item.items?.map((subItem) => (
 											<Link
 												key={subItem._key}
-												href={
-													subItem.href.startsWith("/")
-														? subItem.href
-														: `/${subItem.href}`
-												}
+												href={subItem.href}
 												className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
 											>
 												<span>
@@ -409,15 +365,9 @@ export default function Header({
 											asChild
 											className="w-full"
 										>
-											<Link
-												href={
-													button.url.startsWith("/")
-														? button.url
-														: `/${button.url}`
-												}
-											>
-												{getLocalizedValue(button.i18n_label, button.label)}
-											</Link>
+												<Link href={button.url}>
+													{getLocalizedValue(button.i18n_label, button.label)}
+												</Link>
 										</Button>
 									))}
 								</div>
