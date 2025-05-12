@@ -41,6 +41,22 @@ export default function Header({
 	const [scrolled, setScrolled] = useState(false);
 	const { getLocalizedValue } = useLanguage();
 
+	// Helper function to process URLs
+	const processUrl = (url: string | undefined): string | undefined => {
+		if (!url) {
+			return undefined;
+		}
+		// Sanitize URL: trim whitespace and remove common invisible characters (zero-width space, etc.)
+		const cleanUrl = url.trim().replace(/[\u200B-\u200D\uFEFF]/g, '');
+
+		if (cleanUrl.startsWith("/") || cleanUrl.startsWith("#") || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(cleanUrl)) {
+			return cleanUrl;
+		}
+		return `/${cleanUrl}`;
+	};
+
+	const processedDropdownCTAUrl = processUrl(dropdownCTAUrl);
+
 	// Get localized site name
 	const siteName = getLocalizedValue(i18n_title, title);
 	// Get localized dropdown CTA label
@@ -113,14 +129,15 @@ export default function Header({
 										item.i18n_title,
 										item.title,
 									);
+									const itemHref = processUrl(item.href);
 									return (
 										<NavigationMenuItem key={item._key}>
-											{item.href ? (
+											{itemHref ? (
 												<NavigationMenuLink asChild>
 													<Button variant="ghost" asChild>
-															<Link href={item.href}>
-																{navTitle || item.title}
-															</Link>
+														<Link href={itemHref}>
+															{navTitle || item.title}
+														</Link>
 													</Button>
 												</NavigationMenuLink>
 											) : (
@@ -143,27 +160,30 @@ export default function Header({
 																	</p>
 																</div>
 																<Button size="sm" className="mt-10" asChild>
-																		<Link href={dropdownCTAUrl}>
-																			{localizedDropdownCTALabel}
-																		</Link>
+																	<Link href={processedDropdownCTAUrl || "#"}>
+																		{localizedDropdownCTALabel}
+																	</Link>
 																</Button>
 															</div>
 															<div className="flex flex-col text-sm h-full justify-end">
-																{item.items?.map((subItem) => (
-																	<NavigationMenuLink
-																		href={subItem.href}
-																		key={subItem._key}
-																		className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
-																	>
-																		<span>
-																			{getLocalizedValue(
-																				subItem.i18n_title,
-																				subItem.title,
-																			)}
-																		</span>
-																		<MoveRight className="w-4 h-4 text-muted-foreground" />
-																	</NavigationMenuLink>
-																))}
+																{item.items?.map((subItem) => {
+																	const subItemHref = processUrl(subItem.href);
+																	return (
+																		<NavigationMenuLink
+																			href={subItemHref}
+																			key={subItem._key}
+																			className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
+																		>
+																			<span>
+																				{getLocalizedValue(
+																					subItem.i18n_title,
+																					subItem.title,
+																				)}
+																			</span>
+																			<MoveRight className="w-4 h-4 text-muted-foreground" />
+																		</NavigationMenuLink>
+																	);
+																})}
 															</div>
 														</div>
 													</NavigationMenuContent>
@@ -191,67 +211,73 @@ export default function Header({
 						<div className="hidden lg:flex flex-1 justify-center">
 							<NavigationMenu>
 								<NavigationMenuList className="flex justify-center gap-4">
-									{navigationItems.map((item) => (
-										<NavigationMenuItem key={item._key}>
-											{item.href ? (
-												<NavigationMenuLink asChild>
-													<Button variant="ghost" asChild>
-															<Link href={item.href}>
+									{navigationItems.map((item) => {
+										const itemHref = processUrl(item.href);
+										return (
+											<NavigationMenuItem key={item._key}>
+												{itemHref ? (
+													<NavigationMenuLink asChild>
+														<Button variant="ghost" asChild>
+															<Link href={itemHref}>
 																{getLocalizedValue(item.i18n_title, item.title)}
 															</Link>
-													</Button>
-												</NavigationMenuLink>
-											) : (
-												<>
-													<NavigationMenuTrigger className="font-medium text-sm">
-														{getLocalizedValue(item.i18n_title, item.title)}
-													</NavigationMenuTrigger>
-													<NavigationMenuContent className="!w-[450px] p-4">
-														<div className="flex flex-col lg:grid grid-cols-2 gap-4">
-															<div className="flex flex-col h-full justify-between">
-																<div className="flex flex-col">
-																	<p className="text-base">
-																		{getLocalizedValue(
-																			item.i18n_title,
-																			item.title,
-																		)}
-																	</p>
-																	<p className="text-muted-foreground text-sm">
-																		{getLocalizedValue(
-																			item.i18n_description,
-																			item.description,
-																		)}
-																	</p>
-																</div>
-																<Button size="sm" className="mt-10" asChild>
-																		<Link href={dropdownCTAUrl}>
+														</Button>
+													</NavigationMenuLink>
+												) : (
+													<>
+														<NavigationMenuTrigger className="font-medium text-sm">
+															{getLocalizedValue(item.i18n_title, item.title)}
+														</NavigationMenuTrigger>
+														<NavigationMenuContent className="!w-[450px] p-4">
+															<div className="flex flex-col lg:grid grid-cols-2 gap-4">
+																<div className="flex flex-col h-full justify-between">
+																	<div className="flex flex-col">
+																		<p className="text-base">
+																			{getLocalizedValue(
+																				item.i18n_title,
+																				item.title,
+																			)}
+																		</p>
+																		<p className="text-muted-foreground text-sm">
+																			{getLocalizedValue(
+																				item.i18n_description,
+																				item.description,
+																			)}
+																		</p>
+																	</div>
+																	<Button size="sm" className="mt-10" asChild>
+																		<Link href={processedDropdownCTAUrl || "#"}>
 																			{localizedDropdownCTALabel}
 																		</Link>
-																</Button>
+																	</Button>
+																</div>
+																<div className="flex flex-col text-sm h-full justify-end">
+																	{item.items?.map((subItem) => {
+																		const subItemHref = processUrl(subItem.href);
+																		return (
+																			<NavigationMenuLink
+																				href={subItemHref}
+																				key={subItem._key}
+																				className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
+																			>
+																				<span>
+																					{getLocalizedValue(
+																						subItem.i18n_title,
+																						subItem.title,
+																					)}
+																				</span>
+																				<MoveRight className="w-4 h-4 text-muted-foreground" />
+																			</NavigationMenuLink>
+																		);
+																	})}
+																</div>
 															</div>
-															<div className="flex flex-col text-sm h-full justify-end">
-																{item.items?.map((subItem) => (
-																	<NavigationMenuLink
-																		href={subItem.href}
-																		key={subItem._key}
-																		className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
-																	>
-																		<span>
-																			{getLocalizedValue(
-																				subItem.i18n_title,
-																				subItem.title,
-																			)}
-																		</span>
-																		<MoveRight className="w-4 h-4 text-muted-foreground" />
-																	</NavigationMenuLink>
-																))}
-															</div>
-														</div>
-													</NavigationMenuContent>
-												</>
-											)}
-										</NavigationMenuItem>
-									))}
+														</NavigationMenuContent>
+													</>
+												)}
+											</NavigationMenuItem>
+										);
+									})}
 								</NavigationMenuList>
 							</NavigationMenu>
 						</div>
@@ -261,29 +287,32 @@ export default function Header({
 				{/* RIGHT COLUMN */}
 				<div className="flex justify-end w-full gap-4 items-center">
 					<div className="hidden lg:flex gap-4">
-						{ctaButtons.map((button) => (
-							<Button
-								key={button._key}
-								variant={
-									variant === "transparent" &&
-									!scrolled &&
-									button.variant === "outline"
-										? "outline"
-										: button.variant || "default"
-								}
-								className={cn({
-									"text-white border-white hover:bg-white/20":
+						{ctaButtons.map((button) => {
+							const buttonUrl = processUrl(button.url);
+							return (
+								<Button
+									key={button._key}
+									variant={
 										variant === "transparent" &&
 										!scrolled &&
-										button.variant === "outline",
-								})}
-								asChild
-							>
-									<Link href={button.url}>
+										button.variant === "outline"
+											? "outline"
+											: button.variant || "default"
+									}
+									className={cn({
+										"text-white border-white hover:bg-white/20":
+											variant === "transparent" &&
+											!scrolled &&
+											button.variant === "outline",
+									})}
+									asChild
+								>
+									<Link href={buttonUrl || "#"}>
 										{getLocalizedValue(button.i18n_label, button.label)}
 									</Link>
-							</Button>
-						))}
+								</Button>
+							);
+						})}
 					</div>
 					<Sheet>
 						<SheetTrigger asChild>
@@ -316,60 +345,69 @@ export default function Header({
 								</SheetTitle>
 							</SheetHeader>
 							<div className="flex flex-col gap-6 py-6">
-								{navigationItems.map((item) => (
-									<div key={item._key} className="flex flex-col gap-2">
-										{item.href ? (
-											<Link
-												href={item.href}
-												className="text-lg font-medium hover:text-primary flex justify-between items-center"
-											>
-												<span>
-													{getLocalizedValue(item.i18n_title, item.title)}
-												</span>
-												<MoveRight className="w-4 h-4 text-muted-foreground" />
-											</Link>
-										) : (
-											<>
-												<p className="text-lg font-medium">
-													{getLocalizedValue(item.i18n_title, item.title)}
-												</p>
-												{(item.description || item.i18n_description) && (
-													<p className="text-muted-foreground text-sm pb-1">
-														{getLocalizedValue(
-															item.i18n_description,
-															item.description,
-														)}
+								{navigationItems.map((item) => {
+									const itemHref = processUrl(item.href);
+									return (
+										<div key={item._key} className="flex flex-col gap-2">
+											{itemHref ? (
+												<Link
+													href={itemHref}
+													className="text-lg font-medium hover:text-primary flex justify-between items-center"
+												>
+													<span>
+														{getLocalizedValue(item.i18n_title, item.title)}
+													</span>
+													<MoveRight className="w-4 h-4 text-muted-foreground" />
+												</Link>
+											) : (
+												<>
+													<p className="text-lg font-medium">
+														{getLocalizedValue(item.i18n_title, item.title)}
 													</p>
-												)}
-											</>
-										)}
-										{item.items?.map((subItem) => (
-											<Link
-												key={subItem._key}
-												href={subItem.href}
-												className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
-											>
-												<span>
-													{getLocalizedValue(subItem.i18n_title, subItem.title)}
-												</span>
-												<MoveRight className="w-3.5 h-3.5" />
-											</Link>
-										))}
-									</div>
-								))}
+													{(item.description || item.i18n_description) && (
+														<p className="text-muted-foreground text-sm pb-1">
+															{getLocalizedValue(
+																item.i18n_description,
+																item.description,
+															)}
+														</p>
+													)}
+												</>
+											)}
+											{item.items?.map((subItem) => {
+												const subItemHref = processUrl(subItem.href);
+												return (
+													<Link
+														key={subItem._key}
+														href={subItemHref || "#"}
+														className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
+													>
+														<span>
+															{getLocalizedValue(subItem.i18n_title, subItem.title)}
+														</span>
+														<MoveRight className="w-3.5 h-3.5" />
+													</Link>
+												);
+											})}
+										</div>
+									);
+								})}
 								<div className="mt-6 flex flex-col gap-3 border-t pt-6">
-									{ctaButtons.map((button) => (
-										<Button
-											key={button._key}
-											variant={button.variant || "default"}
-											asChild
-											className="w-full"
-										>
-												<Link href={button.url}>
+									{ctaButtons.map((button) => {
+										const buttonUrl = processUrl(button.url);
+										return (
+											<Button
+												key={button._key}
+												variant={button.variant || "default"}
+												asChild
+												className="w-full"
+											>
+												<Link href={buttonUrl || "#"}>
 													{getLocalizedValue(button.i18n_label, button.label)}
 												</Link>
-										</Button>
-									))}
+											</Button>
+										);
+									})}
 								</div>
 							</div>
 						</SheetContent>
