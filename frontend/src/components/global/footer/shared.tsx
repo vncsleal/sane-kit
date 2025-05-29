@@ -8,6 +8,7 @@ import type { Dictionary } from "@/i18n/getDictionary";
 
 export type FooterProps = Footer & {
   dictionary: Dictionary['footer'];
+  documentId?: string;
 };
 
 // Reusable Logo or Site Title component

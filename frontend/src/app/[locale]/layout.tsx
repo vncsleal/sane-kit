@@ -23,7 +23,7 @@ async function getGlobals(locale: Locale): Promise<{ header: SanityHeader | null
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
   // Generate language alternates for SEO
   const languages = i18n.locales.reduce((acc, lang) => {
     acc[lang] = `/${lang}`;
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
   const { header, footer } = await getGlobals(locale);
   const dictionary = await getDictionary(locale);
 
