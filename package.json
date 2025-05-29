@@ -1,5 +1,5 @@
 {
-  "name": "my-sanity-template",
+  "name": "sane-kit",
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
     "dev:frontend": "cd frontend && npm run dev",

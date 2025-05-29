@@ -1,30 +1,12 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/lib/language-context";
 import posthog from "posthog-js";
 import { Card, CardContent } from "../ui/card";
-import { Cookie } from "lucide-react"; // Import the Cookie icon
+import { Cookie } from "lucide-react"; 
 
-// Define translations for the cookie consent message
-
-const i18n_description = {
-  en: "We use cookies to optimize your experience. They're optional, but appreciated. Do you accept?",
-  pt_BR: "Nós usamos cookies para otimizar sua experiência. Eles são opcionais, mas apreciados. Você aceita?",
-};
-
-const i18n_acceptButton = {
-  en: "Accept",
-  pt_BR: "Aceitar",
-};
-
-const i18n_rejectButton = {
-  en: "Dismiss",
-  pt_BR: "Dispensar",
-};
-
-// Add global type definition for gtag
+// Define global type definition for gtag
 declare global {
   interface Window {
     gtag: (
@@ -37,14 +19,11 @@ declare global {
 
 export function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false);
-  const { getLocalizedValue } = useLanguage();
   
-  const localizedDescription = getLocalizedValue(
-    i18n_description, 
-    "Analytics cookies. Optional but appreciated."
-  );
-  const localizedAcceptButton = getLocalizedValue(i18n_acceptButton, "Accept");
-  const localizedRejectButton = getLocalizedValue(i18n_rejectButton, "Dismiss");
+  // Default text values in Portuguese
+  const description = "Usamos cookies para otimizar sua experiência. Eles são opcionais, mas apreciados. Você aceita?";
+  const acceptButton = "Aceitar";
+  const rejectButton = "Recusar";
 
   // Check if consent has already been provided
   useEffect(() => {
@@ -104,18 +83,18 @@ export function CookieConsent() {
       <Card className="border shadow">
         <CardContent className="px-4 "> 
           <div className="flex items-center justify-between gap-3"> 
-            <Cookie className="h-5 w-5 text-muted-foreground flex-shrink-0" /> {/* Icon */}
-            <div className="flex-grow"> {/* Text container */}
+            <Cookie className="h-5 w-5 text-muted-foreground flex-shrink-0" /> 
+            <div className="flex-grow"> 
               <p className="text-xs text-muted-foreground">
-                {localizedDescription}
+                {description}
               </p>
             </div>
-            <div className="flex gap-2 flex-shrink-0"> {/* Buttons container */}
-              <Button variant="outline" size={"sm"} onClick={handleReject} >
-                {localizedRejectButton}
+            <div className="flex gap-2 flex-shrink-0"> 
+              <Button variant="outline" size={"sm"} onClick={handleReject}>
+                {rejectButton}
               </Button>
-              <Button size={"sm"} onClick={handleAccept} >
-                {localizedAcceptButton}
+              <Button size={"sm"} onClick={handleAccept}>
+                {acceptButton}
               </Button>
             </div>
           </div>

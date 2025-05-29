@@ -4,210 +4,170 @@ import {
 	ImageIcon,
 	TagIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, defineArrayMember } from "sanity";
+import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 // Define field groups
 const blogPostGroups = [
 	{
 		name: "basic",
-		title: "Basic Information",
+		title: groups.basic,
 		icon: InfoOutlineIcon,
 		default: true,
 	},
 	{
 		name: "content",
-		title: "Content",
+		title: groups.content,
 		icon: DocumentTextIcon,
 	},
 	{
 		name: "metadata",
-		title: "Metadata",
+		title: groups.metadata,
 		icon: TagIcon,
 	},
 	{
 		name: "media",
-		title: "Media",
+		title: groups.media,
 		icon: ImageIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: DocumentTextIcon,
 	},
 ];
 
 export const blogPost = defineType({
 	name: "blogPost",
-	title: "Blog Post",
+	title: documents.blogPost,
 	type: "document",
 	icon: DocumentTextIcon,
 	groups: blogPostGroups,
 	fields: [
 		defineField({
-			name: "title",
+			name: "language",
 			type: "string",
-			title: "Title",
-			validation: (rule) => rule.required(),
+			hidden: true,
+			readOnly: true,
+		}),
+		defineField({
+			name: "title",
+			title: fields.title,
+			type: "string",
+			validation: (rule) =>
+				rule.required().error(validation.postTitleRequired),
 			group: "basic",
 		}),
 		defineField({
-			name: "i18n_title",
-			type: "internationalizedArrayString",
-			title: "Title (Translated)",
-		}),
-		defineField({
 			name: "slug",
+			title: fields.slug,
 			type: "slug",
-			title: "Slug",
 			options: {
 				source: "title",
 				maxLength: 96,
+				isUnique: isUniqueOtherThanLanguage,
 			},
-			validation: (rule) => rule.required(),
+			validation: (rule) =>
+				rule.required().error(validation.postSlugRequired),
 			group: "basic",
 		}),
 		defineField({
 			name: "publishedAt",
+			title: fields.publishedAt,
 			type: "datetime",
-			title: "Published At",
 			initialValue: () => new Date().toISOString(),
 			group: "basic",
 		}),
 		defineField({
 			name: "excerpt",
+			title: fields.excerpt,
 			type: "text",
-			title: "Excerpt",
-			description: "A short summary of the article",
-			validation: (rule) => rule.max(300),
+			description: descriptions.excerpt,
+			validation: (rule) => [
+				rule.max(300).error(validation.excerptMaxLength),
+				rule.min(50).warning(validation.excerptMinLength),
+			],
 			group: "basic",
 		}),
 		defineField({
-			name: "i18n_excerpt",
-			type: "internationalizedArrayText",
-			title: "Excerpt (Translated)",
-			description: "A translated summary of the article",
-		}),
-		defineField({
-			name: "author",
-			type: "reference",
-			title: "Author",
-			to: [{ type: "author" }],
-			validation: (rule) => rule.required(),
+			name: "authors",
+			title: fields.authors,
+			type: "array",
+			of: [defineArrayMember({ type: "reference", to: [{ type: "author" }] })],
+			validation: (rule) =>
+				rule
+					.required()
+					.min(1)
+					.error(validation.authorsRequired),
 			group: "metadata",
 		}),
 		defineField({
 			name: "mainImage",
+			title: fields.mainImage,
 			type: "image",
-			title: "Main Image",
 			options: {
 				hotspot: true,
 			},
 			fields: [
-				{
+				defineField({
 					name: "alt",
+					title: fields.alt,
 					type: "string",
-					title: "Alternative Text",
-				},
-				{
-					name: "i18n_alt",
-					type: "internationalizedArrayString",
-					title: "Alternative Text (Translated)",
-				},
-				{
+					validation: (rule) =>
+						rule
+							.required()
+							.error(validation.altRequiredForImage),
+				}),
+				defineField({
 					name: "caption",
+					title: fields.caption,
 					type: "string",
-					title: "Caption",
-				},
-				{
-					name: "i18n_caption",
-					type: "internationalizedArrayString",
-					title: "Caption (Translated)",
-				},
+				}),
 			],
 			group: "media",
 		}),
 		defineField({
 			name: "categories",
+			title: fields.categories,
 			type: "array",
-			title: "Categories",
-			of: [{ type: "reference", to: { type: "category" } }],
+			of: [defineArrayMember({ type: "reference", to: { type: "category" } })],
 			group: "metadata",
 		}),
 		defineField({
 			name: "body",
-			title: "Content",
-			type: "portableText", // This references the complete portable text type
+			title: fields.body,
+			type: "portableText",
 			group: "content",
 		}),
 		defineField({
-			name: "i18n_body",
-			title: "Content (Translated)",
-			type: "array",
-
-			of: [
-				{
-					type: "object",
-					name: "localizedContent",
-					groups: [
-						{ name: "translations", title: "Translations", default: true },
-					],
-					fields: [
-						{
-							name: "language",
-							type: "string",
-							title: "Language",
-							options: {
-								list: [{ title: "Brazilian Portuguese", value: "pt_BR" }],
-							},
-						},
-						{
-							name: "content",
-							title: "Content",
-							type: "portableText",
-						},
-					],
-					preview: {
-						select: {
-							language: "language",
-						},
-						prepare({ language }) {
-							return {
-								title: `Content in ${language === "pt_BR" ? "Brazilian Portuguese" : language}`,
-							};
-						},
-					},
-				},
-			],
-		}),
-		defineField({
 			name: "featured",
-			type: "boolean",
-			title: "Featured Post",
-			description: "Set this post as a featured article",
-			initialValue: false,
+			title: fields.featured,
+			type: "string",
+			description: descriptions.featuredPost,
+			initialValue: "false",
+			options: {
+				list: sanityOptions.yesNo,
+				layout: "radio",
+			},
 			group: "metadata",
 		}),
 	],
 	preview: {
 		select: {
 			title: "title",
-			author: "author.name",
+			authorName: "authors.0.name",
 			media: "mainImage",
 			date: "publishedAt",
 		},
 		prepare(selection) {
-			const { title, author, media, date } = selection;
+			const { title, authorName, media, date } = selection;
 			const formattedDate = date
-				? new Date(date).toLocaleDateString("en-US", {
+				? new Date(date).toLocaleDateString("pt-BR", {
 						year: "numeric",
 						month: "short",
 						day: "numeric",
 					})
-				: "Unpublished";
+				: descriptions.notPublished;
 
 			return {
 				title,
-				subtitle: `By ${author || "Unknown author"} · ${formattedDate}`,
+				subtitle: `Por ${authorName || descriptions.unknownAuthor} · ${formattedDate}`,
 				media: media || DocumentTextIcon,
 			};
 		},

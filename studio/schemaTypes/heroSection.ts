@@ -1,315 +1,296 @@
 import {
-	RocketIcon,
-	InfoOutlineIcon,
-	ComponentIcon,
-	ImageIcon,
+  RocketIcon,
+  InfoOutlineIcon,
+  ComponentIcon,
+  ImageIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
-
-// Define field groups
-const heroGroups = [
-	{
-		name: "content",
-		title: "Content",
-		icon: InfoOutlineIcon,
-		default: true,
-	},
-	{
-		name: "appearance",
-		title: "Appearance",
-		icon: ComponentIcon,
-	},
-	{
-		name: "actions",
-		title: "Actions",
-		icon: RocketIcon,
-	},
-	{
-		name: "media",
-		title: "Media",
-		icon: ImageIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
-	},
-];
+import { defineField, defineType, defineArrayMember } from "sanity";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 export const heroSection = defineType({
-	name: "heroSection",
-	title: "Hero Section",
-	type: "object",
-	icon: RocketIcon,
-	groups: heroGroups,
-	fields: [
-		defineField({
-			name: "variant",
-			type: "string",
-			title: "Variant",
-			options: {
-				list: [
-					{ title: "Button Banner", value: "buttonBanner" },
-					{ title: "Badge Banner", value: "badgeBanner" },
-					{ title: "Grid Gallery", value: "gridGallery" },
-				],
-			},
-			initialValue: "buttonBanner",
-			group: "appearance",
-		}),
-		defineField({
-			name: "bannerButton",
-			type: "object",
-			title: "Banner Button",
-			hidden: ({ parent }) => parent?.variant !== "buttonBanner",
-			group: "actions",
-			fields: [
-				{
-					name: "label",
-					type: "string",
-					title: "Label",
-				},
-				{
-					name: "i18n_label",
-					type: "internationalizedArrayString",
-					title: "Label (Translated)",
-				},
-				{
-					name: "url",
-					type: "string",
-					title: "URL",
-				},
-			],
-		}),
-		defineField({
-			name: "badgeText",
-			type: "string",
-			title: "Badge Text",
-			group: "content",
-			hidden: ({ parent }) =>
-				parent?.variant !== "badgeBanner" && parent?.variant !== "gridGallery",
-		}),
-		defineField({
-			name: "i18n_badgeText",
-			type: "internationalizedArrayString",
-			title: "Badge Text (Translated)",
-			group: "content",
-			hidden: ({ parent }) =>
-				parent?.variant !== "badgeBanner" && parent?.variant !== "gridGallery",
-		}),
-		defineField({
-			name: "heading",
-			type: "string",
-			title: "Heading",
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_heading",
-			type: "internationalizedArrayString",
-			title: "Heading (Translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "subheading",
-			type: "text",
-			title: "Subheading",
-			rows: 3,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_subheading",
-			type: "internationalizedArrayText",
-			title: "Subheading (Translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "buttons",
-			type: "array",
-			title: "Buttons",
-			group: "actions",
-			of: [
-				{
-					type: "object",
-					name: "button",
-					fields: [
-						{
-							name: "label",
-							type: "string",
-							title: "Label",
-						},
-						{
-							name: "i18n_label",
-							type: "internationalizedArrayString",
-							title: "Label (Translated)",
-						},
-						{
-							name: "url",
-							type: "string",
-							title: "URL",
-						},
-						{
-							name: "variant",
-							type: "string",
-							title: "Variant",
-							options: {
-								list: [
-									{ title: "Default", value: "default" },
-									{ title: "Secondary", value: "secondary" },
-									{ title: "Outline", value: "outline" },
-									{ title: "Ghost", value: "ghost" },
-									{ title: "Link", value: "link" },
-								],
-							},
-							initialValue: "default",
-						},
-						{
-							name: "icon",
-							type: "string",
-							title: "Icon",
-							options: {
-								list: [
-									{ title: "Phone", value: "phone" },
-									{ title: "Arrow Right", value: "arrowRight" },
-									{ title: "Plus", value: "plus" },
-									{ title: "Check", value: "check" },
-									{ title: "Heart", value: "heart" },
-									{ title: "Star", value: "star" },
-									{ title: "Search", value: "search" },
-									{ title: "Settings", value: "settings" },
-									{ title: "Mail", value: "mail" },
-									{ title: "Calendar", value: "calendar" },
-								],
-							},
-						},
-					],
-				},
-			],
-		}),
-		defineField({
-			name: "media",
-			type: "object",
-			title: "Media",
-			description: "Add images or videos to your hero section",
-			group: "media",
-			fields: [
-				{
-					name: "type",
-					type: "string",
-					title: "Type",
-					options: {
-						list: [
-							{ title: "Image", value: "image" },
-							{ title: "Video", value: "video" },
-							{ title: "Placeholder", value: "placeholder" },
-						],
-					},
-					initialValue: "placeholder",
-				},
-				{
-					name: "image",
-					type: "image",
-					title: "Image",
-					hidden: ({ parent }) => parent?.type !== "image",
-					options: {
-						hotspot: true,
-					},
-					fields: [
-						{
-							name: "alt",
-							type: "string",
-							title: "Alternative Text",
-							hidden: ({ parent }) => parent?.type !== "image",
-						},
-						{
-							name: "i18n_alt",
-							type: "internationalizedArrayString",
-							title: "Alternative Text (Translated)",
-							hidden: ({ parent }) => parent?.type !== "image",
-						},
-					],
-				},
-				{
-					name: "video",
-					type: "object",
-					title: "Video",
-					hidden: ({ parent }) => parent?.type !== "video",
-					fields: [
-						{
-							name: "url",
-							type: "url",
-							title: "Video URL",
-							description:
-								"Use Vimeo or uploadthing URLs for optimal performance.",
-						},
-						{
-							name: "autoplay",
-							type: "boolean",
-							title: "Autoplay",
-							initialValue: false,
-						},
-						{
-							name: "loop",
-							type: "boolean",
-							title: "Loop",
-							initialValue: true,
-						},
-						{
-							name: "muted",
-							type: "boolean",
-							title: "Muted",
-							initialValue: true,
-						},
-					],
-				},
-				{
-					name: "additionalImages",
-					type: "array",
-					title: "Additional Images",
-					description:
-						"Add up to 3 additional images for the Grid Gallery variant (up to 4 images total)",
-					hidden: ({ parent }) => {
-						// Only show additional images for image type and gridGallery variant
-						return parent?.type !== "image";
-					},
-					of: [
-						{
-							type: "image",
-							title: "Image",
-							options: {
-								hotspot: true,
-							},
-							fields: [
-								{
-									name: "alt",
-									type: "string",
-									title: "Alternative Text",
-								},
-								{
-									name: "i18n_alt",
-									type: "internationalizedArrayString",
-									title: "Alternative Text (Translated)",
-								},
-							],
-						},
-					],
-					validation: (Rule) =>
-						Rule.max(3).warning("You can add up to 3 additional images"),
-				},
-			],
-		}),
-	],
-	preview: {
-		select: {
-			title: "heading",
-			subtitle: "variant",
-		},
-		prepare({ title, subtitle }) {
-			return {
-				title: title || "Hero Section",
-				subtitle: `Variant: ${subtitle || "buttonBanner"}`,
-				media: RocketIcon,
-			};
-		},
-	},
+  name: "heroSection",
+  title: documents.heroSection,
+  type: "object",
+  icon: RocketIcon,
+  groups: [
+    {
+      name: "content",
+      title: groups.content,
+      icon: InfoOutlineIcon,
+      default: true,
+    },
+    {
+      name: "appearance",
+      title: groups.appearance,
+      icon: ComponentIcon,
+    },
+    {
+      name: "actions",
+      title: groups.actions,
+      icon: RocketIcon,
+    },
+    {
+      name: "media",
+      title: groups.media,
+      icon: ImageIcon,
+    },
+  ],
+  fields: [
+    defineField({
+      name: "variant",
+      title: fields.variant,
+      type: "string",
+      options: {
+        list: sanityOptions.heroVariants,
+        layout: "radio",
+      },
+      initialValue: "buttonBanner",
+      group: "appearance",
+      validation: (rule) => 
+        rule.required().error(validation.heroVariantRequired),
+    }),
+    defineField({
+      name: "bannerButton",
+      title: fields.bannerButton,
+      type: "object",
+      hidden: ({ parent }) => parent?.variant !== "buttonBanner",
+      group: "actions",
+      fields: [
+        defineField({
+          name: "label",
+          title: fields.label,
+          type: "string",
+          validation: (rule) => 
+            rule.required().error(validation.bannerButtonLabelRequired),
+        }),
+        defineField({
+          name: "url",
+          title: fields.url,
+          type: "url",
+          validation: (rule) => 
+            rule.required().error(validation.bannerButtonUrlRequired)
+            .uri({
+              allowRelative: true,
+              scheme: ["http", "https", "mailto", "tel"]
+            }).error(validation.bannerButtonUrlInvalid),
+        }),
+      ],
+    }),
+    defineField({
+      name: "badgeText",
+      title: fields.badgeText,
+      type: "string",
+      group: "content",
+      hidden: ({ parent }) =>
+        parent?.variant !== "badgeBanner" && parent?.variant !== "gridGallery",
+      validation: (rule) => 
+        rule.max(30).warning(validation.badgeTextWarningHero),
+    }),
+    defineField({
+      name: "heading",
+      title: fields.heading,
+      type: "string",
+      validation: (rule) => 
+        rule.required().error(validation.heroTitleRequired)
+        .max(70).warning(validation.heroTitleWarning),
+      group: "content",
+    }),
+    defineField({
+      name: "subheading",
+      title: fields.subheading,
+      type: "text",
+      rows: 3,
+      group: "content",
+      validation: (rule) =>
+        rule.max(200).warning(validation.heroSubheadingWarning),
+    }),
+    defineField({
+      name: "buttons",
+      title: fields.buttons,
+      type: "array",
+      group: "actions",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "button",
+          title: descriptions.defaultHeroButton,
+          fields: [
+            defineField({
+              name: "label",
+              title: fields.label,
+              type: "string",
+              validation: (rule) => 
+                rule.required().error(validation.heroButtonLabelRequired),
+            }),
+            defineField({
+              name: "url",
+              title: fields.url,
+              type: "string",
+              validation: (rule) => 
+                rule.required().error(validation.heroButtonUrlRequired),
+            }),
+            defineField({
+              name: "variant",
+              title: fields.buttonVariant,
+              type: "string",
+              options: {
+                list: sanityOptions.buttonVariantOptions,
+              },
+              initialValue: "default",
+            }),
+            defineField({
+              name: "icon",
+              title: fields.icon,
+              type: "string",
+              options: {
+                list: sanityOptions.heroButtonIconOptions,
+              },
+            }),
+          ],
+          preview: {
+            select: {
+              title: "label",
+              subtitle: "url",
+              variant: "variant",
+            },
+            prepare({ title, subtitle, variant }) {
+              const selectedVariant = sanityOptions.buttonVariantOptions.find(v => v.value === variant);
+              const variantTitle = selectedVariant ? selectedVariant.title : variant;
+              return {
+                title: title || descriptions.defaultHeroButton,
+                subtitle: `${variantTitle || descriptions.defaultLayout} | ${subtitle || descriptions.urlNotDefined}`,
+              };
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: "media",
+      title: fields.media,
+      type: "object",
+      description: descriptions.heroMediaDescription,
+      group: "media",
+      fields: [
+        defineField({
+          name: "type",
+          title: fields.mediaType,
+          type: "string",
+          options: {
+            list: sanityOptions.heroMediaTypes,
+            layout: "radio",
+          },
+          initialValue: "placeholder",
+        }),
+        defineField({
+          name: "image",
+          title: fields.image,
+          type: "image",
+          hidden: ({ parent }) => parent?.type !== "image",
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            defineField({
+              name: "alt",
+              title: fields.alt,
+              type: "string",
+              validation: (rule) => 
+                rule.required().error(validation.mainImageAltRequired),
+            }),
+          ],
+        }),
+        defineField({
+          name: "video",
+          title: fields.video,
+          type: "object",
+          hidden: ({ parent }) => parent?.type !== "video",
+          fields: [
+            defineField({
+              name: "url",
+              title: fields.videoUrl,
+              type: "url",
+              description: descriptions.videoUrlDescription,
+              validation: (rule) => 
+                rule.required().error(validation.heroButtonUrlRequired),
+            }),
+            defineField({
+              name: "autoplay",
+              title: fields.autoplay,
+              type: "string",
+              options: {
+                list: sanityOptions.yesNo,
+                layout: "radio",
+              },
+              initialValue: "false",
+            }),
+            defineField({
+              name: "loop",
+              title: fields.loop,
+              type: "string",
+              options: {
+                list: sanityOptions.yesNo,
+                layout: "radio",
+              },
+              initialValue: "true",
+            }),
+            defineField({
+              name: "muted",
+              title: fields.muted,
+              type: "string",
+              options: {
+                list: sanityOptions.yesNo,
+                layout: "radio",
+              },
+              initialValue: "true",
+            }),
+          ],
+        }),
+        defineField({
+          name: "additionalImages",
+          title: fields.additionalImages,
+          type: "array",
+          description: descriptions.additionalImagesDescription,
+          hidden: ({ parent }) => {
+            return parent?.type !== "image";
+          },
+          of: [
+            defineArrayMember({
+              type: "image",
+              title: fields.image,
+              options: {
+                hotspot: true,
+              },
+              fields: [
+                defineField({
+                  name: "alt",
+                  title: fields.alt,
+                  type: "string",
+                  validation: (rule) => 
+                    rule.required().error(validation.mainImageAltRequired),
+                }),
+              ],
+            }),
+          ],
+          validation: (rule) =>
+            rule.max(3).warning(validation.additionalImagesMaxWarning),
+        }),
+      ],
+    }),
+  ],
+  preview: {
+    select: {
+      title: "heading",
+      subtitle: "variant",
+    },
+    prepare({ title, subtitle }) {
+      const selectedVariant = sanityOptions.heroVariants.find(v => v.value === subtitle);
+      const variantTitle = selectedVariant ? selectedVariant.title : subtitle;
+      return {
+        title: title || descriptions.defaultHeroSection,
+        subtitle: `${descriptions.heroVariantLabel}${variantTitle || "buttonBanner"}`,
+        media: RocketIcon,
+      };
+    },
+  },
 });

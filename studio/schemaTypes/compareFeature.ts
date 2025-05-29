@@ -1,67 +1,55 @@
-import { ComposeIcon, TranslateIcon } from "@sanity/icons";
+import { ComposeIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
-
-// Define field groups
-const compareFeatureGroups = [
-	{
-		name: "content",
-		title: "Content",
-		default: true,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: TranslateIcon,
-	},
-];
+import { fields, documents, descriptions, validation } from "../dictionary";
 
 export const compareFeature = defineType({
-	name: "compareFeature",
-	title: "Compare Feature",
-	type: "document", // Changed from "object" to "document"
-	icon: ComposeIcon,
-	groups: compareFeatureGroups,
-	fields: [
-		defineField({
-			name: "title",
-			title: "Feature Title",
-			type: "string",
-			validation: (rule) => rule.required(),
-			group: "content",
+  name: "compareFeature",
+  title: documents.compareFeature,
+  type: "document",
+  icon: ComposeIcon,
+  fields: [
+    defineField({
+			name: 'language',
+			type: 'string',
+			hidden: true,
+			readOnly: true,
 		}),
-		defineField({
-			name: "i18n_title",
-			title: "Feature Title (Translated)",
-			type: "internationalizedArrayString",
-			group: "translations",
-		}),
-		defineField({
-			name: "description",
-			title: "Description",
-			type: "text",
-			rows: 2,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_description",
-			title: "Description (Translated)",
-			type: "internationalizedArrayText",
-			group: "translations",
-		}),
-	],
-	preview: {
-		select: {
-			title: "title",
-			description: "description",
-		},
-		prepare({ title, description }) {
-			return {
-				title: title || "Compare Feature",
-				subtitle: description
-					? `${description.substring(0, 80)}${description.length > 80 ? "..." : ""}`
-					: "No description",
-				media: ComposeIcon,
-			};
-		},
-	},
+    defineField({
+      name: "title",
+      title: fields.featureTitle,
+      type: "string",
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.featureTitleRequired)
+          .max(80)
+          .warning(validation.featureTitleWarning),
+    }),
+    defineField({
+      name: "description",
+      title: fields.description,
+      type: "text",
+      rows: 2,
+      validation: (rule) =>
+        rule.max(200).warning(validation.featureDescriptionWarning),
+    }),
+  ],
+  preview: {
+    select: {
+      title: "title",
+      description: "description",
+    },
+    prepare({ title, description }) {
+      return {
+        title: title || descriptions.defaultCompareFeature,
+        subtitle:
+          description && description.length > 0
+            ? `${description.substring(0, 80)}${
+                description.length > 80 ? "..." : ""
+              }`
+            : descriptions.noDescription,
+        media: ComposeIcon,
+      };
+    },
+  },
 });

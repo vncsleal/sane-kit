@@ -1,103 +1,119 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useContext, useEffect, useState } from 'react';
+import { ChevronDown, Globe } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown, Loader2 } from "lucide-react";
-import { useLanguage, type Language } from "@/lib/language-context";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
-
-interface LanguageOption {
-	id: Language;
-	code: string;
-	flag: string;
-}
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { LanguageContext } from './LanguageProvider';
+import { i18n, type Locale } from '@/i18n/i18n-config';
+import { getTranslationMetadata } from '@/sanity/client';
+import { getDictionary } from '@/i18n/getDictionary';
+import type { Dictionary } from '@/i18n/getDictionary';
 
 interface LanguageSwitcherProps {
-	variant?: "default" | "minimal" | "footer";
+  variant?: 'default' | 'minimal';
+  documentId?: string;
 }
 
-const languageOptions: LanguageOption[] = [
-	{ id: "en", code: "EN", flag: "🇺🇸" },
-	{ id: "pt_BR", code: "PT", flag: "🇧🇷" },
-];
+export function LanguageSwitcher({ variant = 'default', documentId }: LanguageSwitcherProps) {
+  const context = useContext(LanguageContext);
+  const [availableUrls, setAvailableUrls] = useState<Record<string, string>>({});
+  const [dictionary, setDictionary] = useState<Dictionary | null>(null);
+  
+  if (!context) {
+    throw new Error('LanguageSwitcher must be used within a LanguageProvider');
+  }
+  
+  const { locale, switchLanguage } = context;
 
-export default function LanguageSwitcher({
-	variant = "default",
-}: LanguageSwitcherProps) {
-	const { language, setLanguage, isLoading } = useLanguage();
-	const router = useRouter();
-	const [isSwitching, setIsSwitching] = useState(false);
+  // Fetch dictionary based on current locale
+  useEffect(() => {
+    const loadDictionary = async () => {
+      try {
+        const dict = await getDictionary(locale);
+        setDictionary(dict);
+      } catch (error) {
+        console.error('Failed to load dictionary:', error);
+        // Fallback dictionary
+        setDictionary({
+          header: {
+            languageSwitcher: 'Language Switcher',
+            languages: {
+              en: 'English',
+              'pt-BR': 'Português'
+            }
+          }
+        } as Dictionary);
+      }
+    };
 
-	const currentLanguage =
-		languageOptions.find((option) => option.id === language) ||
-		languageOptions[0];
+    loadDictionary();
+  }, [locale]);
 
-	const handleLanguageChange = (newLanguage: Language) => {
-		if (language === newLanguage) return;
-		setIsSwitching(true);
-		setLanguage(newLanguage);
-		router.refresh();
-		setIsSwitching(false);
-	};
+  useEffect(() => {
+    if (documentId) {
+      getTranslationMetadata({ documentId }).then(({ getUrlsMap }) => {
+        setAvailableUrls(getUrlsMap());
+      });
+    }
+  }, [documentId]);
 
-	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center h-8 w-[70px]">
-				<Loader2 className="h-4 w-4 animate-spin" />
-			</div>
-		);
-	}
+  const handleLanguageChange = (newLocale: Locale) => {
+    if (newLocale !== locale) {
+      switchLanguage(newLocale);
+    }
+  };
 
-	// Use dropdown menu for all variants
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					size="sm"
-					variant={variant === "footer" ? "secondary" : "ghost"}
-					className={cn(
-						"h-8 px-3 text-xs min-w-[70px]",
-						variant === "footer" &&
-							"bg-primary/10 hover:bg-primary/20 text-background ",
-						variant === "minimal" && "px-2 h-8 ",
-					)}
-					disabled={isSwitching}
-				>
-					{isSwitching ? (
-						<Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
-					) : (
-						<span className="mr-1">{currentLanguage.flag}</span>
-					)}
-					<span>{currentLanguage.code}</span>
-					<ChevronDown className="h-3.5 w-3.5 ml-1 opacity-70" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				align="end"
-				className={cn("min-w-[100px]", variant === "minimal" && "w-[70px]")}
-			>
-				{languageOptions.map((option) => (
-					<DropdownMenuItem
-						key={option.id}
-						onClick={() => handleLanguageChange(option.id)}
-						className={cn(
-							"cursor-pointer justify-between",
-							language === option.id && "font-medium bg-accent",
-						)}
-						disabled={isSwitching || language === option.id}
-					>
-						<span className="mr-2">{option.flag}</span>
-						<span>{option.code}</span>
-					</DropdownMenuItem>
-				))}
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
+  // Don't render until dictionary is loaded
+  if (!dictionary) {
+    return null;
+  }
+
+  const renderMenuItem = (lang: Locale) => {
+    const isCurrentLocale = locale === lang;
+    const hasTranslation = !documentId || availableUrls[lang];
+    
+    return (
+      <DropdownMenuItem
+        key={lang}
+        onClick={() => handleLanguageChange(lang)}
+        className={isCurrentLocale ? "bg-muted" : ""}
+        disabled={!hasTranslation && !isCurrentLocale}
+      >
+        {dictionary.header.languages[lang]}
+        {!hasTranslation && !isCurrentLocale && (
+          <span className="ml-2 text-xs text-muted-foreground">(não disponível)</span>
+        )}
+      </DropdownMenuItem>
+    );
+  };
+
+  const triggerButton = variant === 'minimal' ? (
+    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+      <Globe className="h-4 w-4" />
+      <span className="sr-only">{dictionary.header.languageSwitcher}</span>
+    </Button>
+  ) : (
+    <Button variant="outline" size="default" className="gap-2">
+      <Globe className="h-4 w-4" />
+      <span className="hidden sm:inline">{dictionary.header.languages[locale]}</span>
+      <ChevronDown className="h-3 w-3" />
+    </Button>
+  );
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {triggerButton}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {i18n.locales.map(renderMenuItem)}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }

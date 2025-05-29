@@ -5,148 +5,150 @@ import {
 	CogIcon,
 } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
+import {
+	fields,
+	groups,
+	documents,
+	descriptions,
+	validation,
+	sanityOptions,
+} from "../dictionary";
 
 // Define field groups
 const blogSectionGroups = [
 	{
 		name: "content",
-		title: "Content",
+		title: groups.content,
 		icon: InfoOutlineIcon,
 		default: true,
 	},
 	{
 		name: "appearance",
-		title: "Appearance",
+		title: groups.appearance,
 		icon: ComponentIcon,
 	},
 	{
 		name: "options",
-		title: "Options",
+		title: groups.options,
 		icon: CogIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
 	},
 ];
 
 export const blogSection = defineType({
 	name: "blogSection",
-	title: "Blog Section",
+	title: documents.blogSection,
 	type: "object",
 	icon: DocumentTextIcon,
 	groups: blogSectionGroups,
 	fields: [
 		defineField({
 			name: "heading",
+			title: fields.heading,
 			type: "string",
-			title: "Heading",
-			initialValue: "Latest articles",
-			validation: (rule) => rule.required(),
+			initialValue: descriptions.latestArticles,
+			validation: (rule) =>
+				rule.required().error(validation.blogSectionTitleRequired),
 			group: "content",
 		}),
 		defineField({
-			name: "i18n_heading",
-			type: "internationalizedArrayString",
-			title: "Heading (Translated)",
-		}),
-		defineField({
 			name: "variant",
+			title: fields.variant,
 			type: "string",
-			title: "Layout Variant",
 			group: "appearance",
 			options: {
-				list: [
-					{ title: "Default with Featured Post", value: "default" },
-					{ title: "Grid Layout (4 columns)", value: "grid" },
-				],
+				list: sanityOptions.blogSectionVariants,
+				layout: "radio",
 			},
 			initialValue: "default",
 		}),
 		defineField({
 			name: "subheading",
+			title: fields.subheading,
 			type: "text",
-			title: "Subheading",
 			rows: 2,
 			hidden: ({ parent }) => parent?.variant === "grid",
+			validation: (rule) =>
+				rule.max(200).warning(validation.subheadingWarning),
 			group: "content",
 		}),
 		defineField({
-			name: "i18n_subheading",
-			type: "internationalizedArrayText",
-			title: "Subheading (Translated)",
-			hidden: ({ parent }) => parent?.variant === "grid",
-		}),
-		defineField({
 			name: "postsToShow",
+			title: fields.postsToShow,
 			type: "number",
-			title: "Number of Posts to Show",
-			description: "Limit the number of posts displayed",
+			description: descriptions.postsToShowDescription,
 			initialValue: 4,
-			validation: (rule) => rule.min(1).max(12),
+			validation: (rule) =>
+				rule.min(1).max(12).error(validation.postsCountRange),
 			group: "options",
 		}),
 		defineField({
 			name: "showFeaturedPostLarge",
-			type: "boolean",
-			title: "Show Featured Post in Large Format",
-			description:
-				"If enabled, the first post will be displayed in a larger format",
-			initialValue: true,
+			title: fields.showFeaturedPostLarge,
+			type: "string",
+			description: descriptions.showFeaturedPostLargeDescription,
+			initialValue: "true",
+			options: {
+				list: sanityOptions.yesNo,
+				layout: "radio",
+			},
 			hidden: ({ parent }) => parent?.variant === "grid",
 			group: "appearance",
 		}),
 		defineField({
 			name: "featuredPostsOnly",
-			type: "boolean",
-			title: "Show Only Featured Posts",
-			description: "If enabled, only posts marked as featured will be shown",
-			initialValue: false,
+			title: fields.featuredPostsOnly,
+			type: "string",
+			description: descriptions.featuredPostsOnlyDescription,
+			initialValue: "false",
+			options: {
+				list: sanityOptions.yesNo,
+				layout: "radio",
+			},
 			group: "options",
 		}),
 		defineField({
 			name: "viewAllButton",
-			type: "boolean",
-			title: "Show 'View All' Button",
-			initialValue: false,
+			title: fields.viewAllButton,
+			type: "string",
+			initialValue: "false",
+			options: {
+				list: sanityOptions.yesNo,
+				layout: "radio",
+			},
 			group: "options",
 		}),
 		defineField({
 			name: "viewAllUrl",
+			title: fields.viewAllUrl,
 			type: "string",
-			title: "View All URL",
-			description: "URL for the 'View all articles' button",
+			description: descriptions.viewAllUrlDescription,
 			initialValue: "/blog",
-			hidden: ({ parent }) => !parent?.viewAllButton,
+			hidden: ({ parent }) => parent?.viewAllButton === "false",
 			group: "options",
 		}),
 		defineField({
 			name: "viewAllButtonText",
+			title: fields.viewAllButtonText,
 			type: "string",
-			title: "View All Button Text",
-			description: "Text to display on the 'View all' button",
-			initialValue: "View all articles",
-			hidden: ({ parent }) => !parent?.viewAllButton,
+			description: descriptions.viewAllButtonTextDescription,
+			initialValue: descriptions.viewAllArticles,
+			hidden: ({ parent }) => parent?.viewAllButton === "false",
 			group: "content",
-		}),
-		defineField({
-			name: "i18n_viewAllButtonText",
-			type: "internationalizedArrayString",
-			title: "View All Button Text (Translated)",
-			hidden: ({ parent }) => !parent?.viewAllButton,
 		}),
 	],
 	preview: {
 		select: {
 			title: "heading",
 			variant: "variant",
-			posts: "postsToShow",
 		},
-		prepare({ title, variant, posts }) {
+		prepare({ title, variant }) {
+			const selectedVariant = sanityOptions.blogSectionVariants.find(
+				(v) => v.value === variant,
+			);
+			const variantTitle = selectedVariant ? selectedVariant.title : variant;
 			return {
-				title: title || "Blog Section",
-				subtitle: `${variant || "default"} · ${posts || 4} posts`,
+				title: title || descriptions.defaultBlogSection,
+				subtitle: variantTitle || descriptions.defaultLayout,
 				media: DocumentTextIcon,
 			};
 		},

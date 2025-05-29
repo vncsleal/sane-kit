@@ -1,8 +1,11 @@
 "use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "./CodeBlock";
+import type { Dictionary } from "@/i18n/getDictionary";
+import type { Locale } from "@/i18n/i18n-config";
 import {
 	PortableText,
 	type PortableTextReactComponents,
@@ -21,63 +24,58 @@ import {
 	Mail,
 } from "lucide-react";
 import type {
-	SanityBlogPost,
-	SanityAuthor,
-	SanityCategory,
-	PortableTextImage as SanityPortableTextImage,
-} from "@/sanity/types/schema";
+	Author,
+	Category,
+	CodeBlock as SanityCodeBlock,
+	Code as SanityCode,
+	PortableText as SanityPortableText,
+	SanityImageHotspot,
+	SanityImageCrop,
+  Slug as SanitySlug // Import Slug as SanitySlug to avoid naming conflicts if any
+} from "@/sanity/types";
 import { BlogShareButton } from "./BlogShareButton";
-import { useLanguage } from "@/lib/language-context";
-
-// Define translations for static text
-const staticText = {
-	aboutTheAuthor: {
-		en: "About the author",
-		pt_BR: "Sobre o autor",
-	},
-	minRead: {
-		en: "min read",
-		pt_BR: "min de leitura",
-	},
-	noImage: {
-		en: "No image",
-		pt_BR: "Sem imagem",
-	},
-	unknownType: {
-		en: "Unknown type",
-		pt_BR: "Tipo desconhecido",
-	},
-};
 
 // Define the structure that represents post data after it's been fetched
-// and references have been expanded
-interface ExpandedBlogPost
-	extends Omit<SanityBlogPost, "author" | "categories"> {
-	author: SanityAuthor;
-	categories?: SanityCategory[];
+// and references have been expanded - modified to match BlogPostData
+export interface ExpandedBlogPost {
+	_id: string;
+	_type: "blogPost";
+	title: string;
+	slug: {
+		current: string;
+	};
+	publishedAt: string;
+	excerpt?: string;
+	mainImage?: {
+		asset?: { _ref: string; _type: string };
+		hotspot?: SanityImageHotspot;
+		crop?: SanityImageCrop;
+		alt?: string;
+		_type: string;
+	};
+	body?: SanityPortableText;
+	featured?: string | boolean;
+	authors?: Author[];
+	author: Author;
+	categories?: Array<{
+		originalReferenceId?: string;
+		i18nId?: string;
+    // localized is a full Category object, but we must ensure its _id and slug are what we expect.
+		localized?: Category & { _id: string; slug: SanitySlug }; 
+    // Fields from the direct reference as a fallback or for non-localized scenarios
+    _id: string; 
+    title?: string; 
+    slug?: SanitySlug; 
+    description?: string; 
+	}>;
 }
 
-// Define interface for Sanity code block value
-interface CodeBlockValue {
-	_type: "codeBlock";
-	code:
-		| string
-		| {
-				_type: "code";
-				code: string;
-				language?: string;
-				filename?: string;
-		  };
-	language?: string;
-	filename?: string;
-	showLineNumbers?: boolean;
-	title?: string; // Added missing property
-	highlightLines?: string; // Added missing property
-	caption?: string; // Added missing property
-}
+// Using SanityCodeBlock from the official types
 
 interface BlogPostPageProps {
 	post: ExpandedBlogPost;
+	dictionary?: Dictionary;
+	locale: Locale; // Add locale prop
 }
 
 // Social icon mapping
@@ -90,25 +88,34 @@ const SocialIcons = {
 	youtube: Youtube,
 } as const;
 
-export default function BlogPostPage({ post }: BlogPostPageProps) {
-	const { language } = useLanguage();
-
-	// Get localized static text
-	const localizedAboutAuthor =
-		staticText.aboutTheAuthor[language] || staticText.aboutTheAuthor.en;
-	const localizedMinRead =
-		staticText.minRead[language] || staticText.minRead.en;
-	const localizedNoImage =
-		staticText.noImage[language] || staticText.noImage.en;
-	const localizedUnknownType =
-		staticText.unknownType[language] || staticText.unknownType.en;
+export default function BlogPostPage({ post, dictionary, locale }: BlogPostPageProps) {
+	// Use dictionary from props with fallback
+	const staticText = dictionary ? {
+		...dictionary.general,
+		...dictionary.post,
+		...dictionary.notFound,
+		...dictionary.blog,
+		...dictionary.share,
+		...dictionary.code,
+	} : {
+		// Fallback values
+		minRead: "min read",
+		aboutTheAuthor: "About the Author",
+		email: "Email",
+		noImage: "No image available",
+		unknownType: "Unknown content type",
+	};
 
 	// PortableText components for rendering blog content with improved styling
 	const components: PortableTextReactComponents = {
 		types: {
 			image: ({
 				value,
-			}: PortableTextComponentProps<SanityPortableTextImage>) => (
+			}: PortableTextComponentProps<{
+				asset: { _ref: string };
+				alt?: string;
+				caption?: string;
+			}>) => (
 				<figure className="my-8">
 					<div className="relative w-full rounded-md overflow-hidden">
 						<Image
@@ -127,37 +134,32 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 					)}
 				</figure>
 			),
-			codeBlock: ({ value }: PortableTextComponentProps<CodeBlockValue>) => {
+			codeBlock: ({ value }: PortableTextComponentProps<SanityCodeBlock>) => {
 				// Handle case where code is an object from Sanity code-input plugin
 				if (typeof value.code === "object" && value.code !== null) {
+					const codeObj = value.code as SanityCode;
 					return (
 						<CodeBlock
-							code={value.code.code || ""}
-							language={value.code.language || value.language || "typescript"}
-							filename={value.code.filename || value.filename || ""}
+							code={codeObj.code || ""}
+							language={codeObj.language || "typescript"}
+							filename={codeObj.filename || ""}
 							title={value.title || ""}
 							highlightLines={value.highlightLines}
-							showLineNumbers={
-								value.showLineNumbers !== undefined
-									? value.showLineNumbers
-									: true
-							}
+							showLineNumbers={value.showLineNumbers === "true"}
 							caption={value.caption || ""}
 						/>
 					);
 				}
 
-				// Handle string code (original format)
+				// Handle string code (legacy format)
 				return (
 					<CodeBlock
-						code={typeof value.code === "string" ? value.code : ""}
-						language={value.language || "typescript"}
-						filename={value.filename || ""}
+						code={typeof value.code === "string" ? value.code : ''}
+						language={"typescript"} // Default to typescript
+						filename={""}
 						title={value.title || ""}
 						highlightLines={value.highlightLines}
-						showLineNumbers={
-							value.showLineNumbers !== undefined ? value.showLineNumbers : true
-						}
+						showLineNumbers={value.showLineNumbers === "true"}
 						caption={value.caption || ""}
 					/>
 				);
@@ -213,12 +215,14 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 				);
 			},
 			link: ({ value, children }) => {
-				const target = (value?.href || "").startsWith("http")
-					? "_blank"
-					: undefined;
+				const href = value?.href || "";
+				const isInternal = href.startsWith("/") || href.startsWith("#") || (!href.startsWith("http") && !href.startsWith("mailto"));
+				const target = isInternal ? undefined : "_blank";
+				const localizedHref = isInternal ? `/${locale}${href}` : href;
+
 				return (
 					<Link
-						href={value?.href || ""}
+						href={localizedHref}
 						target={target}
 						className="text-primary hover:underline"
 					>
@@ -239,27 +243,37 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 			bullet: ({ children }) => <li className="mb-2">{children}</li>,
 			number: ({ children }) => <li className="mb-2">{children}</li>,
 		},
-		hardBreak: () => <br />, // Handle line breaks
-		unknownMark: ({ children }) => <>{children}</>, // Fallback for unknown marks
-		unknownType: () => <div>{localizedUnknownType}</div>, // Use localized text for unknown types
-		unknownBlockStyle: ({ children }) => <div>{children}</div>, // Fallback for unknown block styles
-		unknownList: ({ children }) => <ul>{children}</ul>, // Fallback for unknown lists
-		unknownListItem: ({ children }) => <li>{children}</li>, // Fallback for unknown list items
+		hardBreak: () => <br />, 
+		unknownMark: ({ children }) => <>{children}</>, 
+		unknownType: () => <div>{staticText.unknownType}</div>,
+		unknownBlockStyle: ({ children }) => <div>{children}</div>, 
+		unknownList: ({ children }) => <ul>{children}</ul>, 
+		unknownListItem: ({ children }) => <li>{children}</li>, 
 	};
 
 	return (
 		<article className="max-w-4xl mx-auto px-4 py-12 md:py-20">
 			<header className="mb-12">
-				{/* Categories - now TypeScript knows these are expanded category objects */}
+				
 				<div className="flex gap-2 mb-4 flex-wrap">
-					{post.categories?.map((category) => (
-						<Link
-							href={`/blog/category/${category.slug.current}`}
-							key={category._id}
-						>
-							<Badge>{category.title}</Badge>
-						</Link>
-					))}
+					{post.categories?.map((categoryWrapper) => {
+            // Use the localized data if available, otherwise fallback to the direct reference
+            const categoryToDisplay = categoryWrapper.localized || categoryWrapper;
+            
+            // Ensure categoryToDisplay and its slug are defined before creating the link
+            if (categoryToDisplay && categoryToDisplay.slug?.current && categoryToDisplay.title) {
+              return (
+                <Link
+                  href={`/${locale}/blog/category/${categoryToDisplay.slug.current}`}
+                  // Use the _id of the localized category if available, otherwise the original reference's _id.
+                  key={categoryWrapper.localized?._id || categoryWrapper.originalReferenceId || categoryWrapper._id}
+                >
+                  <Badge>{categoryToDisplay.title}</Badge>
+                </Link>
+              );
+            }
+            return null; // Or some fallback UI if the category/slug is missing
+          })}
 				</div>
 
 				{/* Title */}
@@ -278,25 +292,27 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 								/>
 							) : null}
 							<AvatarFallback>
-								{post.author.name
-									.split(" ")
-									.map((n) => n[0])
-									.join("")
-									.toUpperCase()
-									.substring(0, 2)}
+								{post.author.name 
+									? post.author.name
+										.split(" ")
+										.map((n) => n[0])
+										.join("")
+										.toUpperCase()
+										.substring(0, 2)
+									: "AU"}
 							</AvatarFallback>
 						</Avatar>
 
 						<div>
 							<Link
-								href={`/blog/author/${post.author.slug?.current}`}
+								href={`/${locale}/blog/author/${post.author.slug?.current}`}
 								className="font-medium hover:underline"
 							>
 								{post.author.name}
 							</Link>
 							<div className="flex items-center text-sm text-muted-foreground">
 								<span>
-									{new Date(post.publishedAt).toLocaleDateString("en-US", {
+									{new Date(post.publishedAt).toLocaleDateString("pt-BR", {
 										year: "numeric",
 										month: "short",
 										day: "numeric",
@@ -316,16 +332,16 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 													})
 													.join(" ")
 													.split(/\s+/).length / 200,
-											)} ${localizedMinRead}`
-										: `3 ${localizedMinRead}`}
+											)} ${staticText.minRead}`
+										: `3 ${staticText.minRead}`}
 								</span>
 							</div>
 						</div>
 					</div>
 
-					{/* Desktop share button - only using the ShareButton which now includes bookmark */}
+					{/* Desktop share button */}
 					<div className="hidden md:flex gap-2">
-						<BlogShareButton title={post.title} />
+						<BlogShareButton title={post.title} dictionary={staticText} />
 					</div>
 				</div>
 
@@ -342,7 +358,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 					</div>
 				) : (
 					<div className="w-full aspect-video mb-10 bg-muted rounded-lg flex items-center justify-center">
-						<span className="text-muted-foreground">{localizedNoImage}</span>
+						<span className="text-muted-foreground">{staticText.noImage}</span>
 					</div>
 				)}
 			</header>
@@ -359,7 +375,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 			{/* Author bio */}
 			{post.author.bio && (
 				<div className="mt-16 pt-8 border-t">
-					<h2 className="text-xl font-semibold mb-4">{localizedAboutAuthor}</h2>
+					<h2 className="text-xl font-semibold mb-4">{staticText.aboutTheAuthor}</h2>
 					<div className="p-6 bg-muted/30 rounded-lg">
 						<div className="flex flex-col md:flex-row gap-6">
 							<Avatar className="h-20 w-20">
@@ -370,18 +386,20 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 									/>
 								) : null}
 								<AvatarFallback>
-									{post.author.name
-										.split(" ")
-										.map((n) => n[0])
-										.join("")
-										.toUpperCase()
-										.substring(0, 2)}
+									{post.author.name 
+										? post.author.name
+											.split(" ")
+											.map((n) => n[0])
+											.join("")
+											.toUpperCase()
+											.substring(0, 2)
+										: "AU"}
 								</AvatarFallback>
 							</Avatar>
 
 							<div className="flex-1">
 								<Link
-									href={`/blog/author/${post.author.slug?.current}`}
+									href={`/${locale}/blog/author/${post.author.slug?.current}`}
 									className="text-lg font-medium hover:underline"
 								>
 									{post.author.name}
@@ -404,7 +422,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 														asChild
 													>
 														<Link
-															href={link.url}
+															href={link.url || '#'}
 															target="_blank"
 															rel="noopener noreferrer"
 														>
@@ -423,7 +441,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
 												>
 													<Link href={`mailto:${post.author.email}`}>
 														<Mail className="h-4 w-4" />
-														<span className="sr-only">Email</span>
+														<span className="sr-only">{staticText.email}</span>
 													</Link>
 												</Button>
 											)}

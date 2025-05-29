@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { CodeBlock as Code } from "react-code-blocks";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
+import { dictionary } from "@/i18n/dictionaries.pt-BR";
 
 interface CodeBlockProps {
 	code: string;
@@ -45,7 +46,7 @@ export function CodeBlock({
 	const handleCopy = async () => {
 		await navigator.clipboard.writeText(code);
 		setCopied(true);
-		toast.success("Copied to clipboard");
+		toast.success(dictionary.code.copiedToClipboard);
 		setTimeout(() => setCopied(false), 2000);
 	};
 
@@ -132,7 +133,7 @@ export function CodeBlock({
 						className="bg-[#25292E] text-[#f0f6fc] p-4 rounded-md"
 						style={customStyle}
 					>
-						Loading code editor...
+						{dictionary.code.loadingEditor}
 					</div>
 				)}
 			</div>
@@ -161,7 +162,11 @@ export function CodeBlock({
 						</Button>
 					</TooltipTrigger>
 					<TooltipContent>
-						<p>{copied ? "Copied!" : "Copy code"}</p>
+						<p>
+							{copied
+								? dictionary.code.copied
+								: dictionary.code.copyCode}
+						</p>
 					</TooltipContent>
 				</Tooltip>
 			</TooltipProvider>

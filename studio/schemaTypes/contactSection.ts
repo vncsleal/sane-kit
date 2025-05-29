@@ -1,220 +1,214 @@
 import {
-	UserIcon,
-	InfoOutlineIcon,
-	ComponentIcon,
-	CogIcon,
+  UserIcon,
+  InfoOutlineIcon,
+  ComponentIcon,
+  CogIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
-
-// Define field groups
-const contactGroups = [
-	{
-		name: "content",
-		title: "Content",
-		icon: InfoOutlineIcon,
-		default: true,
-	},
-	{
-		name: "features",
-		title: "Features",
-		icon: ComponentIcon,
-	},
-	{
-		name: "form",
-		title: "Form Settings",
-		icon: CogIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
-	},
-];
+import { defineField, defineType, defineArrayMember } from "sanity";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 export const contactSection = defineType({
-	name: "contactSection",
-	title: "Contact Section",
-	type: "object",
-	icon: UserIcon,
-	groups: contactGroups,
-	fields: [
-		defineField({
-			name: "badgeText",
-			type: "string",
-			title: "Badge Text",
-			initialValue: "Contact",
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_badgeText",
-			type: "internationalizedArrayString",
-			title: "Badge Text (Translated)",
-		}),
-		defineField({
-			name: "heading",
-			type: "string",
-			title: "Heading",
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_heading",
-			type: "internationalizedArrayString",
-			title: "Heading (Translated)",
-		}),
-		defineField({
-			name: "description",
-			type: "text",
-			title: "Description",
-			rows: 3,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_description",
-			type: "internationalizedArrayText",
-			title: "Description (Translated)",
-		}),
-		defineField({
-			name: "features",
-			type: "array",
-			title: "Features",
-			group: "features",
-			of: [
-				{
-					type: "object",
-					name: "feature",
-					fields: [
-						defineField({
-							name: "title",
-							type: "string",
-							title: "Title",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_title",
-							type: "internationalizedArrayString",
-							title: "Title (Translated)",
-						}),
-						defineField({
-							name: "description",
-							type: "text",
-							title: "Description",
-							rows: 2,
-						}),
-						defineField({
-							name: "i18n_description",
-							type: "internationalizedArrayText",
-							title: "Description (Translated)",
-						}),
-					],
-					preview: {
-						select: {
-							title: "title",
-							subtitle: "description",
-						},
-					},
-				},
-			],
-			validation: (rule) => rule.min(1).error("Add at least one feature"),
-		}),
-		defineField({
-			name: "formTitle",
-			type: "string",
-			title: "Form Title",
-			initialValue: "Book a meeting",
-			group: "form",
-		}),
-		defineField({
-			name: "i18n_formTitle",
-			type: "internationalizedArrayString",
-			title: "Form Title (Translated)",
-		}),
-		defineField({
-			name: "formFields",
-			type: "object",
-			title: "Form Fields",
-			group: "form",
-			fields: [
-				defineField({
-					name: "showDate",
-					type: "boolean",
-					title: "Show Date Picker",
-					initialValue: true,
-				}),
-				defineField({
-					name: "showFirstName",
-					type: "boolean",
-					title: "Show First Name Field",
-					initialValue: true,
-				}),
-				defineField({
-					name: "showLastName",
-					type: "boolean",
-					title: "Show Last Name Field",
-					initialValue: true,
-				}),
-				defineField({
-					name: "showFileUpload",
-					type: "boolean",
-					title: "Show File Upload Field",
-					initialValue: true,
-				}),
-				defineField({
-					name: "fileUploadLabel",
-					type: "string",
-					title: "File Upload Label",
-					initialValue: "Upload resume",
-					hidden: ({ parent }) => !parent?.showFileUpload,
-				}),
-				defineField({
-					name: "i18n_fileUploadLabel",
-					type: "internationalizedArrayString",
-					title: "File Upload Label (Translated)",
-					hidden: ({ parent }) => !parent?.showFileUpload,
-				}),
-			],
-		}),
-		defineField({
-			name: "buttonText",
-			type: "string",
-			title: "Button Text",
-			initialValue: "Book the meeting",
-			validation: (rule) => rule.required(),
-			group: "form",
-		}),
-		defineField({
-			name: "i18n_buttonText",
-			type: "internationalizedArrayString",
-			title: "Button Text (Translated)",
-		}),
-		defineField({
-			name: "buttonIcon",
-			type: "string",
-			title: "Button Icon",
-			options: {
-				list: [
-					{ title: "Arrow Right", value: "arrowRight" },
-					{ title: "Phone", value: "phone" },
-					{ title: "None", value: "none" },
-				],
-			},
-			initialValue: "arrowRight",
-			group: "form",
-		}),
-	],
-	preview: {
-		select: {
-			title: "heading",
-			subtitle: "badgeText",
-			featuresCount: "features.length",
-		},
-		prepare({ title, subtitle, featuresCount = 0 }) {
-			return {
-				title: title || "Contact Section",
-				subtitle: `${subtitle ? `Badge: ${subtitle}` : "Contact section"} · ${featuresCount} feature${featuresCount === 1 ? "" : "s"}`,
-				media: UserIcon,
-			};
-		},
-	},
+  name: "contactSection",
+  title: documents.contactSection,
+  type: "object",
+  icon: UserIcon,
+  groups: [
+    {
+      name: "content",
+      title: groups.content,
+      icon: InfoOutlineIcon,
+      default: true,
+    },
+    {
+      name: "features",
+      title: groups.features,
+      icon: ComponentIcon,
+    },
+    {
+      name: "form",
+      title: groups.form,
+      icon: CogIcon,
+    },
+  ],
+  fields: [
+    defineField({
+      name: "badgeText",
+      title: fields.badgeText,
+      type: "string",
+      initialValue: descriptions.defaultContact,
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.badgeTextRequired)
+          .max(30)
+          .warning(validation.badgeTextWarning),
+      group: "content",
+    }),
+    defineField({
+      name: "heading",
+      title: fields.heading,
+      type: "string",
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.contactTitleRequired)
+          .max(100)
+          .warning(validation.contactTitleWarning),
+      group: "content",
+    }),
+    defineField({
+      name: "description",
+      title: fields.description,
+      type: "text",
+      rows: 3,
+      group: "content",
+      validation: (rule) =>
+        rule.max(300).warning(validation.contactDescriptionWarning),
+    }),
+    defineField({
+      name: "features",
+      title: fields.features,
+      type: "array",
+      group: "features",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "feature",
+          title: fields.feature,
+          fields: [
+            defineField({
+              name: "title",
+              title: fields.title,
+              type: "string",
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.featureTitleRequiredContact)
+                  .max(80)
+                  .warning(validation.featureTitleWarningContact),
+            }),
+            defineField({
+              name: "description",
+              title: fields.description,
+              type: "text",
+              rows: 2,
+              validation: (rule) =>
+                rule.max(150).warning(validation.featureDescriptionWarningContact),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              subtitle: "description",
+            },
+          },
+        }),
+      ],
+      validation: (rule) =>
+        rule.min(1).error(validation.featuresMinRequiredContact),
+    }),
+    defineField({
+      name: "formTitle",
+      title: fields.formTitle,
+      type: "string",
+      initialValue: descriptions.defaultScheduleMeeting,
+      group: "form",
+      validation: (rule) =>
+        rule.max(80).warning(validation.formTitleWarning),
+    }),
+    defineField({
+      name: "formFields",
+      title: fields.formFields,
+      type: "object",
+      group: "form",
+      fields: [
+        defineField({
+          name: "showDate",
+          title: fields.showDate,
+          type: "string",
+          options: {
+            list: sanityOptions.yesNo,
+            layout: "radio",
+          },
+          initialValue: "true",
+        }),
+        defineField({
+          name: "showFirstName",
+          title: fields.showFirstName,
+          type: "string",
+          options: {
+            list: sanityOptions.yesNo,
+            layout: "radio",
+          },
+          initialValue: "true",
+        }),
+        defineField({
+          name: "showLastName",
+          title: fields.showLastName,
+          type: "string",
+          options: {
+            list: sanityOptions.yesNo,
+            layout: "radio",
+          },
+          initialValue: "true",
+        }),
+        defineField({
+          name: "showFileUpload",
+          title: fields.showFileUpload,
+          type: "string",
+          options: {
+            list: sanityOptions.yesNo,
+            layout: "radio",
+          },
+          initialValue: "true",
+        }),
+        defineField({
+          name: "fileUploadLabel",
+          title: fields.fileUploadLabel,
+          type: "string",
+          initialValue: descriptions.defaultUploadResume,
+          hidden: ({ parent }) => parent?.showFileUpload === "false",
+          validation: (rule) =>
+            rule.max(50).warning(validation.fileUploadLabelWarning),
+        }),
+      ],
+    }),
+    defineField({
+      name: "buttonText",
+      title: fields.buttonText,
+      type: "string",
+      initialValue: descriptions.defaultScheduleButton,
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.formButtonTextRequired)
+          .max(50)
+          .warning(validation.planButtonTextWarning),
+      group: "form",
+    }),
+    defineField({
+      name: "buttonIcon",
+      title: fields.buttonIcon,
+      type: "string",
+      options: {
+        list: sanityOptions.contactButtonIconOptions,
+        layout: "radio",
+      },
+      initialValue: "arrowRight",
+      group: "form",
+    }),
+  ],
+  preview: {
+    select: {
+      title: "heading",
+      subtitle: "badgeText",
+    },
+    prepare({ title, subtitle }) {
+      return {
+        title: title || descriptions.defaultContactSection,
+        subtitle: subtitle ? `${descriptions.badgeContact}${subtitle}` : descriptions.defaultContactSection,
+        media: UserIcon,
+      };
+    },
+  },
 });

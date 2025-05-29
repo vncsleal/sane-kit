@@ -1,194 +1,181 @@
 import { HelpCircleIcon, InfoOutlineIcon, ComponentIcon } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
-
-// Define field groups
-const faqGroups = [
-	{
-		name: "content",
-		title: "Content",
-		icon: InfoOutlineIcon,
-		default: true,
-	},
-	{
-		name: "appearance",
-		title: "Appearance",
-		icon: ComponentIcon,
-	},
-	{
-		name: "questions",
-		title: "FAQ Items",
-		icon: HelpCircleIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
-	},
-];
+import { defineField, defineType, defineArrayMember } from "sanity";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 export const faqSection = defineType({
-	name: "faqSection",
-	title: "FAQ Section",
-	type: "object",
-	icon: HelpCircleIcon,
-	groups: faqGroups,
-	fields: [
-		defineField({
-			name: "variant",
-			type: "string",
-			title: "Layout Variant",
-			group: "appearance",
-			options: {
-				list: [
-					{ title: "Side by Side", value: "sideBySide" },
-					{ title: "Centered", value: "centered" },
-				],
-			},
-			initialValue: "sideBySide",
-		}),
-		defineField({
-			name: "badgeText",
-			type: "string",
-			title: "Badge Text",
-			description: "Text displayed in the badge (e.g. 'FAQ')",
-			initialValue: "FAQ",
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_badgeText",
-			type: "internationalizedArrayString",
-			title: "Badge Text (Translated)",
-			description: "Text displayed in the badge (translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "heading",
-			type: "string",
-			title: "Heading",
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_heading",
-			type: "internationalizedArrayString",
-			title: "Heading (Translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "subheading",
-			type: "text",
-			title: "Subheading",
-			description: "Descriptive text that appears below the heading",
-			rows: 3,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_subheading",
-			type: "internationalizedArrayText",
-			title: "Subheading (Translated)",
-			description:
-				"Descriptive text that appears below the heading (translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "buttonText",
-			type: "string",
-			title: "Button Text",
-			description: "Call-to-action button text",
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_buttonText",
-			type: "internationalizedArrayString",
-			title: "Button Text (Translated)",
-			description: "Call-to-action button text (translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "buttonUrl",
-			type: "string",
-			title: "Button URL",
-			description: "Where the button links to",
-			hidden: ({ parent }) => !parent?.buttonText,
-			group: "content",
-		}),
-		defineField({
-			name: "buttonIcon",
-			type: "string",
-			title: "Button Icon",
-			options: {
-				list: [
-					{ title: "None", value: "none" },
-					{ title: "Phone", value: "phone" },
-					{ title: "Arrow Right", value: "arrowRight" },
-					{ title: "Plus", value: "plus" },
-					{ title: "Check", value: "check" },
-				],
-			},
-			initialValue: "phone",
-			hidden: ({ parent }) => !parent?.buttonText,
-			group: "content",
-		}),
-		defineField({
-			name: "faqItems",
-			type: "array",
-			title: "FAQ Items",
-			description: "Questions and answers for the FAQ section",
-			group: "questions",
-			of: [
-				{
-					type: "object",
-					name: "faqItem",
-					groups: [
-						{ name: "content", title: "Content", default: true },
-						{ name: "translations", title: "Translations" },
-					],
-					fields: [
-						defineField({
-							name: "question",
-							type: "string",
-							title: "Question",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_question",
-							type: "internationalizedArrayString",
-						}),
-						defineField({
-							name: "answer",
-							type: "text",
-							title: "Answer",
-							rows: 3,
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_answer",
-							type: "internationalizedArrayText",
-							title: "Answer (Translated)",
-						}),
-					],
-					preview: {
-						select: {
-							title: "question",
-							subtitle: "answer",
-						},
-					},
-				},
-			],
-			validation: (rule) => rule.min(1).error("Add at least one FAQ item"),
-		}),
-	],
-	preview: {
-		select: {
-			title: "heading",
-			itemCount: "faqItems.length",
-		},
-		prepare({ title, itemCount = 0 }) {
-			return {
-				title: title || "FAQ Section",
-				subtitle: `${itemCount} question${itemCount === 1 ? "" : "s"}`,
-				media: HelpCircleIcon,
-			};
-		},
-	},
+  name: "faqSection",
+  title: documents.faqSection,
+  type: "object",
+  icon: HelpCircleIcon,
+  groups: [
+    {
+      name: "content",
+      title: groups.content,
+      icon: InfoOutlineIcon,
+      default: true,
+    },
+    {
+      name: "appearance",
+      title: groups.appearance,
+      icon: ComponentIcon,
+    },
+    {
+      name: "questions",
+      title: groups.questions,
+      icon: HelpCircleIcon,
+    },
+  ],
+  fields: [
+    defineField({
+      name: "variant",
+      title: fields.variant,
+      type: "string",
+      group: "appearance",
+      options: {
+        list: sanityOptions.faqLayoutVariants,
+        layout: "radio",
+      },
+      initialValue: "sideBySide",
+    }),
+    defineField({
+      name: "badgeText",
+      title: fields.badgeText,
+      type: "string",
+      description: descriptions.faqBadgeDescription,
+      initialValue: descriptions.defaultFaq,
+      group: "content",
+      validation: (rule) =>
+        rule.max(30).warning(validation.badgeTextWarning),
+    }),
+    defineField({
+      name: "heading",
+      title: fields.heading,
+      type: "string",
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.faqTitleRequired)
+          .max(100)
+          .warning(validation.faqTitleWarning),
+      group: "content",
+    }),
+    defineField({
+      name: "subheading",
+      title: fields.subheading,
+      type: "text",
+      description: descriptions.faqSubheadingDescription,
+      rows: 3,
+      group: "content",
+      validation: (rule) =>
+        rule.max(250).warning(validation.faqSubheadingWarning),
+    }),
+    defineField({
+      name: "buttonText",
+      title: fields.buttonText,
+      type: "string",
+      description: descriptions.faqButtonDescription,
+      group: "content",
+      validation: (rule) =>
+        rule.max(50).warning(validation.planButtonTextWarning),
+    }),
+    defineField({
+      name: "buttonUrl",
+      title: fields.buttonUrl,
+      type: "url",
+      description: descriptions.faqButtonUrlDescription,
+      hidden: ({ parent }) => !parent?.buttonText,
+      group: "content",
+      validation: (rule) => 
+        rule
+          .required()
+          .error(validation.faqButtonUrlRequired)
+          .uri({
+            allowRelative: true,
+            scheme: ["http", "https", "mailto", "tel"]
+          })
+          .error(validation.faqButtonUrlInvalid)
+    }),
+    defineField({
+      name: "buttonIcon",
+      title: fields.buttonIcon,
+      type: "string",
+      options: {
+        list: sanityOptions.faqButtonIconOptions,
+      },
+      initialValue: "phone",
+      hidden: ({ parent }) => !parent?.buttonText,
+      group: "content",
+    }),
+    defineField({
+      name: "faqItems",
+      title: fields.faqItems,
+      type: "array",
+      description: descriptions.faqItemsDescription,
+      group: "questions",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "faqItem",
+          title: descriptions.faqItemDefault,
+          fields: [
+            defineField({
+              name: "question",
+              title: fields.question,
+              type: "string",
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.questionRequired)
+                  .max(200)
+                  .warning(validation.questionWarning),
+            }),
+            defineField({
+              name: "answer",
+              title: fields.answer,
+              type: "text",
+              rows: 3,
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.answerRequired)
+                  .min(20)
+                  .warning(validation.answerMinLength),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "question",
+              subtitle: "answer",
+            },
+            prepare({ title, subtitle }) {
+              const answerPreview = subtitle
+                ? subtitle.substring(0, 80) + (subtitle.length > 80 ? "..." : "")
+                : descriptions.noAnswer;
+              return {
+                title: title || descriptions.questionNotDefined,
+                subtitle: answerPreview,
+              };
+            },
+          },
+        }),
+      ],
+      validation: (rule) =>
+        rule.min(1).error(validation.faqItemsMinRequired),
+    }),
+  ],
+  preview: {
+    select: {
+      title: "heading",
+      variant: "variant",
+    },
+    prepare({ title, variant }) {
+      const selectedVariant = sanityOptions.faqLayoutVariants.find((v) => v.value === variant);
+      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+      return {
+        title: title || descriptions.defaultFaqSection,
+        subtitle: variantTitle || descriptions.defaultLayout,
+        media: HelpCircleIcon,
+      };
+    },
+  },
 });

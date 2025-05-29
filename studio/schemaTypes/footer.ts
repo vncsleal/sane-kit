@@ -1,238 +1,279 @@
 import {
-	MenuIcon,
-	InfoOutlineIcon,
-	ComponentIcon,
-	LinkIcon,
+  MenuIcon,
+  InfoOutlineIcon,
+  ComponentIcon,
+  LinkIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
-
-// Define field groups
-const footerGroups = [
-	{
-		name: "basic",
-		title: "Basic Information",
-		icon: InfoOutlineIcon,
-		default: true,
-	},
-	{
-		name: "appearance",
-		title: "Appearance",
-		icon: ComponentIcon,
-	},
-	{
-		name: "content",
-		title: "Content",
-		icon: MenuIcon,
-	},
-	{
-		name: "navigation",
-		title: "Navigation",
-		icon: LinkIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
-	},
-];
+import { defineField, defineType, defineArrayMember, type Reference, type ValidationContext } from "sanity";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 export const footer = defineType({
-	name: "footer",
-	title: "Footer",
-	type: "document",
-	icon: MenuIcon,
-	groups: footerGroups,
-	fields: [
-		defineField({
-			name: "title",
-			type: "string",
-			title: "Site Name",
-			description: "The name displayed in the footer",
-			validation: (rule) => rule.required(),
-			group: "basic",
-		}),
-		defineField({
-			name: "i18n_title",
-			title: "Site Name (Translated)",
-			type: "internationalizedArrayString",
-			group: "basic",
-		}),
-		defineField({
-			name: "logo",
-			type: "image",
-			title: "Logo",
-			description:
-				"Upload a logo to display instead of the site name. If no logo is provided, site name text will be used.",
-			options: {
-				hotspot: true,
-			},
-			fields: [
-				{
-					name: "alt",
-					type: "string",
-					title: "Alternative Text",
-					description: "Important for SEO and accessibility",
-				},
-				{
-					name: "i18n_alt",
-					title: "Alternative Text (Translated)",
-					type: "internationalizedArrayString",
-				},
-			],
-			group: "basic",
-		}),
-		defineField({
-			name: "variant",
-			type: "string",
-			title: "Layout Variant",
-			options: {
-				list: [
-					{ title: "Simple", value: "simple" },
-					{ title: "Minimal", value: "minimal" },
-					{ title: "Tiny", value: "tiny" },
-				],
-			},
-			initialValue: "simple",
-			group: "appearance",
-		}),
-		defineField({
-			name: "description",
-			type: "text",
-			title: "Footer Description",
-			description: "A short description or tagline for the footer",
-			rows: 2,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_description",
-			title: "Footer Description (Translated)",
-			type: "internationalizedArrayText",
-			group: "content",
-		}),
-		defineField({
-			name: "address",
-			type: "array",
-			title: "Address Lines",
-			of: [{ type: "string" }],
-			description: "Enter the address line by line",
-			group: "content",
-		}),
-		defineField({
-			name: "legalLinks",
-			type: "array",
-			title: "Legal Links",
-			group: "navigation",
-			of: [
-				{
-					type: "object",
-					name: "link",
-					fields: [
-						defineField({
-							name: "title",
-							type: "string",
-							title: "Title",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_title",
-							title: "Title (Translated)",
-							type: "internationalizedArrayString",
-						}),
-						defineField({
-							name: "url",
-							type: "string",
-							title: "URL",
-							validation: (rule) => rule.required(),
-						}),
-					],
-				},
-			],
-		}),
-		defineField({
-			name: "navigationItems",
-			type: "array",
-			title: "Navigation Items",
-			group: "navigation",
-			of: [
-				{
-					type: "object",
-					name: "navigationItem",
-					fields: [
-						defineField({
-							name: "title",
-							type: "string",
-							title: "Title",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "i18n_title",
-							title: "Title (Translated)",
-							type: "internationalizedArrayString",
-						}),
-						defineField({
-							name: "href",
-							type: "string",
-							title: "Link",
-							description: "Leave blank for categories without direct links",
-						}),
-						defineField({
-							name: "description",
-							type: "text",
-							title: "Description",
-							description: "Optional description for this category",
-						}),
-						defineField({
-							name: "i18n_description",
-							title: "Description (Translated)",
-							type: "internationalizedArrayText",
-						}),
-						defineField({
-							name: "items",
-							type: "array",
-							title: "Sub Links",
-							description: "Add links under this category",
-							of: [
-								{
-									type: "object",
-									name: "subItem",
-									fields: [
-										defineField({
-											name: "title",
-											type: "string",
-											title: "Title",
-											validation: (rule) => rule.required(),
-										}),
-										defineField({
-											name: "i18n_title",
-											title: "Title (Translated)",
-											type: "internationalizedArrayString",
-										}),
-										defineField({
-											name: "href",
-											type: "string",
-											title: "Link",
-											validation: (rule) => rule.required(),
-										}),
-									],
-								},
-							],
-						}),
-					],
-				},
-			],
-		}),
-	],
-	preview: {
-		select: {
-			title: "title",
-			variant: "variant",
-		},
-		prepare({ title, variant }) {
-			return {
-				title: title || "Website Footer",
-				subtitle: `Variant: ${variant || "default"}`,
-				media: MenuIcon,
-			};
-		},
-	},
+  name: "footer",
+  title: documents.footer,
+  type: "document",
+  icon: MenuIcon,
+  groups: [
+    {
+      name: "basic",
+      title: groups.basic,
+      icon: InfoOutlineIcon,
+      default: true,
+    },
+    {
+      name: "appearance",
+      title: groups.appearance,
+      icon: ComponentIcon,
+    },
+    {
+      name: "content",
+      title: groups.content,
+      icon: MenuIcon,
+    },
+    {
+      name: "navigation",
+      title: "Navegação",
+      icon: LinkIcon,
+    },
+  ],
+  fields: [
+    defineField({
+      name: "language",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+    }),
+    defineField({
+      name: "title",
+      title: fields.siteName,
+      type: "string",
+      description: descriptions.footerSiteNameDescription,
+      validation: (rule) =>
+        rule.required().error(validation.footerSiteNameRequired),
+      group: "basic",
+    }),
+    defineField({
+      name: "logo",
+      title: fields.logo,
+      type: "image",
+      description: descriptions.footerLogoDescription,
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: "alt",
+          title: fields.alt,
+          type: "string",
+          description: descriptions.logoAltDescription,
+          validation: (rule) =>
+            rule.custom((value, context: ValidationContext) => {
+              const parent = context.parent as { asset?: Reference };
+              if (parent?.asset && !value) {
+                return validation.logoAltRequiredFooter;
+              }
+              return true;
+            }),
+        }),
+      ],
+      group: "basic",
+    }),
+    defineField({
+      name: "variant",
+      title: fields.variant,
+      type: "string",
+      options: {
+        list: sanityOptions.footerVariants,
+        layout: "radio", 
+      },
+      initialValue: "simple",
+      group: "appearance",
+    }),
+    defineField({
+      name: "description",
+      title: fields.footerDescription,
+      type: "text",
+      description: descriptions.footerDescriptionDescription,
+      rows: 2,
+      group: "content",
+      validation: (rule) =>
+        rule.max(200).warning(validation.footerDescriptionWarning),
+    }),
+    defineField({
+      name: "address",
+      title: fields.address,
+      type: "array",
+      of: [{ type: "string" }],
+      description: descriptions.addressDescription,
+      group: "content",
+    }),
+    defineField({
+      name: "legalLinks",
+      title: fields.legalLinks,
+      type: "array",
+      group: "navigation",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "link",
+          title: descriptions.defaultLegalLink,
+          fields: [
+            defineField({
+              name: "title",
+              title: fields.title,
+              type: "string",
+              validation: (rule) =>
+                rule.required().error(validation.legalLinkTitleRequired),
+            }),
+            defineField({
+              name: "url",
+              title: fields.url,
+              type: "url", 
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.legalLinkUrlRequired)
+                  .uri({
+                    allowRelative: true,
+                    scheme: ["http", "https", "mailto", "tel"],
+                  })
+                  .error(validation.legalLinkUrlInvalid),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              subtitle: "url",
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || descriptions.defaultLegalLink,
+                subtitle: subtitle || descriptions.urlNotDefinedHeader,
+                media: LinkIcon,
+              };
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: "navigationItems",
+      title: fields.navigationItems,
+      type: "array",
+      group: "navigation",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "navigationItem",
+          title: descriptions.defaultNavigationItem,
+          fields: [
+            defineField({
+              name: "title",
+              title: fields.title,
+              type: "string",
+              validation: (rule) =>
+                rule.required().error(validation.footerNavigationTitleRequired),
+            }),
+            defineField({
+              name: "href",
+              title: fields.href,
+              type: "url", 
+              description: descriptions.footerNavigationDescription,
+              validation: (rule) =>
+                rule
+                  .uri({
+                    allowRelative: true,
+                    scheme: ["http", "https", "mailto", "tel"],
+                  })
+                  .error(validation.footerNavigationUrlInvalid),
+            }),
+            defineField({
+              name: "description",
+              title: fields.description,
+              type: "text",
+              description: descriptions.footerCategoryDescription,
+              validation: (rule) =>
+                rule.max(150).warning(validation.footerCategoryDescriptionWarning),
+            }),
+            defineField({
+              name: "items",
+              title: fields.subItems,
+              type: "array",
+              description: descriptions.sublinkDescription,
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "subItem",
+                  title: descriptions.defaultSublink,
+                  fields: [
+                    defineField({
+                      name: "title",
+                      title: fields.title,
+                      type: "string",
+                      validation: (rule) =>
+                        rule.required().error(validation.sublinkTitleRequired),
+                    }),
+                    defineField({
+                      name: "href",
+                      title: fields.href,
+                      type: "url", 
+                      validation: (rule) =>
+                        rule
+                          .required()
+                          .error(validation.sublinkUrlRequired)
+                          .uri({
+                            allowRelative: true,
+                            scheme: ["http", "https", "mailto", "tel"],
+                          })
+                          .error(validation.sublinkUrlInvalid),
+                    }),
+                  ],
+                  preview: {
+                    select: {
+                      title: "title",
+                      subtitle: "href",
+                    },
+                    prepare({ title, subtitle }) {
+                      return {
+                        title: title || descriptions.defaultSublink,
+                        subtitle: subtitle || descriptions.linkNotDefined,
+                        media: LinkIcon,
+                      };
+                    },
+                  },
+                }),
+              ],
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              subtitle: "href",
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || descriptions.defaultNavigationItem,
+                subtitle: subtitle || descriptions.noDirectLink,
+                media: MenuIcon,
+              };
+            },
+          },
+        }),
+      ],
+    }),
+  ],
+  preview: {
+    select: {
+      title: "title",
+      variant: "variant",
+    },
+    prepare({ title, variant }) {
+      const selectedVariant = sanityOptions.footerVariants.find((v) => v.value === variant);
+      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+      return {
+        title: title || descriptions.defaultFooter,
+        subtitle: `Variante: ${variantTitle || descriptions.defaultVariant}`,
+        media: MenuIcon,
+      };
+    },
+  },
 });

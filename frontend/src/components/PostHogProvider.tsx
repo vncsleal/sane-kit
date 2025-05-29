@@ -12,7 +12,16 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       ? window.localStorage.getItem('cookie-consent-choice')
       : null;
       
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+    const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    
+    if (!posthogKey) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("PostHog key is missing. Analytics tracking is disabled.");
+      }
+      return;
+    }
+    
+    posthog.init(posthogKey, {
       api_host: "/ingest",
       ui_host: "https://us.posthog.com",
       capture_pageview: false, // We capture pageviews manually
@@ -58,7 +67,7 @@ function PostHogPageView() {
       let url = window.origin + pathname
       const search = searchParams.toString()
       if (search) {
-        url += "?" + search
+        url += `?${search}`
       }
       posthog.capture("$pageview", { "$current_url": url })
     }

@@ -1,61 +1,61 @@
 import { TagIcon, InfoOutlineIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
+import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
+import { fields, groups, documents, descriptions, validation } from "../dictionary";
 
 // Define field groups
 const categoryGroups = [
 	{
 		name: "basic",
-		title: "Basic Information",
+		title: groups.basic,
 		icon: InfoOutlineIcon,
 		default: true,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
 	},
 ];
 
 export const category = defineType({
 	name: "category",
-	title: "Category",
+	title: documents.category,
 	type: "document",
 	icon: TagIcon,
 	groups: categoryGroups,
 	fields: [
 		defineField({
+			name: 'language',
+			type: 'string',
+			hidden: true,
+			readOnly: true,
+		}),
+		defineField({
 			name: "title",
+			title: fields.title,
 			type: "string",
-			title: "Title",
-			validation: (rule) => rule.required(),
+			validation: (rule) =>
+				rule.required().error(validation.titleRequired),
 			group: "basic",
 		}),
 		defineField({
-			name: "i18n_title",
-			type: "internationalizedArrayString",
-			title: "Title (Translated)",
-		}),
-		defineField({
 			name: "slug",
+			title: fields.slug,
 			type: "slug",
-			title: "Slug",
 			options: {
 				source: "title",
 				maxLength: 96,
+				isUnique: isUniqueOtherThanLanguage,
 			},
-			validation: (rule) => rule.required(),
+			validation: (rule) =>
+				rule.required().error(validation.slugRequired),
 			group: "basic",
 		}),
 		defineField({
 			name: "description",
+			title: fields.description,
 			type: "text",
-			title: "Description",
+			validation: (rule) =>
+				rule
+					.max(200)
+					.warning(validation.descriptionWarning),
 			group: "basic",
-		}),
-		defineField({
-			name: "i18n_description",
-			type: "internationalizedArrayText",
-			title: "Description (Translated)",
 		}),
 	],
 	preview: {
@@ -66,7 +66,7 @@ export const category = defineType({
 		prepare({ title, subtitle }) {
 			return {
 				title,
-				subtitle: subtitle || "No description",
+				subtitle: subtitle || descriptions.noDescription,
 				media: TagIcon,
 			};
 		},

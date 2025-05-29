@@ -1,179 +1,164 @@
 import {
-	BellIcon,
-	InfoOutlineIcon,
-	BulbOutlineIcon,
-	ComponentIcon,
+  BellIcon,
+  InfoOutlineIcon,
+  BulbOutlineIcon,
+  ComponentIcon,
 } from "@sanity/icons";
-import { defineField, defineType } from "sanity";
-
-// Define field groups
-const ctaGroups = [
-	{
-		name: "content",
-		title: "Content",
-		icon: InfoOutlineIcon,
-		default: true,
-	},
-	{
-		name: "appearance",
-		title: "Appearance",
-		icon: ComponentIcon,
-	},
-	{
-		name: "actions",
-		title: "Call to Actions",
-		icon: BulbOutlineIcon,
-	},
-	{
-		name: "translations",
-		title: "Translations",
-		icon: InfoOutlineIcon,
-	},
-];
+import { defineField, defineType, defineArrayMember } from "sanity";
+import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 
 export const ctaSection = defineType({
-	name: "ctaSection",
-	title: "CTA Section",
-	type: "object",
-	icon: BellIcon,
-	groups: ctaGroups,
-	fields: [
-		defineField({
-			name: "variant",
-			type: "string",
-			title: "Variant",
-			group: "appearance",
-			options: {
-				list: [
-					{ title: "Default", value: "default" },
-					{ title: "Highlight", value: "highlight" },
-					{ title: "Minimal", value: "minimal" },
-					{ title: "Full", value: "full" },
-				],
-			},
-			initialValue: "default",
-		}),
-		defineField({
-			name: "badgeText",
-			type: "string",
-			title: "Badge Text",
-			description: "Optional badge text displayed above the heading",
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_badgeText",
-			type: "internationalizedArrayString",
-			title: "Badge Text (Translated)",
-			description:
-				"Optional badge text displayed above the heading (translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "heading",
-			type: "string",
-			title: "Heading",
-			validation: (rule) => rule.required(),
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_heading",
-			type: "internationalizedArrayString",
-			title: "Heading (Translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "subheading",
-			type: "text",
-			title: "Subheading",
-			rows: 3,
-			group: "content",
-		}),
-		defineField({
-			name: "i18n_subheading",
-			type: "internationalizedArrayText",
-			title: "Subheading (Translated)",
-			group: "content",
-		}),
-		defineField({
-			name: "buttons",
-			type: "array",
-			title: "Buttons",
-			group: "actions",
-			of: [
-				{
-					type: "object",
-					name: "button",
-					fields: [
-						{
-							name: "label",
-							type: "string",
-							title: "Label",
-							validation: (rule) => rule.required(),
-						},
-						{
-							name: "i18n_label",
-							type: "internationalizedArrayString",
-							title: "Label (Translated)",
-						},
-						{
-							name: "url",
-							type: "string",
-							title: "URL",
-							validation: (rule) => rule.required(),
-						},
-						{
-							name: "variant",
-							type: "string",
-							title: "Variant",
-							options: {
-								list: [
-									{ title: "Default", value: "default" },
-									{ title: "Secondary", value: "secondary" },
-									{ title: "Outline", value: "outline" },
-									{ title: "Ghost", value: "ghost" },
-									{ title: "Link", value: "link" },
-								],
-							},
-							initialValue: "default",
-						},
-						{
-							name: "icon",
-							type: "string",
-							title: "Icon",
-							options: {
-								list: [
-									{ title: "None", value: "none" },
-									{ title: "Arrow Right", value: "arrowRight" },
-									{ title: "Phone", value: "phone" },
-									{ title: "Plus", value: "plus" },
-								],
-							},
-							initialValue: "none",
-						},
-					],
-					preview: {
-						select: {
-							title: "label",
-							subtitle: "url",
-						},
-					},
-				},
-			],
-			validation: (rule) => rule.min(1).error("Add at least one button"),
-		}),
-	],
-	preview: {
-		select: {
-			title: "heading",
-			subtitle: "variant",
-			buttonCount: "buttons.length",
-		},
-		prepare({ title, subtitle, buttonCount = 0 }) {
-			return {
-				title: title || "CTA Section",
-				subtitle: `${subtitle || "default"} - ${buttonCount} button${buttonCount === 1 ? "" : "s"}`,
-				media: BellIcon,
-			};
-		},
-	},
+  name: "ctaSection",
+  title: documents.ctaSection,
+  type: "object",
+  icon: BellIcon,
+  groups: [
+    {
+      name: "content",
+      title: groups.content,
+      icon: InfoOutlineIcon,
+      default: true,
+    },
+    {
+      name: "appearance",
+      title: groups.appearance,
+      icon: ComponentIcon,
+    },
+    {
+      name: "actions",
+      title: groups.actions,
+      icon: BulbOutlineIcon,
+    },
+  ],
+  fields: [
+    defineField({
+      name: "variant",
+      title: fields.variant,
+      type: "string",
+      group: "appearance",
+      options: {
+        list: sanityOptions.ctaSectionVariants,
+        layout: "radio",
+      },
+      initialValue: "default",
+    }),
+    defineField({
+      name: "badgeText",
+      title: fields.badgeText,
+      type: "string",
+      description: descriptions.badgeTextDescription,
+      group: "content",
+      validation: (rule) =>
+        rule.max(40).warning(validation.badgeTextWarning),
+    }),
+    defineField({
+      name: "heading",
+      title: fields.heading,
+      type: "string",
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.ctaTitleRequired)
+          .max(120)
+          .warning(validation.ctaTitleWarning),
+      group: "content",
+    }),
+    defineField({
+      name: "subheading",
+      title: fields.subheading,
+      type: "text",
+      rows: 3,
+      group: "content",
+      validation: (rule) =>
+        rule.max(300).warning(validation.ctaSubheadingWarning),
+    }),
+    defineField({
+      name: "buttons",
+      title: fields.buttons,
+      type: "array",
+      group: "actions",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "button",
+          title: descriptions.defaultButton,
+          fields: [
+            defineField({
+              name: "label",
+              title: fields.label,
+              type: "string",
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.buttonLabelRequired)
+                  .max(50)
+                  .warning(validation.buttonLabelWarning),
+            }),
+            defineField({
+              name: "url",
+              title: fields.url,
+              type: "url",
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.buttonUrlRequired)
+                  .uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] })
+                  .error(validation.buttonUrlInvalid),
+            }),
+            defineField({
+              name: "variant",
+              title: fields.buttonVariant,
+              type: "string",
+              options: {
+                list: sanityOptions.buttonVariantOptions,
+              },
+              initialValue: "default",
+            }),
+            defineField({
+              name: "icon",
+              title: fields.icon,
+              type: "string",
+              options: {
+                list: sanityOptions.ctaButtonIconOptions,
+                layout: "radio",
+              },
+              initialValue: "none",
+            }),
+          ],
+          preview: {
+            select: {
+              title: "label",
+              subtitle: "url",
+              variant: "variant",
+            },
+            prepare({ title, subtitle, variant }) {
+              const selectedVariant = sanityOptions.buttonVariantOptions.find(v => v.value === variant);
+              const variantTitle = selectedVariant ? selectedVariant.title : variant;
+              return {
+                title: title || descriptions.defaultButton,
+                subtitle: `${variantTitle || "Padrão"} | ${subtitle || descriptions.urlNotDefined}`,
+              };
+            },
+          },
+        }),
+      ],
+      validation: (rule) =>
+        rule.min(1).error(validation.buttonsMinRequired),
+    }),
+  ],
+  preview: {
+    select: {
+      title: "heading",
+      variant: "variant",
+    },
+    prepare({ title, variant }) {
+      const selectedVariant = sanityOptions.ctaSectionVariants.find(v => v.value === variant);
+      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+      return {
+        title: title || descriptions.defaultCtaSection,
+        subtitle: variantTitle || descriptions.defaultLayout,
+        media: BellIcon,
+      };
+    },
+  },
 });

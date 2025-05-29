@@ -1,4 +1,3 @@
-// Importing all the schema types for the Sanity CMS
 import { page } from "./page";
 import { heroSection } from "./heroSection";
 import { casesSection } from "./casesSection";
@@ -21,30 +20,28 @@ import { codeBlock } from "./codeBlock";
 import { portableText } from "./portableText";
 import { contactSection } from "./contactSection";
 import { newsletterSection } from "./newsletterSection";
-export const schemaTypes = [
-	// Document types
-	page,
-	compareFeature,
-	header,
-	footer,
-	blogPost,
-	author,
-	category,
-	blogPage,
-	codeBlock,
-	portableText,
 
-	// Section types (objects)
-	heroSection,
-	casesSection,
-	testimonialsSection,
-	pricingSection,
-	compareFeaturesSection,
-	statsSection,
-	ctaSection,
-	faqSection,
-	featureSection,
-	blogSection,
-	contactSection,
-	newsletterSection,
+export const schemaTypes = [
+  page,
+  compareFeature,
+  header,
+  footer,
+  blogPost,
+  author,
+  category,
+  blogPage,
+  codeBlock,
+  portableText,
+  heroSection,
+  casesSection,
+  testimonialsSection,
+  pricingSection,
+  compareFeaturesSection,
+  statsSection,
+  ctaSection,
+  faqSection,
+  featureSection,
+  blogSection,
+  contactSection,
+  newsletterSection,
 ];

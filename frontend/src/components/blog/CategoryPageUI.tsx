@@ -1,33 +1,36 @@
 "use client";
 
-import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { urlFor } from "@/sanity/client";
-import type { SanityCategory } from "@/sanity/types/schema";
-import { useLanguage } from "@/lib/language-context";
-import type { BlogPostData } from "@/app/blog/[slug]/page";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import type { Dictionary } from "@/i18n/getDictionary";
+import type { Locale } from "@/i18n/i18n-config";
+import type { CATEGORY_PAGE_QUERYResult } from "@/sanity/types";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
 
-interface CategoryPageUIProps {
-	category: SanityCategory;
-	posts: BlogPostData[];
-}
-
-// Helper function to format date
-function formatDate(dateString?: string) {
-	if (!dateString) return "";
-	return new Date(dateString).toLocaleDateString("en-US", {
+// Function to format date
+function formatDate(dateString: string, locale: string) {
+	return new Date(dateString).toLocaleDateString(locale, {
 		year: "numeric",
 		month: "short",
 		day: "numeric",
 	});
 }
 
-// Function to get author initials for avatar fallback
-function getInitials(name?: string) {
-	if (!name) return "??";
+// Function to get author initials
+function getInitials(name: string) {
+	if (!name) return "";
 	return name
 		.split(" ")
 		.map((n) => n[0])
@@ -36,171 +39,191 @@ function getInitials(name?: string) {
 		.substring(0, 2);
 }
 
-// Define translations for static text
-const staticText = {
-	noArticlesFound: {
-		en: "No articles found in this category.",
-		pt_BR: "Nenhum artigo encontrado nesta categoria.",
-	},
-	viewAllBlogPosts: {
-		en: "View all blog posts",
-		pt_BR: "Ver todos os posts",
-	},
-	noImage: {
-		en: "No image",
-		pt_BR: "Sem imagem",
-	},
-};
+// Use the generated types directly from CATEGORY_PAGE_QUERYResult
+type CategoryFromQuery = NonNullable<CATEGORY_PAGE_QUERYResult>;
+type PostFromQuery = CategoryFromQuery["posts"][0];
+
+interface CategoryPageUIProps {
+	category: CategoryFromQuery;
+	posts: PostFromQuery[];
+	dictionary: Dictionary;
+	locale: Locale;
+}
 
 export default function CategoryPageUI({
 	category,
 	posts,
+	dictionary,
+	locale,
 }: CategoryPageUIProps) {
-	const { getLocalizedValue, language } = useLanguage();
+	const [currentPage, setCurrentPage] = useState(1);
+	const postsPerPage = 6;
 
-	const localizedCategoryTitle = getLocalizedValue(
-		category.i18n_title,
-		category.title,
-	);
-	const localizedCategoryDescription = getLocalizedValue(
-		category.i18n_description,
-		category.description,
-	);
+	// Calculate pagination
+	const totalPages = Math.ceil(posts.length / postsPerPage);
+	const startIndex = (currentPage - 1) * postsPerPage;
+	const endIndex = startIndex + postsPerPage;
+	const currentPosts = posts.slice(startIndex, endIndex);
 
-	// Localize static text
-	const localizedNoArticles =
-		staticText.noArticlesFound[language] || staticText.noArticlesFound.en;
-	const localizedViewAll =
-		staticText.viewAllBlogPosts[language] || staticText.viewAllBlogPosts.en;
-	const localizedNoImage =
-		staticText.noImage[language] || staticText.noImage.en;
+	// Generate pagination items
+	const paginationItems = [];
+	const maxPagesToShow = 5;
+
+	let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+	const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+	if (endPage === totalPages) {
+		startPage = Math.max(1, endPage - maxPagesToShow + 1);
+	}
+
+	for (let i = startPage; i <= endPage; i++) {
+		paginationItems.push(
+			<PaginationItem key={i}>
+				<PaginationLink
+					href="#"
+					isActive={i === currentPage}
+					onClick={(e) => {
+						e.preventDefault();
+						setCurrentPage(i);
+					}}
+				>
+					{i}
+				</PaginationLink>
+			</PaginationItem>
+		);
+	}
 
 	return (
-		<main className="container mx-auto px-4 md:px-6 py-12">
-			<div className="flex flex-col gap-12">
-				{/* Category Header */}
-				<div className="flex flex-col gap-4 max-w-3xl">
-					<Badge className="w-fit">{localizedCategoryTitle}</Badge>
-					<h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-						{localizedCategoryTitle}
-					</h1>
-					{localizedCategoryDescription && (
-						<p className="text-xl text-muted-foreground">
-							{localizedCategoryDescription}
-						</p>
-					)}
-				</div>
-
-				{/* Category Posts */}
-				<div className="flex flex-col gap-8">
-					{posts.length === 0 ? (
-						<div className="text-center py-20">
-							<p className="text-muted-foreground text-lg">
-								{localizedNoArticles}
-							</p>
-							<Button asChild className="mt-8">
-								<Link href="/blog">{localizedViewAll}</Link>
-							</Button>
-						</div>
-					) : (
-						<>
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-								{posts.map((post: BlogPostData) => {
-									const localizedPostTitle = getLocalizedValue(
-										post.i18n_title,
-										post.title,
-									);
-									const localizedExcerpt = getLocalizedValue(
-										post.i18n_excerpt,
-										post.excerpt,
-									);
-									const localizedAuthorName = getLocalizedValue(
-										post.author?.i18n_name,
-										post.author?.name,
-									);
-									const localizedImageAlt = getLocalizedValue(
-										post.mainImage?.i18n_alt,
-										post.mainImage?.alt,
-									);
-									const localizedAuthorAvatarAlt = getLocalizedValue(
-										post.author?.avatar?.i18n_alt,
-										post.author?.avatar?.alt,
-									);
-
-									return (
-										<Link
-											href={`/blog/${post.slug.current}`}
-											key={post._id}
-											className="flex flex-col gap-4 group hover:opacity-80 transition-opacity"
-										>
-											<div className="bg-muted rounded-md aspect-video overflow-hidden relative">
-												{post.mainImage?.asset?._ref ? (
-													<Image
-														src={urlFor(post.mainImage.asset._ref).url()}
-														alt={localizedImageAlt || localizedPostTitle || ""}
-														fill
-														className="object-cover transition-transform group-hover:scale-105"
-													/>
-												) : (
-													<div className="w-full h-full bg-muted flex items-center justify-center">
-														<span className="text-muted-foreground">
-															{localizedNoImage}
-														</span>
-													</div>
-												)}
-											</div>
-
-											<div className="flex flex-row gap-4 items-center">
-												<span className="text-sm text-muted-foreground">
-													{formatDate(post.publishedAt)}
-												</span>
-											</div>
-
-											<h2 className="text-xl font-semibold tracking-tight group-hover:text-primary transition-colors">
-												{localizedPostTitle}
-											</h2>
-
-											{localizedExcerpt && (
-												<p className="text-muted-foreground line-clamp-2">
-													{localizedExcerpt}
-												</p>
-											)}
-
-											{localizedAuthorName && (
-												<div className="flex items-center gap-2 mt-auto">
-													<Avatar className="h-8 w-8">
-														{post.author?.avatar?.asset?._ref ? (
-															<AvatarImage
-																src={urlFor(
-																	post.author.avatar.asset._ref,
-																).url()}
-																alt={
-																	localizedAuthorAvatarAlt ||
-																	localizedAuthorName
-																}
-															/>
-														) : null}
-														<AvatarFallback>
-															{getInitials(localizedAuthorName)}
-														</AvatarFallback>
-													</Avatar>
-													<span className="text-sm">{localizedAuthorName}</span>
-												</div>
-											)}
-										</Link>
-									);
-								})}
-							</div>
-
-							<div className="flex justify-center pt-8">
-								<Button asChild>
-									<Link href="/blog">{localizedViewAll}</Link>
-								</Button>
-							</div>
-						</>
-					)}
-				</div>
+		<div className="container mx-auto px-4 py-12">
+			{/* Category Header */}
+			<div className="mb-12 text-center">
+				<h1 className="text-4xl font-bold tracking-tight mb-4">
+					{category.title || "Category"}
+				</h1>
+				{category.description && (
+					<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+						{category.description}
+					</p>
+				)}
+				
 			</div>
-		</main>
+
+			{/* Posts Grid */}
+			{currentPosts.length > 0 ? (
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+					{currentPosts.map((post) => (
+						<Link
+							key={post._id}
+							href={`/${locale}/blog/${post.slug?.current || ""}`}
+							className="flex flex-col gap-4 hover:opacity-90 transition-opacity group"
+						>
+							<div className="bg-muted rounded-md aspect-video overflow-hidden">
+								{post.mainImage?.asset?._ref ? (
+									<Image
+										src={urlFor(post.mainImage).url()}
+										alt={post.mainImage.alt || ""}
+										width={600}
+										height={337}
+										className="w-full h-full object-cover transition-transform group-hover:scale-105"
+									/>
+								) : null}
+							</div>
+
+							<div className="flex flex-row gap-3 items-center flex-wrap">
+								{post.categories?.length ? (
+									<Badge variant="secondary">
+										{post.categories[0].title || ""}
+									</Badge>
+								) : null}
+								{post.publishedAt && (
+									<span className="text-sm text-muted-foreground">
+										{formatDate(post.publishedAt, locale)}
+									</span>
+								)}
+							</div>
+
+							<div className="flex flex-col gap-1">
+								<h2 className="text-2xl font-medium tracking-tight group-hover:text-primary transition-colors">
+									{post.title || ""}
+								</h2>
+								{post.excerpt && (
+									<p className="text-muted-foreground line-clamp-2">
+										{post.excerpt}
+									</p>
+								)}
+							</div>
+
+							<div className="flex items-center gap-2 mt-auto">
+								{post.author && (
+									<>
+										<Avatar className="h-8 w-8">
+											{post.author.avatar?.asset?._ref ? (
+												<AvatarImage
+													src={urlFor(post.author.avatar).url()}
+													alt={post.author.name || undefined}
+												/>
+											) : null}
+											<AvatarFallback>
+												{getInitials(post.author.name || "")}
+											</AvatarFallback>
+										</Avatar>
+										<span className="text-sm">
+											{post.author.name || ""}
+										</span>
+									</>
+								)}
+							</div>
+						</Link>
+					))}
+				</div>
+			) : (
+				<div className="text-center py-12">
+					<p className="text-lg text-muted-foreground mb-4">
+						{dictionary.category?.noArticlesFound ||
+							"No articles found in this category"}
+					</p>
+					<Button variant="outline" asChild>
+						<Link href={`/${locale}/blog`}>
+							{dictionary.category?.viewAllBlogPosts || "View all posts"}
+						</Link>
+					</Button>
+				</div>
+			)}
+
+			{/* Pagination */}
+			{totalPages > 1 && (
+				<div className="mt-12">
+					<Pagination>
+						<PaginationContent>
+							{currentPage > 1 && (
+								<PaginationItem>
+									<PaginationPrevious
+										href="#"
+										onClick={(e) => {
+											e.preventDefault();
+											setCurrentPage(currentPage - 1);
+										}}
+									/>
+								</PaginationItem>
+							)}
+
+							{paginationItems}
+
+							{currentPage < totalPages && (
+								<PaginationItem>
+									<PaginationNext
+										href="#"
+										onClick={(e) => {
+											e.preventDefault();
+											setCurrentPage(currentPage + 1);
+										}}
+									/>
+								</PaginationItem>
+							)}
+						</PaginationContent>
+					</Pagination>
+				</div>
+			)}
+		</div>
 	);
 }

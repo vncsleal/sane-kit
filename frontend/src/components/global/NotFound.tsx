@@ -1,43 +1,47 @@
-"use client"; // Make this a client component to use the hook
+"use client";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/lib/language-context"; // Import useLanguage
+import { usePathname } from "next/navigation";
+import { i18n, type Locale } from "@/i18n/i18n-config";
+import type { Dictionary } from "@/i18n/getDictionary";
 
 interface NotFoundProps {
-	title: string;
-	i18n_title?: Record<string, string>; // Add i18n prop
-	message: string;
-	i18n_message?: Record<string, string>; // Add i18n prop
-	linkHref: string;
-	linkText: string;
-	i18n_linkText?: Record<string, string>; // Add i18n prop
+	title?: string;
+	message?: string;
+	linkHref?: string;
+	linkText?: string;
+	dictionary: Dictionary;
 }
 
 export default function NotFound({
 	title,
-	i18n_title,
 	message,
-	i18n_message,
 	linkHref,
 	linkText,
-	i18n_linkText,
+	dictionary,
 }: NotFoundProps) {
-	const { getLocalizedValue } = useLanguage(); // Use the hook
-
-	// Localize texts
-	const localizedTitle = getLocalizedValue(i18n_title, title);
-	const localizedMessage = getLocalizedValue(i18n_message, message);
-	const localizedLinkText = getLocalizedValue(i18n_linkText, linkText);
-
+	const pathname = usePathname();
+	
+	// Extract locale from pathname
+	const pathSegments = pathname.split('/').filter(Boolean);
+	const potentialLocale = pathSegments[0] as Locale;
+	const locale = i18n.locales.includes(potentialLocale) ? potentialLocale : i18n.defaultLocale;
+	
+	const localizedHref = linkHref ? `/${locale}${linkHref.startsWith('/') ? linkHref : `/${linkHref}`}` : `/${locale}`;
+	
 	return (
 		<div className="container mx-auto px-4 md:px-6 py-24 flex flex-col items-center justify-center text-center min-h-[calc(100vh-10rem)]">
 			<h1 className="text-4xl font-bold tracking-tight mb-4">
-				{localizedTitle}
+				{title || dictionary.notFound.pageTitle}
 			</h1>
-			<p className="text-xl text-muted-foreground mb-8">{localizedMessage}</p>
+			<p className="text-xl text-muted-foreground mb-8">
+				{message || dictionary.notFound.pageMessage}
+			</p>
 			<Button asChild>
-				<Link href={linkHref}>{localizedLinkText}</Link>
+				<Link href={localizedHref}>
+					{linkText || dictionary.notFound.backToHome}
+				</Link>
 			</Button>
 		</div>
 	);

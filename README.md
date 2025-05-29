@@ -17,7 +17,7 @@ This template utilizes components inspired by [TWBlocks](https://twblocks.com/) 
 - **Comprehensive Page Builder**: Create complex pages with 12+ pre-built section types
 - **Powerful Component Library**: Feature-rich, responsive components for all common UI patterns
 - **Fully Typed Schema**: Complete TypeScript definitions for all Sanity schema types
-- **Internationalization Ready**: Built-in support for multiple languages with sanity-plugin-internationalized-array
+- **Internationalization Ready**: Built-in support for multiple languages with sanity-plugin-document-internationalization
 - **Modern UI Framework**: Built with Shadcn/ui components and Tailwind CSS
 - **Analytics Built-in**: Integrated Google Analytics and PostHog for comprehensive user tracking
 - **Optimized Performance**: Next.js App Router and Turbopack for fast development and production builds
@@ -56,7 +56,7 @@ The kit includes the following section types for building pages:
 - **Studio (CMS):**
   - [Sanity](https://www.sanity.io/) v3
   - [TypeScript](https://www.typescriptlang.org/)
-  - [sanity-plugin-internationalized-array](https://github.com/sanity-io/sanity-plugin-internationalized-array) for multi-language content
+  - [sanity-plugin-document-internationalization](https://github.com/sanity-io/document-internationalization) for multi-language content
   - [Styled Components](https://styled-components.com/)
 
 ## Folder Structure
@@ -132,7 +132,8 @@ The kit comes with built-in support for multiple languages:
 
 - Default language is English with Brazilian Portuguese as a secondary language
 - Add more languages by modifying the language configuration in `sanity.config.ts`
-- Use the `i18n_` prefixed fields to add translations for various content elements
+- Each document type can have language-specific versions with automatic relationship management
+- Translation workflows are built into the Studio interface for easy content management
 
 ## Deployment
 

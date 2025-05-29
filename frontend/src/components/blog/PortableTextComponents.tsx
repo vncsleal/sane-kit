@@ -2,13 +2,20 @@ import type { PortableTextComponents } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/client";
-import type { SanityImage } from "@/sanity/types/schema";
+import type { CodeBlock as SanityCodeBlock, Code as SanityCode, SanityImageHotspot, SanityImageCrop } from "@/sanity/types";
 import { CodeBlock } from "./CodeBlock";
 
 // Basic components, customize as needed
 export const portableTextComponents: PortableTextComponents = {
 	types: {
-		image: ({ value }: { value: SanityImage }) => {
+		image: ({ value }: { value: { 
+			asset?: { _ref: string; _type: string };
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			alt?: string;
+			caption?: string;
+			_type: string;
+		} }) => {
 			if (!value?.asset?._ref) {
 				return null;
 			}
@@ -29,7 +36,7 @@ export const portableTextComponents: PortableTextComponents = {
 			);
 		},
 		// Fixed codeBlock component with proper property passing
-		codeBlock: ({ value }) => {
+		codeBlock: ({ value }: { value: SanityCodeBlock }) => {
 			// With additional defensive null checks
 			if (!value) {
 				return null;
@@ -41,8 +48,8 @@ export const portableTextComponents: PortableTextComponents = {
 					<CodeBlock
 						code={value.code}
 						title={value.title || ""}
-						language={value.language || "typescript"}
-						showLineNumbers={value.showLineNumbers}
+						language={"typescript"} // Default to typescript
+						showLineNumbers={value.showLineNumbers === "true"}
 						highlightLines={value.highlightLines}
 						caption={value.caption}
 					/>
@@ -52,9 +59,9 @@ export const portableTextComponents: PortableTextComponents = {
 			// Handle new code input format ({_type: 'code', code: '...', language: '...'})
 			if (typeof value.code === "object" && value.code !== null) {
 				// Extract simple string from the code object
-				const codeText = value.code.code || "";
-				const language = value.code.language || value.language || "typescript";
-				const filename = value.code.filename || "";
+				const codeText = (value.code as SanityCode).code || "";
+				const language = (value.code as SanityCode).language || "typescript";
+				const filename = (value.code as SanityCode).filename || "";
 
 				return (
 					<CodeBlock
@@ -62,7 +69,7 @@ export const portableTextComponents: PortableTextComponents = {
 						filename={filename}
 						title={value.title || ""}
 						language={language}
-						showLineNumbers={value.showLineNumbers}
+						showLineNumbers={value.showLineNumbers === "true"}
 						highlightLines={value.highlightLines}
 						caption={value.caption}
 					/>

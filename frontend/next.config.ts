@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
+	// Remove built-in i18n support as it's replaced by App Router filesystem routing
+	// i18n: {
+	// 	locales: ["pt-BR", "en"],
+	// 	defaultLocale: "pt-BR",
+	// },
 	// This is required to support PostHog trailing slash API requests
 	skipTrailingSlashRedirect: true,
 	// Add PostHog rewrites

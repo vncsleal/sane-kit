@@ -1,6 +1,7 @@
 ---
 applyTo: '**'
 ---
+---
 description: Opinionated guidance for configuring Sanity Studio and authoring content
 globs: **/*.{ts,tsx,js,jsx}
 alwaysApply: false
