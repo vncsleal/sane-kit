@@ -193,6 +193,46 @@ Sane-Kit comes with both Google Analytics and PostHog implementations:
 
 To disable either analytics platform, simply remove the corresponding environment variables or set them to empty strings.
 
+## Version History
+
+- **Main branch**: Current version with document-based internationalization (v2.0+)
+- **Legacy branch**: Previous version with array-based internationalization (v1.x)
+
+To use the legacy version:
+```bash
+git checkout legacy
+```
+
+## Migration Guide
+
+This project has migrated from array-based to document-based internationalization. If you're upgrading from v1.x:
+
+### Breaking Changes
+
+1. **Content Migration Required**: Existing multilingual content needs to be restructured
+2. **Schema Changes**: Document types now use document-level language handling
+3. **Query Updates**: GROQ queries have been updated for better performance
+4. **Plugin Change**: Now uses `sanity-plugin-document-internationalization` instead of `sanity-plugin-internationalized-array`
+
+### Migration Steps
+
+1. **Backup your data** before starting the migration
+2. **Update schema types** to use the new document-based structure
+3. **Migrate existing content** using Sanity's migration tools
+4. **Update GROQ queries** to work with the new structure
+5. **Test thoroughly** in a development environment
+
+### Resources
+
+For detailed migration instructions, please refer to the [Sanity Document Internationalization documentation](https://github.com/sanity-io/document-internationalization).
+
+### Need Help?
+
+If you encounter issues during migration, please:
+- Check the [legacy branch](https://github.com/vncsleal/sane-kit/tree/legacy) for reference
+- Review the migration documentation
+- Open an issue on GitHub for additional support
+
 ## Contributing
 
 Contributions are welcome! Please refer to the contributing guidelines (if available) or open an issue/pull request.
