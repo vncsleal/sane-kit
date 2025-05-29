@@ -10,7 +10,8 @@ import { PostHogProvider } from "@/components/PostHogProvider";
 import { GoogleAnalytics } from "@/components/global/GoogleAnalytics";
 import { CookieConsent } from "@/components/global/CookieConsent";
 // Import the CookieConsent component
-import { dictionary } from "@/i18n/dictionaries.pt-BR";
+import { getDictionary } from "@/i18n/getDictionary";
+import { i18n } from "@/i18n/i18n-config";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -22,10 +23,13 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-	title: dictionary.app.title,
-	description: dictionary.app.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+	const dictionary = await getDictionary(i18n.defaultLocale);
+	return {
+		title: dictionary.app.title,
+		description: dictionary.app.description,
+	};
+}
 
 export default async function RootLayout({
 	children,
