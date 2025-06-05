@@ -8,8 +8,6 @@ import { ThemeToggle } from "@/components/global/ThemeToggle";
 import { PostHogProvider } from "@/components/PostHogProvider";
 // Import the GoogleAnalytics component
 import { GoogleAnalytics } from "@/components/global/GoogleAnalytics";
-import { CookieConsent } from "@/components/global/CookieConsent";
-// Import the CookieConsent component
 import { getDictionary } from "@/i18n/getDictionary";
 import { i18n } from "@/i18n/i18n-config";
 
@@ -52,7 +50,6 @@ export default async function RootLayout({
               <ThemeToggle />
             </div>
             <Toaster position="top-center" />
-            <CookieConsent />
           </ThemeProvider>
 				</PostHogProvider>
 			</body>

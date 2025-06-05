@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import posthog from "posthog-js";
 import { Card, CardContent } from "../ui/card";
 import { Cookie } from "lucide-react"; 
+import type { Dictionary } from "@/i18n/getDictionary";
 
 // Define global type definition for gtag
 declare global {
@@ -17,13 +18,12 @@ declare global {
   }
 }
 
-export function CookieConsent() {
+interface CookieConsentProps {
+  dictionary?: Partial<Dictionary['cookie']>;
+}
+
+export function CookieConsent({ dictionary = {} }: CookieConsentProps) {
   const [showConsent, setShowConsent] = useState(false);
-  
-  // Default text values in Portuguese
-  const description = "Usamos cookies para otimizar sua experiência. Eles são opcionais, mas apreciados. Você aceita?";
-  const acceptButton = "Aceitar";
-  const rejectButton = "Recusar";
 
   // Check if consent has already been provided
   useEffect(() => {
@@ -86,15 +86,15 @@ export function CookieConsent() {
             <Cookie className="h-5 w-5 text-muted-foreground flex-shrink-0" /> 
             <div className="flex-grow"> 
               <p className="text-xs text-muted-foreground">
-                {description}
+                {dictionary.description || "Usamos cookies para otimizar sua experiência. Eles são opcionais, mas apreciados. Você aceita?"}
               </p>
             </div>
             <div className="flex gap-2 flex-shrink-0"> 
               <Button variant="outline" size={"sm"} onClick={handleReject}>
-                {rejectButton}
+                {dictionary.reject || "Recusar"}
               </Button>
               <Button size={"sm"} onClick={handleAccept}>
-                {acceptButton}
+                {dictionary.accept || "Aceitar"}
               </Button>
             </div>
           </div>
