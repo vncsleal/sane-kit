@@ -60,6 +60,20 @@ export const dictionary = {
     accept: "Accept",
     reject: "Reject",
   },
+  contact: {
+    form: {
+      dateLabel: "Date",
+      datePlaceholder: "Pick a date",
+      firstNameLabel: "First Name",
+      firstNamePlaceholder: "John",
+      lastNameLabel: "Last Name",
+      lastNamePlaceholder: "Doe",
+      emailLabel: "Email",
+      emailPlaceholder: "email@example.com",
+      fileUploadLabel: "Upload resume",
+      submitAlert: "Form submitted"
+    }
+  },
   error: {
     invalidCodeBlock: "Error: Invalid code block format",
   },

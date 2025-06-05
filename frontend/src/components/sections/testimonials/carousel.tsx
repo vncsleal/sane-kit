@@ -60,7 +60,6 @@ export default function Carousel({
                         </p>
                       </div>
                       <p className="flex flex-row gap-2 text-sm items-center">
-                        <span className="text-muted-foreground">Por</span>{" "}
                         <Avatar className="h-6 w-6">
                           {testimonial.avatar ? (
                             <AvatarImage

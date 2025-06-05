@@ -73,6 +73,21 @@ export const dictionary = {
     reject: "Recusar"
   },
   
+  contact: {
+    form: {
+      dateLabel: "Data",
+      datePlaceholder: "Escolha uma data",
+      firstNameLabel: "Nome",
+      firstNamePlaceholder: "João",
+      lastNameLabel: "Sobrenome", 
+      lastNamePlaceholder: "Silva",
+      emailLabel: "Email",
+      emailPlaceholder: "email@exemplo.com",
+      fileUploadLabel: "Enviar currículo",
+      submitAlert: "Formulário enviado"
+    }
+  },
+  
   error: {
     invalidCodeBlock: "Erro: Formato de bloco de código inválido"
   },

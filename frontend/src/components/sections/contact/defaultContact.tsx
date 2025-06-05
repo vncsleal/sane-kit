@@ -4,7 +4,7 @@ import { CalendarIcon, Check, MoveRight, PhoneCall } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
 	Popover,
 	PopoverContent,
@@ -15,6 +15,9 @@ import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { ContactSection } from "@/sanity/types";
+import type { Dictionary } from "@/i18n/getDictionary";
+import { LanguageContext } from "@/components/global/LanguageProvider";
+import { getDictionary } from "@/i18n/getDictionary";
 
 type DefaultContactProps = Pick<ContactSection, 
 	'badgeText' | 'heading' | 'description' | 'features' | 
@@ -38,10 +41,33 @@ export default function DefaultContact({
 	buttonIcon = "arrowRight",
 }: DefaultContactProps) {
 	const [date, setDate] = useState<Date | undefined>(new Date());
+	const [dictionary, setDictionary] = useState<Dictionary['contact'] | null>(null);
+	
+	const context = useContext(LanguageContext);
+	
+	if (!context) {
+		throw new Error('DefaultContact must be used within a LanguageProvider');
+	}
+	
+	const { locale } = context;
+	
+	// Fetch dictionary based on current locale
+	useEffect(() => {
+		const fetchDictionary = async () => {
+			try {
+				const dict = await getDictionary(locale);
+				setDictionary(dict.contact);
+			} catch (error) {
+				console.warn('Failed to fetch dictionary:', error);
+			}
+		};
+		
+		fetchDictionary();
+	}, [locale]);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		alert("Form submitted");
+		alert(dictionary?.form?.submitAlert || "Form submitted");
 	};
 
 	const ButtonIcon =
@@ -101,7 +127,7 @@ export default function DefaultContact({
 
 							{formFields?.showDate === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
-									<Label htmlFor="date">Data</Label>
+									<Label htmlFor="date">{dictionary?.form?.dateLabel || "Data"}</Label>
 									<Popover>
 										<PopoverTrigger asChild>
 											<Button
@@ -112,7 +138,7 @@ export default function DefaultContact({
 												)}
 											>
 												<CalendarIcon className="mr-2 h-4 w-4" />
-												{date ? format(date, "PPP") : <span>Escolha uma data</span>}
+												{date ? format(date, "PPP") : <span>{dictionary?.form?.datePlaceholder || "Escolha uma data"}</span>}
 											</Button>
 										</PopoverTrigger>
 										<PopoverContent className="w-auto p-0">
@@ -129,26 +155,26 @@ export default function DefaultContact({
 
 							{formFields?.showFirstName === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
-									<Label htmlFor="firstName">Nome</Label>
-									<Input type="text" id="firstName" placeholder="Seu nome" />
+									<Label htmlFor="firstName">{dictionary?.form?.firstNameLabel || "Nome"}</Label>
+									<Input type="text" id="firstName" placeholder={dictionary?.form?.firstNamePlaceholder || "João"} />
 								</div>
 							)}
 
 							{formFields?.showLastName === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
-									<Label htmlFor="lastName">Sobrenome</Label>
-									<Input type="text" id="lastName" placeholder="Seu sobrenome" />
+									<Label htmlFor="lastName">{dictionary?.form?.lastNameLabel || "Sobrenome"}</Label>
+									<Input type="text" id="lastName" placeholder={dictionary?.form?.lastNamePlaceholder || "Silva"} />
 								</div>
 							)}
 
 							<div className="grid w-full max-w-sm items-center gap-1">
-								<Label htmlFor="email">Email</Label>
-								<Input type="email" id="email" placeholder="Seu email" />
+								<Label htmlFor="email">{dictionary?.form?.emailLabel || "Email"}</Label>
+								<Input type="email" id="email" placeholder={dictionary?.form?.emailPlaceholder || "email@exemplo.com"} />
 							</div>
 
 							{formFields?.showFileUpload === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
-									<Label htmlFor="files">{formFields.fileUploadLabel}</Label>
+									<Label htmlFor="files">{formFields.fileUploadLabel || dictionary?.form?.fileUploadLabel || "Enviar currículo"}</Label>
 									<Input type="file" id="files" />
 								</div>
 							)}
