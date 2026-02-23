@@ -1,0 +1,31 @@
+{
+  "name": "sanest-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Modern Sanity CMS + Next.js 16 starter - Feb 2026",
+  "scripts": {
+    "dev": "pnpm --parallel dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:studio": "pnpm --filter studio dev",
+    "build": "pnpm --recursive build",
+    "build:web": "pnpm --filter web build",
+    "build:studio": "pnpm --filter studio build",
+    "deploy:studio": "pnpm --filter studio deploy",
+    "typegen": "pnpm --filter studio typegen",
+    "lint": "pnpm --recursive lint",
+    "clean": "pnpm --recursive clean && rm -rf node_modules"
+  },
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "keywords": [
+    "sanity",
+    "nextjs",
+    "cms",
+    "headless",
+    "react",
+    "typescript"
+  ]
+}
