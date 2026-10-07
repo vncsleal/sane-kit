@@ -19,6 +19,17 @@ test('a blog post renders', async ({ page }) => {
   await expect(page.locator('body')).toContainText('Sane Kit')
 })
 
+test('contact form renders with an email field and a honeypot', async ({ page }) => {
+  await page.goto('/pt-BR/contato')
+  await expect(page.locator('input[name="email"]').first()).toBeVisible()
+  await expect(page.locator('input[name="website"]')).toHaveCount(1)
+})
+
+test('newsletter form renders', async ({ page }) => {
+  await page.goto('/pt-BR/newsletter')
+  await expect(page.locator('input[name="email"]').first()).toBeVisible()
+})
+
 test('robots.txt is served with a sitemap reference', async ({ request }) => {
   const response = await request.get('/robots.txt')
   expect(response.ok()).toBeTruthy()

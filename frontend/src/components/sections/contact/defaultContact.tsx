@@ -6,7 +6,7 @@ import { logger } from "@/lib/logger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useActionState } from "react";
 import {
 	Popover,
 	PopoverContent,
@@ -20,6 +20,7 @@ import type { ContactSection } from "@/sanity/types";
 import type { Dictionary } from "@/i18n/getDictionary";
 import { LanguageContext } from "@/components/global/LanguageProvider";
 import { getDictionary } from "@/i18n/getDictionary";
+import { submitContactForm, type FormState } from "@/app/actions/forms";
 
 type DefaultContactProps = Pick<ContactSection, 
 	'badgeText' | 'heading' | 'description' | 'features' | 
@@ -67,10 +68,9 @@ export default function DefaultContact({
 		fetchDictionary();
 	}, [locale]);
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		alert(dictionary?.form?.submitAlert || "Form submitted");
-	};
+	const [formState, formAction, pending] = useActionState(submitContactForm, {
+		status: "idle",
+	} as FormState);
 
 	const ButtonIcon =
 		stegaClean(buttonIcon) === "arrowRight"
@@ -122,10 +122,20 @@ export default function DefaultContact({
 
 					<div className="justify-center flex items-center">
 						<form
-							onSubmit={handleSubmit}
+							action={formAction}
 							className="rounded-md max-w-sm w-full flex flex-col border p-8 gap-4"
 						>
 							<p>{formTitle}</p>
+
+							<input type="hidden" name="date" value={date ? date.toISOString() : ""} />
+							<input
+								type="text"
+								name="website"
+								tabIndex={-1}
+								autoComplete="off"
+								aria-hidden="true"
+								className="hidden"
+							/>
 
 							{formFields?.showDate === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
@@ -157,34 +167,44 @@ export default function DefaultContact({
 							{formFields?.showFirstName === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
 									<Label htmlFor="firstName">{dictionary?.form?.firstNameLabel || "Nome"}</Label>
-									<Input type="text" id="firstName" placeholder={dictionary?.form?.firstNamePlaceholder || "João"} />
+									<Input type="text" id="firstName" name="firstName" placeholder={dictionary?.form?.firstNamePlaceholder || "João"} />
 								</div>
 							)}
 
 							{formFields?.showLastName === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
 									<Label htmlFor="lastName">{dictionary?.form?.lastNameLabel || "Sobrenome"}</Label>
-									<Input type="text" id="lastName" placeholder={dictionary?.form?.lastNamePlaceholder || "Silva"} />
+									<Input type="text" id="lastName" name="lastName" placeholder={dictionary?.form?.lastNamePlaceholder || "Silva"} />
 								</div>
 							)}
 
 							<div className="grid w-full max-w-sm items-center gap-1">
 								<Label htmlFor="email">{dictionary?.form?.emailLabel || "Email"}</Label>
-								<Input type="email" id="email" placeholder={dictionary?.form?.emailPlaceholder || "email@exemplo.com"} />
+								<Input type="email" id="email" name="email" placeholder={dictionary?.form?.emailPlaceholder || "email@exemplo.com"} />
 							</div>
 
 							{formFields?.showFileUpload === "true" && (
 								<div className="grid w-full max-w-sm items-center gap-1">
 									<Label htmlFor="files">{formFields.fileUploadLabel || dictionary?.form?.fileUploadLabel || "Enviar currículo"}</Label>
-									<Input type="file" id="files" />
+									<Input type="file" id="files" name="files" />
 								</div>
 							)}
 
 							<div className="pt-4">
-								<Button type="submit" className="w-full">
+								<Button type="submit" className="w-full" disabled={pending}>
 									{buttonText}
 									{ButtonIcon && <ButtonIcon size={16} className="ml-2" />}
 								</Button>
+								{formState.status === "success" && (
+									<p className="mt-2 text-sm text-green-600 dark:text-green-400">
+										{dictionary?.form?.submitAlert || "Recebemos sua mensagem!"}
+									</p>
+								)}
+								{formState.status === "error" && (
+									<p className="mt-2 text-sm text-destructive">
+										Algo deu errado. Tente novamente.
+									</p>
+								)}
 							</div>
 						</form>
 					</div>

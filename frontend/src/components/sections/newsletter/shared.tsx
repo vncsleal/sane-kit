@@ -5,8 +5,9 @@ import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MoveRight, Plus, Mail } from "lucide-react";
-import React, { useState } from "react";
+import React, { useActionState } from "react";
 import type { NewsletterSection } from "@/sanity/types";
+import { submitNewsletterForm, type FormState } from "@/app/actions/forms";
 
 // Map of icon names to components
 export const IconMap = {
@@ -58,37 +59,9 @@ export const SubscriptionForm = ({
   privacyText,
   variant = "default"
 }: Pick<NewsletterSection, 'inputPlaceholder' | 'buttonText' | 'buttonIcon' | 'successMessage' | 'privacyText' | 'variant'>) => {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    // Basic email validation
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Por favor, digite um endereço de e-mail válido");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      // Here you would typically call your API endpoint to handle the subscription
-      // For example: await fetch('/api/subscribe', { method: 'POST', body: JSON.stringify({ email }) });
-
-      // Simulate API call with delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setSubmitted(true);
-    } catch {
-      setError("Ocorreu um erro. Por favor, tente novamente.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const [state, formAction, pending] = useActionState(submitNewsletterForm, {
+    status: "idle",
+  } as FormState);
 
   // Get icon if specified
   const Icon = buttonIcon && buttonIcon !== "none" ? IconMap[buttonIcon] : null;
@@ -98,7 +71,7 @@ export const SubscriptionForm = ({
   const isFullVariant = stegaClean(variant) === "full";
   const containerClass = (isHighlightVariant || isFullVariant) ? "rounded-md p-1 backdrop-blur-sm" : "";
   
-  if (submitted) {
+  if (state.status === "success") {
     return (
       <div className="mt-2 text-center text-green-600 dark:text-green-400">
         {successMessage}
@@ -107,19 +80,26 @@ export const SubscriptionForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md">
+    <form action={formAction} className="w-full max-w-md">
       <div className={`flex flex-col sm:flex-row gap-2 ${containerClass}`}>
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="hidden"
+        />
         <Input
           type="email"
+          name="email"
           placeholder={inputPlaceholder}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
           className={`flex-1 ${isHighlightVariant ? "bg-primary-foreground border-secondary" : ""}`}
           required
         />
         <Button 
           type="submit" 
-          disabled={isSubmitting}
+          disabled={pending}
           variant={isHighlightVariant ? "secondary" : "default"}
           className={Icon ? "gap-2" : ""}
         >
@@ -128,7 +108,9 @@ export const SubscriptionForm = ({
         </Button>
       </div>
       
-      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+      {state.status === "error" && (
+        <p className="mt-2 text-sm text-destructive">Ocorreu um erro. Por favor, tente novamente.</p>
+      )}
       
       {privacyText && (
         <p className="mt-2 text-xs text-muted-foreground">{privacyText}</p>
