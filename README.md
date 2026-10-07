@@ -106,6 +106,12 @@ tags to invalidate, e.g.:
 { "tags": [_type, _type + ":" + slug.current] }
 ```
 
+## Redirects
+
+Editors manage 307/308 redirects with the **Redirect** document type in the
+Studio. `next.config.ts` loads them in `redirects()` at build time, so a new
+redirect takes effect on the next deploy.
+
 ## Deployment
 
 - **Studio:** `pnpm --filter studio deploy`.

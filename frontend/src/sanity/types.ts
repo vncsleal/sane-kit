@@ -93,6 +93,17 @@ export type FeatureImage = {
   _type: 'image'
 }
 
+export type Redirect = {
+  _id: string
+  _type: 'redirect'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  source?: string
+  destination?: string
+  permanent?: 'true' | 'false'
+}
+
 export type BlogSection = {
   _type: 'blogSection'
   heading?: string
@@ -981,6 +992,7 @@ export type AllSanitySchemaTypes =
   | Logo
   | Avatar
   | FeatureImage
+  | Redirect
   | BlogSection
   | PortableText
   | CodeBlock
@@ -1074,73 +1086,6 @@ export type BLOG_POSTS_QUERY_RESULT = Array<{
     slug: Slug | null
   }> | null
 }>
-
-// Source: ../frontend/src/sanity/client.ts
-// Variable: TRANSLATION_METADATA_QUERY
-// Query: *[  _type == "translation.metadata"  && (    ($documentId != null && translations[].value._ref == $documentId) ||    ($slug != null && references(*[      _type in ["page", "blogPost", "author", "category"]      && slug.current == $slug      && language == $currentLanguage    ][0]._id))  )][0]{  translations[]{    _key,    value->{      _id,      _type,      slug,      language,      title    }  }}
-export type TRANSLATION_METADATA_QUERY_RESULT = {
-  translations: Array<{
-    _key: string
-    value:
-      | {
-          _id: string
-          _type: 'author'
-          slug: Slug | null
-          language: string | null
-          title: null
-        }
-      | {
-          _id: string
-          _type: 'blogPage'
-          slug: null
-          language: string | null
-          title: string | null
-        }
-      | {
-          _id: string
-          _type: 'blogPost'
-          slug: Slug | null
-          language: string | null
-          title: string | null
-        }
-      | null
-      | {
-          _id: string
-          _type: 'category'
-          slug: Slug | null
-          language: string | null
-          title: string | null
-        }
-      | {
-          _id: string
-          _type: 'compareFeature'
-          slug: null
-          language: string | null
-          title: string | null
-        }
-      | {
-          _id: string
-          _type: 'footer'
-          slug: null
-          language: string | null
-          title: string | null
-        }
-      | {
-          _id: string
-          _type: 'header'
-          slug: null
-          language: string | null
-          title: string | null
-        }
-      | {
-          _id: string
-          _type: 'page'
-          slug: Slug | null
-          language: string | null
-          title: string | null
-        }
-  }> | null
-} | null
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: LAYOUT_HEADER_QUERY
@@ -2310,11 +2255,19 @@ export type LANGUAGE_ALTERNATES_QUERY_RESULT = {
   }> | null
 } | null
 
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: REDIRECTS_QUERY
+// Query: *[  _type == "redirect"  && defined(source)  && defined(destination)]{  source,  destination,  permanent}
+export type REDIRECTS_QUERY_RESULT = Array<{
+  source: string
+  destination: string
+  permanent: 'false' | 'true' | null
+}>
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
     '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == "true")\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
-    '*[\n  _type == "translation.metadata"\n  && (\n    ($documentId != null && translations[].value._ref == $documentId) ||\n    ($slug != null && references(*[\n      _type in ["page", "blogPost", "author", "category"]\n      && slug.current == $slug\n      && language == $currentLanguage\n    ][0]._id))\n  )\n][0]{\n  translations[]{\n    _key,\n    value->{\n      _id,\n      _type,\n      slug,\n      language,\n      title\n    }\n  }\n}': TRANSLATION_METADATA_QUERY_RESULT
     '*[\n  _type == "header"\n  && language == $language\n][0]{\n  _id,\n  title,\n  logo,\n  variant,\n  navigationItems[]{\n    title,\n    href,\n    description,\n    items[]{\n      title,\n      href,\n      _key\n    },\n    _key\n  },\n  ctaButtons[]{\n    label,\n    url,\n    variant,\n    _key\n  },\n  dropdownCTALabel,\n  dropdownCTAUrl,\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    language\n  }\n}': LAYOUT_HEADER_QUERY_RESULT
     '*[\n  _type == "footer"\n  && language == $language\n][0]{\n  _id,\n  title,\n  logo,\n  variant,\n  description,\n  address,\n  legalLinks[]{\n    title,\n    url,\n    _key\n  },\n  navigationItems[]{\n    title,\n    href,\n    description,\n    items[]{\n      title,\n      href,\n      _key\n    },\n    _key\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    language\n  }\n}': LAYOUT_FOOTER_QUERY_RESULT
     '*[\n  _type == "page"\n  && slug.current == "/"\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  description,\n  ogImage,\n  pageBuilder[]{\n    _key,\n    _type,\n    ...,\n    _type == "compareFeaturesSection" => {\n      ...,\n      "features": features[]{\n        "_ref": _ref,\n        "_key": _key,\n        "_type": _type\n      },\n      "plans": plans[]{\n        ...,\n        "featureValues": featureValues[]{\n          ...,\n          "featureRef": {\n            "_ref": featureRef._ref,\n            "_type": featureRef._type\n          }\n        }\n      }\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': HOME_PAGE_QUERY_RESULT
@@ -2326,6 +2279,7 @@ declare global {
     '*[\n  _type in ["page", "blogPost", "author", "category"]\n  && defined(slug.current)\n  && language == $language\n]{\n  _type,\n  _updatedAt,\n  "slug": slug.current\n}': SITEMAP_QUERY_RESULT
     '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
     '*[\n  _type == "translation.metadata"\n  && references(*[\n    _type in ["page", "blogPost", "author", "category"]\n    && slug.current == $slug\n    && language == $currentLanguage\n  ][0]._id)\n][0]{\n  "translations": translations[]{\n    "value": value->{ _type, language, "slug": slug.current }\n  }\n}': LANGUAGE_ALTERNATES_QUERY_RESULT
+    '*[\n  _type == "redirect"\n  && defined(source)\n  && defined(destination)\n]{\n  source,\n  destination,\n  permanent\n}': REDIRECTS_QUERY_RESULT
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

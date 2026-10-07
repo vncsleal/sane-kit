@@ -20,6 +20,7 @@ import { codeBlock } from "./codeBlock";
 import { portableText } from "./portableText";
 import { contactSection } from "./contactSection";
 import { newsletterSection } from "./newsletterSection";
+import { redirect } from "./redirect";
 
 export const schemaTypes = [
   page,
@@ -44,4 +45,5 @@ export const schemaTypes = [
   blogSection,
   contactSection,
   newsletterSection,
+  redirect,
 ];

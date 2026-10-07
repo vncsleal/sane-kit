@@ -25,7 +25,8 @@ const labels = {
   footers: isPortuguese ? 'Rodapés' : 'Footers',
   footersByLanguage: isPortuguese ? 'Rodapés por Idioma' : 'Footers by Language',
   reusableContent: isPortuguese ? 'Conteúdo Reutilizável' : 'Reusable Content',
-  compareFeatures: isPortuguese ? 'Comparar Recursos' : 'Compare Features'
+  compareFeatures: isPortuguese ? 'Comparar Recursos' : 'Compare Features',
+  redirects: isPortuguese ? 'Redirecionamentos' : 'Redirects'
 }
 
 export const structure = (S: StructureBuilder) =>
@@ -220,5 +221,9 @@ export const structure = (S: StructureBuilder) =>
         .child(
           S.documentTypeList('compareFeature')
             .title(labels.compareFeatures)
-        )
+        ),
+
+      S.divider(),
+
+      S.documentTypeListItem('redirect').title(labels.redirects)
     ])

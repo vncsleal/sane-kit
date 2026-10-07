@@ -450,3 +450,13 @@ export const LANGUAGE_ALTERNATES_QUERY = defineQuery(`*[
     "value": value->{ _type, language, "slug": slug.current }
   }
 }`);
+
+export const REDIRECTS_QUERY = defineQuery(`*[
+  _type == "redirect"
+  && defined(source)
+  && defined(destination)
+]{
+  source,
+  destination,
+  permanent
+}`);
