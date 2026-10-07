@@ -1,0 +1,32 @@
+# Implementation status — upgrade to the 2026 stack
+
+Branch: **`upgrade/2026`** (off `main`; `main` untouched).
+Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
+
+## Done and verified
+
+| Area | Change |
+| --- | --- |
+| Tooling | pnpm 10 workspaces, Turborepo, Node 24, root scripts, ESLint flat config, CI `verify` job |
+| Env | `@t3-oss/env-nextjs` + `zod` (`frontend/src/sanity/env.ts`) — no silent fallbacks |
+| Studio | Sanity 6.18, React 19.3, plugin majors, `@sanity/icons` v5 subpath imports (22 files), Presentation tool + `resolve.ts`, dev-only Vision, `deployment.autoUpdates` |
+| TypeGen | Config in `studio/sanity.cli.ts`; 13 queries / 65 schema types; regenerated `types.ts` |
+| Web | Next 16.4, React 19.3, `middleware` → `proxy.ts` (`@formatjs/intl-localematcher` + `negotiator`), typed route params + `hasLocale`, `priority` → `preload`, ESLint CLI |
+| Data layer | `next-sanity` 13, `sanity/{env,client,image,live,translations}`, `defineQuery` from `next-sanity` |
+| Live / VE | `defineLive` / `sanityFetch` / `<SanityLive />`, `<VisualEditing />`, Server-Action `<DisableDraftMode />`, draft-mode + revalidate routes, `parseBody` |
+| stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
+| i18n | Server-driven language switcher (`sanity/translations.ts` + `x-pathname`); client-side Sanity fetch removed |
+| SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images |
+| UI deps | lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4 |
+| Docs | README rewritten; vendored Sanity rules removed in favour of the official skill |
+
+**Verified:** frontend + studio `tsc` clean · frontend + studio ESLint 0 errors · frontend `next build` green · studio `sanity build` green · `sanity typegen` clean.
+
+## Not done
+
+- **Forms backend** for `ContactSection` / `NewsletterSection` (needs a provider + keys).
+- **Sanity-managed redirects** (`redirect` document type).
+- **shadcn v4 regeneration** and consolidating the nine `@radix-ui/react-*` packages into `radix-ui` (`shadcn init --base radix --preset nova`, `shadcn/tailwind.css`).
+- **Runtime verification** of Live Content / Visual Editing / Draft Mode (needs a Viewer token + CORS credentials).
+- **Playwright / Vitest** baseline.
+- Deferred: schema conformance, Sanity `locale` document type, Blueprints/Functions.
