@@ -16,7 +16,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | Live / VE | `defineLive` / `sanityFetch` / `<SanityLive />`, `<VisualEditing />`, Server-Action `<DisableDraftMode />`, draft-mode + revalidate routes, `parseBody` |
 | stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
 | i18n | Server-driven language switcher (`sanity/translations.ts` + `x-pathname`); client-side Sanity fetch removed |
-| SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images, **Sanity-managed redirects** (`redirect` type → `next.config` `redirects()`) |
+| SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images, **reusable `seo` schema type** (coalesce fallbacks + `noIndex`), **JSON-LD** (`BlogPosting`/`Organization`), **Sanity-managed redirects** (`redirect` type → `next.config` `redirects()`) |
 | UI deps | lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4, **nine `@radix-ui/react-*` packages consolidated into `radix-ui`** |
 | Docs | README rewritten; vendored Sanity rules removed in favour of the official skill |
 | Tests | **Vitest** unit tests (10) + **Playwright** smoke suite (6, boots the dev server) |
