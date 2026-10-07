@@ -17,7 +17,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
 | i18n | Server-driven language switcher (`sanity/translations.ts` + `x-pathname`); client-side Sanity fetch removed |
 | SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images |
-| UI deps | lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4 |
+| UI deps | lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4, **nine `@radix-ui/react-*` packages consolidated into `radix-ui`** |
 | Docs | README rewritten; vendored Sanity rules removed in favour of the official skill |
 
 **Verified:** frontend + studio `tsc` clean · frontend + studio ESLint 0 errors · frontend `next build` green · studio `sanity build` green · `sanity typegen` clean.
@@ -26,7 +26,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 
 - **Forms backend** for `ContactSection` / `NewsletterSection` (needs a provider + keys).
 - **Sanity-managed redirects** (`redirect` document type).
-- **shadcn v4 regeneration** and consolidating the nine `@radix-ui/react-*` packages into `radix-ui` (`shadcn init --base radix --preset nova`, `shadcn/tailwind.css`).
+- **shadcn v4 theme refresh** (`shadcn init --base radix --preset nova`, `shadcn/tailwind.css`). The `radix-ui` consolidation is done; the CLI currently emits a broken `cn` import alias, so component regeneration needs the alias fixed or a manual pass.
 - **Runtime verification** of Live Content / Visual Editing / Draft Mode (needs a Viewer token + CORS credentials).
 - **Playwright / Vitest** baseline.
 - Deferred: schema conformance, Sanity `locale` document type, Blueprints/Functions.
