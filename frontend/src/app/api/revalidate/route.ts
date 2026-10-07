@@ -2,7 +2,7 @@ import { revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
 
-import { revalidateSecret } from '@/sanity/env'
+import { revalidateSecret } from '@/sanity/env.server'
 
 type WebhookPayload = { tags?: string[] }
 

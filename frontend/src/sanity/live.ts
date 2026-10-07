@@ -1,7 +1,7 @@
 import { defineLive } from 'next-sanity/live'
 
 import { client } from './client'
-import { readToken } from './env'
+import { readToken } from './env.server'
 
 /**
  * Live Content API binding. `sanityFetch` returns `{ data, ... }` and handles

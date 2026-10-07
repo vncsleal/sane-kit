@@ -1,9 +1,22 @@
 import { expect, test } from '@playwright/test'
 
-test('root redirects to a locale', async ({ page }) => {
+test('root redirects to a supported locale', async ({ page }) => {
   await page.goto('/')
-  // The proxy must redirect `/` to a supported locale prefix.
   await expect(page).toHaveURL(/\/(pt-BR|en)(\/|$)/)
+})
+
+for (const locale of ['pt-BR', 'en'] as const) {
+  test(`${locale} home renders content`, async ({ page }) => {
+    const response = await page.goto(`/${locale}`)
+    expect(response?.status()).toBe(200)
+    await expect(page.locator('body')).toContainText('Sane Kit')
+  })
+}
+
+test('a blog post renders', async ({ page }) => {
+  const response = await page.goto('/pt-BR/blog/como-usar-o-sane-kit')
+  expect(response?.status()).toBe(200)
+  await expect(page.locator('body')).toContainText('Sane Kit')
 })
 
 test('robots.txt is served with a sitemap reference', async ({ request }) => {
@@ -21,10 +34,3 @@ test('rss.xml is served', async ({ request }) => {
   const response = await request.get('/rss.xml')
   expect(response.ok()).toBeTruthy()
 })
-
-for (const locale of ['en', 'pt-BR'] as const) {
-  test(`${locale} home responds without a server error`, async ({ request }) => {
-    const response = await request.get(`/${locale}`)
-    expect(response.status()).toBeLessThan(500)
-  })
-}
