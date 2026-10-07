@@ -19,7 +19,8 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images, **Sanity-managed redirects** (`redirect` type → `next.config` `redirects()`) |
 | UI deps | lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4, **nine `@radix-ui/react-*` packages consolidated into `radix-ui`** |
 | Docs | README rewritten; vendored Sanity rules removed in favour of the official skill |
-| Tests | **Vitest** unit tests (7) + **Playwright** smoke suite (6, boots the dev server) |
+| Tests | **Vitest** unit tests (10) + **Playwright** smoke suite (6, boots the dev server) |
+| Resilience | `error.tsx` / `loading.tsx` / `global-error.tsx` boundaries (Next 16 `retry` prop) + a shared `logger` (no bare `console.*`) |
 
 **Verified:** frontend + studio `tsc` clean · frontend + studio ESLint 0 errors · frontend `next build` green · studio `sanity build` green · `sanity typegen` clean.
 
