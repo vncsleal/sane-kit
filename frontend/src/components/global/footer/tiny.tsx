@@ -9,7 +9,9 @@ export default function TinyFooter({
   logo,
   legalLinks = [],
   dictionary,
-  documentId,
+  locale,
+  alternates,
+  languageNames,
 }: FooterProps) {
   return (
     <footer className="w-full py-6 bg-background border-t">
@@ -26,7 +28,7 @@ export default function TinyFooter({
           {/* Bottom row - Copyright and Language Switcher */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t text-xs">
             <Copyright siteTitle={title} dictionary={dictionary} />
-            <LanguageSwitcher variant="minimal" documentId={documentId} />
+            <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>
       </div>

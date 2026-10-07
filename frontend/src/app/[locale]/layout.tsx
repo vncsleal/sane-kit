@@ -1,4 +1,5 @@
 // app/[locale]/layout.tsx
+import { headers } from 'next/headers'
 import Header from '@/components/global/Header';
 import Footer from '@/components/global/Footer';
 import { CookieConsent } from '@/components/global/CookieConsent';
@@ -8,6 +9,7 @@ import { LanguageProvider } from '@/components/global/LanguageProvider';
 import { getDictionary } from '@/i18n/getDictionary';
 import { i18n, hasLocale, type Locale } from '@/i18n/i18n-config';
 import { LAYOUT_FOOTER_QUERY, LAYOUT_HEADER_QUERY } from '@/sanity/queries';
+import { getLanguageAlternates } from '@/sanity/translations';
 
 
 interface Props {
@@ -26,11 +28,8 @@ async function getGlobals(locale: Locale): Promise<{ header: SanityHeader | null
 export async function generateMetadata({ params }: Props) {
   const { locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  // Generate language alternates for SEO
-  const languages = i18n.locales.reduce((acc, lang) => {
-    acc[lang] = `/${lang}`;
-    return acc;
-  }, {} as Record<string, string>);
+  const pathname = (await headers()).get('x-pathname') ?? `/${locale}`;
+  const languages = await getLanguageAlternates(pathname, locale);
 
   return {
     alternates: {
@@ -43,14 +42,27 @@ export async function generateMetadata({ params }: Props) {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const { header, footer } = await getGlobals(locale);
-  const dictionary = await getDictionary(locale);
+  const pathname = (await headers()).get('x-pathname') ?? `/${locale}`;
+
+  const [{ header, footer }, dictionary, alternates] = await Promise.all([
+    getGlobals(locale),
+    getDictionary(locale),
+    getLanguageAlternates(pathname, locale),
+  ]);
 
   return (
     <LanguageProvider locale={locale}>
       {header && <Header {...header} locale={locale} dictionary={dictionary} />}
       <div className="mt-20">{children}</div>
-      {footer && <Footer {...footer} dictionary={dictionary.footer} />}
+      {footer && (
+        <Footer
+          {...footer}
+          locale={locale}
+          alternates={alternates}
+          languageNames={dictionary.header.languages}
+          dictionary={dictionary.footer}
+        />
+      )}
       <CookieConsent dictionary={dictionary.cookie} />
     </LanguageProvider>
   );

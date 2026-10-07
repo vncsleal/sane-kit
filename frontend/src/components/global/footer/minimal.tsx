@@ -8,7 +8,9 @@ export default function MinimalFooter({
   logo,
   legalLinks = [],
   dictionary,
-  documentId,
+  locale,
+  alternates,
+  languageNames,
 }: FooterProps) {
   return (
     <footer className="w-full py-8 bg-foreground text-background">
@@ -23,7 +25,7 @@ export default function MinimalFooter({
           {/* Bottom row - Copyright and Language Switcher */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-4 border-t border-background/10">
             <Copyright siteTitle={title} dictionary={dictionary} />
-            <LanguageSwitcher variant="minimal" documentId={documentId} />
+            <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>
       </div>

@@ -437,3 +437,16 @@ export const RSS_QUERY = defineQuery(`*[
   publishedAt,
   "slug": slug.current
 }`);
+
+export const LANGUAGE_ALTERNATES_QUERY = defineQuery(`*[
+  _type == "translation.metadata"
+  && references(*[
+    _type in ["page", "blogPost", "author", "category"]
+    && slug.current == $slug
+    && language == $currentLanguage
+  ][0]._id)
+][0]{
+  "translations": translations[]{
+    "value": value->{ _type, language, "slug": slug.current }
+  }
+}`);

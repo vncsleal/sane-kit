@@ -2260,6 +2260,56 @@ export type RSS_QUERY_RESULT = Array<{
   slug: string | null
 }>
 
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: LANGUAGE_ALTERNATES_QUERY
+// Query: *[  _type == "translation.metadata"  && references(*[    _type in ["page", "blogPost", "author", "category"]    && slug.current == $slug    && language == $currentLanguage  ][0]._id)][0]{  "translations": translations[]{    "value": value->{ _type, language, "slug": slug.current }  }}
+export type LANGUAGE_ALTERNATES_QUERY_RESULT = {
+  translations: Array<{
+    value:
+      | {
+          _type: 'author'
+          language: string | null
+          slug: string | null
+        }
+      | {
+          _type: 'blogPage'
+          language: string | null
+          slug: null
+        }
+      | {
+          _type: 'blogPost'
+          language: string | null
+          slug: string | null
+        }
+      | null
+      | {
+          _type: 'category'
+          language: string | null
+          slug: string | null
+        }
+      | {
+          _type: 'compareFeature'
+          language: string | null
+          slug: null
+        }
+      | {
+          _type: 'footer'
+          language: string | null
+          slug: null
+        }
+      | {
+          _type: 'header'
+          language: string | null
+          slug: null
+        }
+      | {
+          _type: 'page'
+          language: string | null
+          slug: string | null
+        }
+  }> | null
+} | null
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
@@ -2275,6 +2325,7 @@ declare global {
     '{\n  "config": *[\n    _type == "blogPage"\n    && language == $language\n  ][0]{\n    _id,\n    _type,\n    title,\n    description,\n    layout,\n    postsPerPage,\n    featuredPostsCount,\n    showOnlyFeaturedPosts,\n    seo{\n      metaTitle,\n      metaDescription\n    }\n  },\n  "posts": *[\n    _type == "blogPost"\n    && language == $language\n  ] | order(publishedAt desc)[$start...$end]{\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": authors[0]->{\n      _id,\n      name,\n      avatar\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      slug,\n      description,\n      language\n    }\n  },\n  "totalPosts": count(*[_type == "blogPost" && language == $language])\n}': BLOG_INDEX_PAGE_QUERY_RESULT
     '*[\n  _type in ["page", "blogPost", "author", "category"]\n  && defined(slug.current)\n  && language == $language\n]{\n  _type,\n  _updatedAt,\n  "slug": slug.current\n}': SITEMAP_QUERY_RESULT
     '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
+    '*[\n  _type == "translation.metadata"\n  && references(*[\n    _type in ["page", "blogPost", "author", "category"]\n    && slug.current == $slug\n    && language == $currentLanguage\n  ][0]._id)\n][0]{\n  "translations": translations[]{\n    "value": value->{ _type, language, "slug": slug.current }\n  }\n}': LANGUAGE_ALTERNATES_QUERY_RESULT
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

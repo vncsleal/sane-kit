@@ -11,7 +11,9 @@ export default function SimpleFooter({
   legalLinks = [],
   navigationItems = [],
   dictionary,
-  documentId,
+  locale,
+  alternates,
+  languageNames,
 }: FooterProps) {
   return (
     <footer className="w-full pt-10 lg:pt-20 bg-foreground text-background">
@@ -53,7 +55,7 @@ export default function SimpleFooter({
         <div className="mt-16 py-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <Copyright siteTitle={title} dictionary={dictionary} />
-            <LanguageSwitcher variant="minimal" documentId={documentId} />
+            <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>
       </div>

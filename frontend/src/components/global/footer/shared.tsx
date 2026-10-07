@@ -4,11 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import type { Footer } from "@/sanity/types";
+import type { Locale } from "@/i18n/i18n-config";
 import type { Dictionary } from "@/i18n/getDictionary";
 
 export type FooterProps = Footer & {
   dictionary: Dictionary['footer'];
-  documentId?: string;
+  locale: Locale;
+  alternates?: Record<string, string>;
+  languageNames?: Record<string, string>;
 };
 
 // Reusable Logo or Site Title component
