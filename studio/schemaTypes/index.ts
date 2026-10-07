@@ -21,6 +21,7 @@ import { portableText } from "./portableText";
 import { contactSection } from "./contactSection";
 import { newsletterSection } from "./newsletterSection";
 import { redirect } from "./redirect";
+import { seo } from "./seo";
 
 export const schemaTypes = [
   page,
@@ -46,4 +47,5 @@ export const schemaTypes = [
   contactSection,
   newsletterSection,
   redirect,
+  seo,
 ];

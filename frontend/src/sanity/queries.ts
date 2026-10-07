@@ -80,6 +80,12 @@ export const HOME_PAGE_QUERY = defineQuery(`*[
   title,
   description,
   ogImage,
+  "seo": {
+    "title": coalesce(seo.title, title),
+    "description": coalesce(seo.description, description),
+    "image": coalesce(seo.image, ogImage),
+    "noIndex": seo.noIndex == "true"
+  },
   pageBuilder[]{
     _key,
     _type,
@@ -122,6 +128,12 @@ export const PAGE_QUERY = defineQuery(`*[
   title,
   description,
   ogImage,
+  "seo": {
+    "title": coalesce(seo.title, title),
+    "description": coalesce(seo.description, description),
+    "image": coalesce(seo.image, ogImage),
+    "noIndex": seo.noIndex == "true"
+  },
   pageBuilder[]{
     _key,
     _type,
@@ -165,6 +177,12 @@ export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
   slug,
   publishedAt,
   excerpt,
+  "seo": {
+    "title": coalesce(seo.title, title),
+    "description": coalesce(seo.description, excerpt),
+    "image": coalesce(seo.image, mainImage),
+    "noIndex": seo.noIndex == "true"
+  },
   mainImage{
     asset,
     hotspot,
@@ -424,7 +442,8 @@ export const SITEMAP_QUERY = defineQuery(`*[
 ]{
   _type,
   _updatedAt,
-  "slug": slug.current
+  "slug": slug.current,
+  "noIndex": seo.noIndex == "true"
 }`);
 
 export const RSS_QUERY = defineQuery(`*[

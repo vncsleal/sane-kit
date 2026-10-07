@@ -145,6 +145,12 @@ export const blogPost = defineType({
 			},
 			group: "metadata",
 		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "seo",
+			group: "metadata",
+		}),
 	],
 	preview: {
 		select: {

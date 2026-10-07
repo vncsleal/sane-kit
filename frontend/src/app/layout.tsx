@@ -12,6 +12,7 @@ import { PostHogProvider } from '@/components/PostHogProvider'
 import { DisableDraftMode } from '@/components/global/DisableDraftMode'
 import { SanityLive } from '@/sanity/live'
 import { env } from '@/sanity/env'
+import { buildOrganizationJsonLd } from '@/lib/structured-data'
 import { getDictionary } from '@/i18n/getDictionary'
 import { i18n } from '@/i18n/i18n-config'
 
@@ -35,10 +36,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
+  const organizationJsonLd = buildOrganizationJsonLd({
+    name: 'Sane Kit',
+    url: env.NEXT_PUBLIC_SITE_URL,
+  })
 
   return (
     <html suppressHydrationWarning lang={i18n.defaultLocale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replace(/</g, '\\u003c'),
+          }}
+        />
         <PostHogProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}

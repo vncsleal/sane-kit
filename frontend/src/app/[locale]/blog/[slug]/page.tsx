@@ -6,6 +6,8 @@ import { getDictionary } from "@/i18n/getDictionary";
 import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
 import type { BLOG_POST_PAGE_QUERY_RESULT } from "@/sanity/types";
 import { BLOG_POST_PAGE_QUERY } from "@/sanity/queries";
+import { siteUrl } from "@/sanity/env";
+import { buildBlogPostingJsonLd } from "@/lib/structured-data";
 
 interface PageParams {
   slug: string;
@@ -36,11 +38,19 @@ export async function generateMetadata({
     };
   }
 
-  const metadata: Metadata = { title: page.title };
-  metadata.description = page.excerpt ?? dict.defaultMeta.description;
+  const metadata: Metadata = {
+    title: page.seo?.title || page.title,
+    description: page.seo?.description || page.excerpt || dict.defaultMeta.description,
+  };
 
-  if (page.mainImage?.asset?._ref) {
-    metadata.openGraph = { images: [urlFor(page.mainImage).url()] };
+  if (page.seo?.image) {
+    metadata.openGraph = {
+      images: [urlFor(page.seo.image).width(1200).height(630).url()],
+    };
+  }
+
+  if (page.seo?.noIndex) {
+    metadata.robots = { index: false, follow: false };
   }
 
   return metadata;
@@ -134,5 +144,22 @@ export default async function Page({ params }: PageProps) {
     })),
   };
 
-  return <BlogPostPage post={finalData} dictionary={dictionary} locale={locale} />;
+  const jsonLd = buildBlogPostingJsonLd({
+    headline: page.seo?.title || page.title || "",
+    url: `${siteUrl}/${locale}/blog/${slug}`,
+    description: page.seo?.description || page.excerpt || undefined,
+    image: page.seo?.image ? urlFor(page.seo.image).width(1200).height(630).url() : undefined,
+    datePublished: page.publishedAt || undefined,
+    authorName: page.author?.name || undefined,
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      <BlogPostPage post={finalData} dictionary={dictionary} locale={locale} />
+    </>
+  );
 }

@@ -36,19 +36,19 @@ export async function generateMetadata({
   }
 
   const metadata: Metadata = {
-    title: page.title || dictionary.defaultMeta.title,
+    title: page.seo?.title || page.title || dictionary.defaultMeta.title,
+    description:
+      page.seo?.description || page.description || dictionary.defaultMeta.description,
   };
 
-  if (page.description) {
-    metadata.description = page.description;
-  } else {
-    metadata.description = dictionary.defaultMeta.description;
+  if (page.seo?.image) {
+    metadata.openGraph = {
+      images: [urlFor(page.seo.image).width(1200).height(630).url()],
+    };
   }
 
-  if (page.ogImage?.asset?._ref) {
-    metadata.openGraph = {
-      images: [urlFor(page.ogImage.asset._ref).width(1200).height(630).url()],
-    };
+  if (page.seo?.noIndex) {
+    metadata.robots = { index: false, follow: false };
   }
 
   return metadata;

@@ -24,10 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const perLocale = await Promise.all(
     i18n.locales.map(async (locale) => {
       const docs = await client.fetch(SITEMAP_QUERY, { language: locale })
-      return docs.map((doc) => ({
-        url: new URL(`/${locale}${pathFor(doc._type, doc.slug ?? '')}`, siteUrl).toString(),
-        lastModified: new Date(doc._updatedAt),
-      }))
+      return docs
+        .filter((doc) => !doc.noIndex)
+        .map((doc) => ({
+          url: new URL(`/${locale}${pathFor(doc._type, doc.slug ?? '')}`, siteUrl).toString(),
+          lastModified: new Date(doc._updatedAt),
+        }))
     }),
   )
 

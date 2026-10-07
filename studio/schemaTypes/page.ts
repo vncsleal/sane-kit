@@ -87,6 +87,12 @@ export const page = defineType({
       group: "seo",
     }),
     defineField({
+      name: "seo",
+      title: "SEO",
+      type: "seo",
+      group: "seo",
+    }),
+    defineField({
       name: "pageBuilder",
       title: fields.pageBuilder,
       type: "array",
