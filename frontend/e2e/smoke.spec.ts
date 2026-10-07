@@ -30,6 +30,12 @@ test('newsletter form renders', async ({ page }) => {
   await expect(page.locator('input[name="email"]').first()).toBeVisible()
 })
 
+test('draft-mode enable rejects unauthenticated requests', async ({ request }) => {
+  const response = await request.get('/api/draft-mode/enable')
+  // 401/403 when configured but unauthenticated; 501 when no read token is set.
+  expect([401, 403, 501]).toContain(response.status())
+})
+
 test('robots.txt is served with a sitemap reference', async ({ request }) => {
   const response = await request.get('/robots.txt')
   expect(response.ok()).toBeTruthy()
