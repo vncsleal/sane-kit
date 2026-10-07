@@ -1,9 +1,7 @@
-import {
-  DocumentIcon,
-  InfoOutlineIcon,
-  EarthGlobeIcon,
-  StackCompactIcon,
-} from "@sanity/icons";
+import { DocumentIcon } from '@sanity/icons/Document'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe'
+import { StackCompactIcon } from '@sanity/icons/StackCompact'
 import { defineField, defineType } from "sanity";
 import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
 import { fields, groups, documents, descriptions, validation } from "../dictionary";

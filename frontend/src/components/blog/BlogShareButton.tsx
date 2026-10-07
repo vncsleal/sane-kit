@@ -7,14 +7,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-	Share2,
-	Twitter,
-	Linkedin,
-	Facebook,
-	Mail,
-	Link as LinkIcon,
-} from "lucide-react";
+import { Share2, Mail, Link as LinkIcon } from "lucide-react";
+import { Twitter, Linkedin, Facebook } from "@/components/icons/social";
 import { toast } from "sonner";
 import type { Dictionary } from "@/i18n/getDictionary";
 

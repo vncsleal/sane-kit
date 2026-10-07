@@ -1,9 +1,7 @@
-import {
-  MenuIcon,
-  InfoOutlineIcon,
-  ComponentIcon,
-  LinkIcon,
-} from "@sanity/icons";
+import { MenuIcon } from '@sanity/icons/Menu'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { ComponentIcon } from '@sanity/icons/Component'
+import { LinkIcon } from '@sanity/icons/Link'
 import { defineField, defineType, defineArrayMember, type ValidationContext, type Reference } from "sanity";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

@@ -1,40 +1,70 @@
-import { defineConfig } from "sanity"; 
-import { structureTool } from "sanity/structure";
-import { visionTool } from "@sanity/vision";
-import { schemaTypes } from "./schemaTypes";
-import { codeInput } from "@sanity/code-input";
-import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
-import { structure } from './structure';
-import Logo from "./components/Logo";
-import { ptBRLocale } from "@sanity/locale-pt-br";
-import { documentInternationalization } from '@sanity/document-internationalization';
-import { studioConfig } from './config';
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { presentationTool } from 'sanity/presentation'
+import { visionTool } from '@sanity/vision'
+import { codeInput } from '@sanity/code-input'
+import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
+import { ptBRLocale } from '@sanity/locale-pt-br'
+import { documentInternationalization } from '@sanity/document-internationalization'
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "your-project-id";
-const dataset = process.env.SANITY_STUDIO_DATASET || "production";
+import { schemaTypes } from './schemaTypes'
+import { structure } from './structure'
+import { resolve } from './presentation/resolve'
+import Logo from './components/Logo'
+import { studioConfig } from './config'
 
-export default defineConfig({ 
-	icon: Logo,
-	name: "default",
-	title: "Sane Kit Studio",
-	projectId,
-	dataset,
-	plugins: [
-		structureTool({ structure }),
-		visionTool(),
-		codeInput(),
-		unsplashImageAsset(),
-		documentInternationalization({
-			supportedLanguages: [
-				{ id: 'pt-BR', title: 'Português (Brasil)' },
-				{ id: 'en', title: 'English' }
-			],
-			schemaTypes: ['page', 'blogPost', 'author', 'category','blogPage', 'header', 'footer','compareFeature', 'featureSection', 'heroSection', 'casesSection', 'testimonialsSection', 'pricingSection', 'compareFeaturesSection', 'statsSection', 'ctaSection', 'faqSection', 'contactSection', 'newsletterSection'],
-		}),
-		// Conditionally apply Portuguese locale based on config
-		...(studioConfig.language === 'pt-BR' ? [ptBRLocale()] : []),
-	],
-	schema: {
-		types: schemaTypes,
-	},
-});
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-project-id'
+const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
+const siteUrl = process.env.SANITY_STUDIO_SITE_URL || 'http://localhost:3000'
+
+export default defineConfig({
+  icon: Logo,
+  name: 'default',
+  title: 'Sane Kit Studio',
+  projectId,
+  dataset,
+  plugins: [
+    structureTool({ structure }),
+    presentationTool({
+      resolve,
+      previewUrl: {
+        initial: siteUrl,
+        previewMode: { enable: '/api/draft-mode/enable' },
+      },
+    }),
+    codeInput(),
+    unsplashImageAsset(),
+    documentInternationalization({
+      supportedLanguages: [
+        { id: 'pt-BR', title: 'Português (Brasil)' },
+        { id: 'en', title: 'English' },
+      ],
+      schemaTypes: [
+        'page',
+        'blogPost',
+        'author',
+        'category',
+        'blogPage',
+        'header',
+        'footer',
+        'compareFeature',
+        'featureSection',
+        'heroSection',
+        'casesSection',
+        'testimonialsSection',
+        'pricingSection',
+        'compareFeaturesSection',
+        'statsSection',
+        'ctaSection',
+        'faqSection',
+        'contactSection',
+        'newsletterSection',
+      ],
+    }),
+    ...(studioConfig.language === 'pt-BR' ? [ptBRLocale()] : []),
+    ...(process.env.NODE_ENV !== 'production' ? [visionTool()] : []),
+  ],
+  schema: {
+    types: schemaTypes,
+  },
+})

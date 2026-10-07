@@ -146,7 +146,6 @@ export default function DefaultContact({
 												mode="single"
 												selected={date}
 												onSelect={setDate}
-												initialFocus
 											/>
 										</PopoverContent>
 									</Popover>

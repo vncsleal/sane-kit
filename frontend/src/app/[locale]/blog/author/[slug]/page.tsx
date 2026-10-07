@@ -6,11 +6,11 @@ import type { Author, Category, PortableText } from "@/sanity/types";
 import type { ExpandedBlogPost } from "@/components/blog/AuthorPageUI";
 import AuthorPageUI from "@/components/blog/AuthorPageUI";
 import { getDictionary } from "@/i18n/getDictionary";
-import type { Locale } from "@/i18n/i18n-config";
+import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
 import { AUTHOR_PAGE_QUERY } from "@/sanity/queries";
 
 
-interface PageParams { slug: string; locale: Locale; }
+interface PageParams { slug: string; locale: string; }
 interface PageProps { params: Promise<PageParams>; }
 
 // Intermediate type for a category as returned by AUTHOR_PAGE_QUERY (within a post)
@@ -70,7 +70,8 @@ async function getPageData(slug: string, locale: Locale): Promise<AuthorPageQuer
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug, locale } = await params;
+  const { slug, locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getPageData(slug, locale);
   const dict = await getDictionary(locale);
   if (!page?.name) {
@@ -98,7 +99,8 @@ export async function generateStaticParams() {
 }
 
 export default async function AuthorPage({ params }: PageProps) {
-  const { slug, locale } = await params;
+  const { slug, locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getPageData(slug, locale);
   const dictionary = await getDictionary(locale);
   if (!page) notFound();

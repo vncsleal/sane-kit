@@ -1,4 +1,6 @@
-import { InfoOutlineIcon, BarChartIcon, ComponentIcon } from "@sanity/icons";
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { BarChartIcon } from '@sanity/icons/BarChart'
+import { ComponentIcon } from '@sanity/icons/Component'
 import { defineField, defineType, defineArrayMember } from "sanity";
 import {
   fields,

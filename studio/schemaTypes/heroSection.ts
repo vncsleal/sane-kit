@@ -1,9 +1,7 @@
-import {
-  RocketIcon,
-  InfoOutlineIcon,
-  ComponentIcon,
-  ImageIcon,
-} from "@sanity/icons";
+import { RocketIcon } from '@sanity/icons/Rocket'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { ComponentIcon } from '@sanity/icons/Component'
+import { ImageIcon } from '@sanity/icons/Image'
 import { defineField, defineType, defineArrayMember } from "sanity";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

@@ -1,0 +1,7 @@
+packages:
+  - frontend
+  - studio
+
+onlyBuiltDependencies:
+  - core-js
+  - unrs-resolver

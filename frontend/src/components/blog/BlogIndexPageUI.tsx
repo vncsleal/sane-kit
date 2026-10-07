@@ -5,7 +5,7 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { BLOG_INDEX_PAGE_QUERYResult } from "@/sanity/types";
+import type { BLOG_INDEX_PAGE_QUERY_RESULT } from "@/sanity/types";
 import type { Dictionary } from "@/i18n/getDictionary";
 import { 
   Pagination, 
@@ -37,7 +37,7 @@ function getInitials(name: string) {
     .substring(0, 2);
 }
 
-type BlogIndexPagePost = NonNullable<BLOG_INDEX_PAGE_QUERYResult>['posts'][0];
+type BlogIndexPagePost = NonNullable<BLOG_INDEX_PAGE_QUERY_RESULT>['posts'][0];
 
 interface PaginationData {
   currentPage: number;
@@ -46,7 +46,7 @@ interface PaginationData {
 }
 
 interface BlogIndexPageUIProps {
-  config: NonNullable<BLOG_INDEX_PAGE_QUERYResult>['config'];
+  config: NonNullable<BLOG_INDEX_PAGE_QUERY_RESULT>['config'];
   posts: BlogIndexPagePost[];
   pagination: PaginationData;
   dictionary: Dictionary['blog'];

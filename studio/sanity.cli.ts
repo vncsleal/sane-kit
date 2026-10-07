@@ -1,30 +1,30 @@
 /**
- * Sanity CLI Configuration
- * This file configures the Sanity CLI tool with project-specific settings
- * and customizes the Vite bundler configuration.
- * Learn more: https://www.sanity.io/docs/cli
+ * Sanity CLI + TypeGen configuration.
+ * https://www.sanity.io/docs/cli
  */
+import { defineCliConfig } from 'sanity/cli'
 
-import { defineCliConfig } from "sanity/cli";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID
+const dataset = process.env.SANITY_STUDIO_DATASET
 
-const projectIdFromEnv = process.env.SANITY_STUDIO_PROJECT_ID;
-const datasetFromEnv = process.env.SANITY_STUDIO_DATASET;
-
-if (!projectIdFromEnv) {
-  throw new Error("The SANITY_STUDIO_PROJECT_ID environment variable is missing or empty. Please set it in your environment.");
+if (!projectId) {
+  throw new Error('Missing SANITY_STUDIO_PROJECT_ID')
 }
-if (!datasetFromEnv) {
-  throw new Error("The SANITY_STUDIO_DATASET environment variable is missing or empty. Please set it in your environment.");
+if (!dataset) {
+  throw new Error('Missing SANITY_STUDIO_DATASET')
 }
-
-export const projectId: string = projectIdFromEnv;
-export const dataset: string = datasetFromEnv;
 
 export default defineCliConfig({
-  api: {
-    projectId,
-    dataset,  
+  api: { projectId, dataset },
+  deployment: {
+    appId: process.env.SANITY_STUDIO_APP_ID || '',
+    autoUpdates: true,
   },
-  studioHost: process.env.SANITY_STUDIO_STUDIO_HOST || "", // Visit https://www.sanity.io/docs/environment-variables to leanr more about using environment variables for local & production.
-  autoUpdates: true,
-});
+  typegen: {
+    enabled: true,
+    path: '../frontend/src/**/*.{ts,tsx,js,jsx}',
+    schema: '../frontend/src/sanity/extract.json',
+    generates: '../frontend/src/sanity/types.ts',
+    overloadClientMethods: true,
+  },
+})

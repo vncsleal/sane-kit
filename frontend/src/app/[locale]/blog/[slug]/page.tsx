@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import BlogPostPage, { type ExpandedBlogPost } from "@/components/blog/BlogPostPage";
 import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/getDictionary";
-import type { Locale } from "@/i18n/i18n-config";
-import type { BLOG_POST_PAGE_QUERYResult } from "@/sanity/types";
+import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
+import type { BLOG_POST_PAGE_QUERY_RESULT } from "@/sanity/types";
 import { BLOG_POST_PAGE_QUERY } from "@/sanity/queries";
 
 interface PageParams {
   slug: string;
-  locale: Locale;
+  locale: string;
 }
 
 interface PageProps {
@@ -17,14 +17,15 @@ interface PageProps {
 }
 
 // Fetch raw page data from the composite query
-async function getPageData(slug: string, locale: Locale): Promise<BLOG_POST_PAGE_QUERYResult | null> {
+async function getPageData(slug: string, locale: Locale): Promise<BLOG_POST_PAGE_QUERY_RESULT | null> {
   return client.fetch(BLOG_POST_PAGE_QUERY, { slug, language: locale });
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug, locale } = await params;
+  const { slug, locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getPageData(slug, locale);
   const dict = await getDictionary(locale);
 
@@ -46,7 +47,8 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: PageProps) {
-  const { slug, locale } = await params;
+  const { slug, locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getPageData(slug, locale);
   const dictionary = await getDictionary(locale);
 

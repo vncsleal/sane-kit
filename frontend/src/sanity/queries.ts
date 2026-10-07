@@ -1,4 +1,4 @@
-import { defineQuery } from "groq";
+import { defineQuery } from "next-sanity";
 
 { /* frontend/src/app/[locale]/layout.tsx */}
 

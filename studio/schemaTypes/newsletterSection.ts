@@ -1,4 +1,6 @@
-import { EnvelopeIcon, InfoOutlineIcon, ComponentIcon } from "@sanity/icons";
+import { EnvelopeIcon } from '@sanity/icons/Envelope'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { ComponentIcon } from '@sanity/icons/Component'
 import { defineField, defineType } from "sanity";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

@@ -9,7 +9,8 @@ import { portableTextComponents } from "./PortableTextComponents";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Github, Globe, Instagram, Linkedin, Mail, Twitter, Youtube } from "lucide-react";
+import { Globe, Mail } from "lucide-react";
+import { Github, Instagram, Linkedin, Twitter, Youtube } from "@/components/icons/social";
 import type { Dictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/i18n-config";
 

@@ -8,7 +8,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Copy, Check, FileCode } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { CodeBlock as Code } from "react-code-blocks";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -35,13 +35,15 @@ export function CodeBlock({
 }: CodeBlockProps) {
 	const [copied, setCopied] = useState(false);
 	useTheme();
-	const [mounted, setMounted] = useState(false);
 	const displayTitle = title || filename;
 
-	// Only render theme-dependent UI after mounting to prevent hydration mismatch
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	// Only render theme-dependent UI after mounting to prevent hydration mismatch.
+	// useSyncExternalStore is SSR-safe and avoids a setState-in-effect.
+	const mounted = useSyncExternalStore(
+		() => () => {},
+		() => true,
+		() => false,
+	);
 
 	const handleCopy = async () => {
 		await navigator.clipboard.writeText(code);

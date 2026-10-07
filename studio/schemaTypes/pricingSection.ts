@@ -1,8 +1,6 @@
-import {
-  CreditCardIcon,
-  InfoOutlineIcon,
-  TagIcon,
-} from "@sanity/icons";
+import { CreditCardIcon } from '@sanity/icons/CreditCard'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { TagIcon } from '@sanity/icons/Tag'
 import { defineField, defineType, defineArrayMember } from "sanity";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

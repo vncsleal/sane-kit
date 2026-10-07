@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import BlogIndexPageUI from "@/components/blog/BlogIndexPageUI";
 import type { Metadata } from "next";
 import { getDictionary } from "@/i18n/getDictionary";
-import type { Locale } from "@/i18n/i18n-config";
-import type { BLOG_INDEX_PAGE_QUERYResult } from "@/sanity/types";
+import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
+import type { BLOG_INDEX_PAGE_QUERY_RESULT } from "@/sanity/types";
 import { BLOG_INDEX_PAGE_QUERY } from "@/sanity/queries";
 
 
 interface PageParams {
-  locale: Locale;
+  locale: string;
 }
 
 interface PageProps {
@@ -17,18 +17,19 @@ interface PageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
-async function getPageData(locale: Locale, page: number = 1, postsPerPage: number = 10): Promise<BLOG_INDEX_PAGE_QUERYResult | null> {
+async function getPageData(locale: Locale, page: number = 1, postsPerPage: number = 10): Promise<BLOG_INDEX_PAGE_QUERY_RESULT | null> {
   const start = (page - 1) * postsPerPage;
   const end = start + postsPerPage;
   
-  return client.fetch<BLOG_INDEX_PAGE_QUERYResult>(
+  return client.fetch<BLOG_INDEX_PAGE_QUERY_RESULT>(
     BLOG_INDEX_PAGE_QUERY,
     { start, end, language: locale }
   );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const data = await getPageData(locale);
   const dict = await getDictionary(locale);
   
@@ -50,7 +51,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogIndexPage({ params, searchParams }: PageProps) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const { page: pageParam } = await searchParams;
   const dictionary = await getDictionary(locale);
   

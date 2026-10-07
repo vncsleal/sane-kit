@@ -1,9 +1,7 @@
-import {
-	DocumentTextIcon,
-	InfoOutlineIcon,
-	ComponentIcon,
-	CogIcon,
-} from "@sanity/icons";
+import { DocumentTextIcon } from '@sanity/icons/DocumentText'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { ComponentIcon } from '@sanity/icons/Component'
+import { CogIcon } from '@sanity/icons/Cog'
 import { defineField, defineType } from "sanity";
 import {
 	fields,

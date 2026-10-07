@@ -6,13 +6,13 @@ import { client } from '@/sanity/client';
 import type { Footer as SanityFooter, Header as SanityHeader } from '@/sanity/types';
 import { LanguageProvider } from '@/components/global/LanguageProvider';
 import { getDictionary } from '@/i18n/getDictionary';
-import { i18n, type Locale } from '@/i18n/i18n-config';
+import { i18n, hasLocale, type Locale } from '@/i18n/i18n-config';
 import { LAYOUT_FOOTER_QUERY, LAYOUT_HEADER_QUERY } from '@/sanity/queries';
 
 
 interface Props {
   children: React.ReactNode;
-  params: { locale: Locale };
+  params: Promise<{ locale: string }>;
 }
 
 async function getGlobals(locale: Locale): Promise<{ header: SanityHeader | null; footer: SanityFooter | null }> {
@@ -24,7 +24,8 @@ async function getGlobals(locale: Locale): Promise<{ header: SanityHeader | null
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   // Generate language alternates for SEO
   const languages = i18n.locales.reduce((acc, lang) => {
     acc[lang] = `/${lang}`;
@@ -40,7 +41,8 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const { header, footer } = await getGlobals(locale);
   const dictionary = await getDictionary(locale);
 

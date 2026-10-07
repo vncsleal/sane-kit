@@ -1,4 +1,6 @@
-import { DocumentTextIcon, EarthGlobeIcon, ThLargeIcon } from "@sanity/icons";
+import { DocumentTextIcon } from '@sanity/icons/DocumentText'
+import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe'
+import { ThLargeIcon } from '@sanity/icons/ThLarge'
 import { defineField, defineType } from "sanity";
 import {
 	fields,

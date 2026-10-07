@@ -14,15 +14,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/client";
-import {
-	Twitter,
-	Linkedin,
-	Github,
-	Instagram,
-	Globe,
-	Youtube,
-	Mail,
-} from "lucide-react";
+import { Globe, Mail } from "lucide-react";
+import { Twitter, Linkedin, Github, Instagram, Youtube } from "@/components/icons/social";
 import type {
 	Author,
 	Category,

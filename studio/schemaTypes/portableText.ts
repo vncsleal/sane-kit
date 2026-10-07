@@ -1,4 +1,4 @@
-import { DocumentTextIcon } from "@sanity/icons";
+import { DocumentTextIcon } from '@sanity/icons/DocumentText'
 import { defineType, defineArrayMember, defineField } from "sanity";
 import { fields, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

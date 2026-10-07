@@ -1,4 +1,5 @@
-import { TagIcon, InfoOutlineIcon } from "@sanity/icons";
+import { TagIcon } from '@sanity/icons/Tag'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
 import { defineField, defineType } from "sanity";
 import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
 import { fields, groups, documents, descriptions, validation } from "../dictionary";

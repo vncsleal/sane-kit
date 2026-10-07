@@ -8,8 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
 import type { BlogSection } from "@/sanity/types";
-import type { BLOG_POSTS_QUERYResult } from "@/sanity/types";
-import { defineQuery } from 'groq';
+import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
+import { defineQuery } from 'next-sanity';
 
 export const BLOG_POSTS_QUERY = defineQuery(`*[
   _type == "blogPost"
@@ -36,7 +36,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`*[
 }`);
 
 // Use the generated type instead of custom interface
-export type BlogPostWithData = BLOG_POSTS_QUERYResult[0];
+export type BlogPostWithData = BLOG_POSTS_QUERY_RESULT[0];
 
 // Utility functions 
 export function formatDate(dateString: string, locale: string) {

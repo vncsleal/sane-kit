@@ -1,9 +1,7 @@
-import {
-  SparklesIcon,
-  InfoOutlineIcon,
-  ImageIcon,
-  ComponentIcon,
-} from "@sanity/icons";
+import { SparklesIcon } from '@sanity/icons/Sparkles'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { ImageIcon } from '@sanity/icons/Image'
+import { ComponentIcon } from '@sanity/icons/Component'
 import { defineField, defineType, defineArrayMember } from "sanity";
 import {
   fields,

@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import type { Dictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/i18n-config";
-import type { CATEGORY_PAGE_QUERYResult } from "@/sanity/types";
+import type { CATEGORY_PAGE_QUERY_RESULT } from "@/sanity/types";
 import {
 	Pagination,
 	PaginationContent,
@@ -39,8 +39,8 @@ function getInitials(name: string) {
 		.substring(0, 2);
 }
 
-// Use the generated types directly from CATEGORY_PAGE_QUERYResult
-type CategoryFromQuery = NonNullable<CATEGORY_PAGE_QUERYResult>;
+// Use the generated types directly from CATEGORY_PAGE_QUERY_RESULT
+type CategoryFromQuery = NonNullable<CATEGORY_PAGE_QUERY_RESULT>;
 type PostFromQuery = CategoryFromQuery["posts"][0];
 
 interface CategoryPageUIProps {

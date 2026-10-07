@@ -1,10 +1,8 @@
-import {
-  CheckmarkCircleIcon,
-  CloseCircleIcon,
-  InfoOutlineIcon,
-  TagIcon,
-  ComposeIcon,
-} from "@sanity/icons";
+import { CheckmarkCircleIcon } from '@sanity/icons/CheckmarkCircle'
+import { CloseCircleIcon } from '@sanity/icons/CloseCircle'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { TagIcon } from '@sanity/icons/Tag'
+import { ComposeIcon } from '@sanity/icons/Compose'
 import { defineField, defineType, defineArrayMember, type ValidationContext } from "sanity";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
 

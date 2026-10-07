@@ -1,4 +1,4 @@
-import { ComposeIcon } from "@sanity/icons";
+import { ComposeIcon } from '@sanity/icons/Compose'
 import { defineField, defineType } from "sanity";
 import { fields, documents, descriptions, validation } from "../dictionary";
 

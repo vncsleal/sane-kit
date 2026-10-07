@@ -9,29 +9,33 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy-graphql": "sanity graphql deploy"
+    "deploy-graphql": "sanity graphql deploy",
+    "typecheck": "tsc --noEmit",
+    "typegen": "sanity schema extract --force --path=../frontend/src/sanity/extract.json && sanity typegen generate",
+    "lint": "eslint ."
   },
-  "keywords": [
-    "sanity"
-  ],
   "dependencies": {
-    "@sanity/code-input": "^5.1.2",
-    "@sanity/document-internationalization": "^3.3.1",
-    "@sanity/locale-pt-br": "^1.1.16",
-    "@sanity/vision": "^3.68.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sanity": "^3.88.2",
-    "sanity-plugin-asset-source-unsplash": "^3.0.3",
-    "sanity-plugin-internationalized-array": "^3.1.2",
+    "@sanity/assist": "^6.2.2",
+    "@sanity/code-input": "^7.3.9",
+    "@sanity/document-internationalization": "^6.2.39",
+    "@sanity/icons": "^5.2.3",
+    "@sanity/language-filter": "^5.0.19",
+    "@sanity/locale-pt-br": "^1.1.37",
+    "@sanity/vision": "^6.18.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sanity": "^6.18.0",
+    "sanity-plugin-asset-source-unsplash": "^7.0.26",
+    "sanity-plugin-internationalized-array": "^5.3.2",
     "styled-components": "^6.1.17"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^5.0.1",
-    "@types/react": "^18.0.25",
-    "eslint": "^9.9.0",
-    "prettier": "^3.0.2",
-    "typescript": "^5.1.6"
+    "@sanity/eslint-config-studio": "^7.0.0",
+    "@types/react": "^19.3.0",
+    "eslint": "^10",
+    "prettier": "^3.5.3",
+    "typescript": "^6.0.3",
+    "@types/node": "^24"
   },
   "prettier": {
     "semi": false,

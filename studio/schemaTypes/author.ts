@@ -1,4 +1,7 @@
-import { UserIcon, InfoOutlineIcon, BookIcon, LinkIcon } from "@sanity/icons";
+import { UserIcon } from '@sanity/icons/User'
+import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
+import { BookIcon } from '@sanity/icons/Book'
+import { LinkIcon } from '@sanity/icons/Link'
 import { defineField, defineType } from "sanity";
 import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
 import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
