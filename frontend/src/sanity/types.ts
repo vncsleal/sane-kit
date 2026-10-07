@@ -2224,6 +2224,42 @@ export type BLOG_INDEX_PAGE_QUERY_RESULT = {
   totalPosts: number
 }
 
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: SITEMAP_QUERY
+// Query: *[  _type in ["page", "blogPost", "author", "category"]  && defined(slug.current)  && language == $language]{  _type,  _updatedAt,  "slug": slug.current}
+export type SITEMAP_QUERY_RESULT = Array<
+  | {
+      _type: 'author'
+      _updatedAt: string
+      slug: string | null
+    }
+  | {
+      _type: 'blogPost'
+      _updatedAt: string
+      slug: string | null
+    }
+  | {
+      _type: 'category'
+      _updatedAt: string
+      slug: string | null
+    }
+  | {
+      _type: 'page'
+      _updatedAt: string
+      slug: string | null
+    }
+>
+
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: RSS_QUERY
+// Query: *[  _type == "blogPost"  && defined(slug.current)  && language == $language] | order(publishedAt desc)[0...50]{  title,  excerpt,  publishedAt,  "slug": slug.current}
+export type RSS_QUERY_RESULT = Array<{
+  title: string | null
+  excerpt: string | null
+  publishedAt: string | null
+  slug: string | null
+}>
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
@@ -2237,6 +2273,8 @@ declare global {
     '*[\n  _type == "author"\n  && defined(slug.current)\n  && defined(language)\n  && ($slug == null || slug.current == $slug)\n  && ($language == null || language == $language)\n]{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  name,\n  slug,\n  role,\n  bio,\n  fullBio,\n  email,\n  avatar,\n  featuredImage,\n  language,\n  socialLinks[]{\n    _key,\n    _type,\n    platform,\n    url,\n    username\n  },\n  "posts": *[\n    _type == "blogPost"\n    && references(^._id)\n    && language == ^.language\n  ] | order(publishedAt desc) {\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    "categories": categories[]->{\n      _id,\n      _type,\n      title,\n      "slug": slug.current,\n      description,\n      language,\n      _createdAt,\n      _updatedAt,\n      _rev\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    name,\n    slug,\n    language\n  }\n}': AUTHOR_PAGE_QUERY_RESULT
     '*[\n  _type == "category"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  language,\n  title,\n  slug,\n  description,\n  "posts": *[\n    _type == "blogPost"\n    && references(^._id)\n    && language == $language\n  ] | order(publishedAt desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": authors[0]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      name,\n      slug,\n      avatar,\n      bio,\n      email,\n      role,\n      language\n    },\n    "authors": authors[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      name,\n      slug,\n      avatar,\n      bio,\n      email,\n      role,\n      language\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      description,\n      language,\n      _createdAt,\n      _updatedAt,\n      _rev\n    },\n    _createdAt,\n    _updatedAt,\n    _rev\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': CATEGORY_PAGE_QUERY_RESULT
     '{\n  "config": *[\n    _type == "blogPage"\n    && language == $language\n  ][0]{\n    _id,\n    _type,\n    title,\n    description,\n    layout,\n    postsPerPage,\n    featuredPostsCount,\n    showOnlyFeaturedPosts,\n    seo{\n      metaTitle,\n      metaDescription\n    }\n  },\n  "posts": *[\n    _type == "blogPost"\n    && language == $language\n  ] | order(publishedAt desc)[$start...$end]{\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": authors[0]->{\n      _id,\n      name,\n      avatar\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      slug,\n      description,\n      language\n    }\n  },\n  "totalPosts": count(*[_type == "blogPost" && language == $language])\n}': BLOG_INDEX_PAGE_QUERY_RESULT
+    '*[\n  _type in ["page", "blogPost", "author", "category"]\n  && defined(slug.current)\n  && language == $language\n]{\n  _type,\n  _updatedAt,\n  "slug": slug.current\n}': SITEMAP_QUERY_RESULT
+    '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

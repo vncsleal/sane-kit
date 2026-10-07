@@ -91,7 +91,7 @@ export default function SlidingComparison({
                   alt={image.alt || heading || ""}
                   width={1920}
                   height={1080}
-                  priority
+                  preload
                   className="absolute left-0 top-0 z-10 w-full h-full aspect-video rounded-2xl select-none border"
                   style={{
                     clipPath: `inset(0 0 0 ${inset}%)`,
@@ -102,7 +102,7 @@ export default function SlidingComparison({
                   alt={comparisonImage.alt || `${heading} comparison` || ""}
                   width={1920}
                   height={1080}
-                  priority
+                  preload
                   className="absolute left-0 top-0 w-full h-full aspect-video rounded-2xl select-none border"
                 />
               </div>

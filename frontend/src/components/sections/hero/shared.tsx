@@ -46,7 +46,7 @@ export const renderBackgroundMedia = (media: HeroSection['media']) => {
           src={urlFor(media.image).width(1920).height(1080).url()}
           alt={media.image.alt || "Hero background"}
           fill
-          priority
+          preload
           className="object-cover"
           sizes="100vw"
         />

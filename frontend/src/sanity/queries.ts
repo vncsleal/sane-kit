@@ -416,3 +416,24 @@ export const BLOG_INDEX_PAGE_QUERY = defineQuery(`{
 { /* Consolidated Author Queries */}
 
 
+
+export const SITEMAP_QUERY = defineQuery(`*[
+  _type in ["page", "blogPost", "author", "category"]
+  && defined(slug.current)
+  && language == $language
+]{
+  _type,
+  _updatedAt,
+  "slug": slug.current
+}`);
+
+export const RSS_QUERY = defineQuery(`*[
+  _type == "blogPost"
+  && defined(slug.current)
+  && language == $language
+] | order(publishedAt desc)[0...50]{
+  title,
+  excerpt,
+  publishedAt,
+  "slug": slug.current
+}`);

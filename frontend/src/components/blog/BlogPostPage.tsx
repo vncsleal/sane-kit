@@ -345,7 +345,7 @@ export default function BlogPostPage({ post, dictionary, locale }: BlogPostPageP
 							src={urlFor(post.mainImage.asset._ref).url()}
 							alt={post.mainImage.alt || post.title}
 							fill
-							priority
+							preload
 							className="object-cover"
 						/>
 					</div>

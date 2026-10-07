@@ -61,7 +61,7 @@ export default function GridGallery({
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
+                  preload
                 />
               </div>
             )}
@@ -108,7 +108,7 @@ export default function GridGallery({
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      priority
+                      preload
                     />
                   </div>
                 )}
