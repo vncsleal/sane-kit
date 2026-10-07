@@ -26,7 +26,6 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 ## Not done
 
 - **Forms backend** for `ContactSection` / `NewsletterSection` (needs a provider + keys).
-- **Sanity-managed redirects** (`redirect` document type).
 - **shadcn v4 theme refresh** (`shadcn init --base radix --preset nova`, `shadcn/tailwind.css`). The `radix-ui` consolidation is done; the CLI currently emits a broken `cn` import alias, so component regeneration needs the alias fixed or a manual pass.
 - **Runtime verification** of Live Content / Visual Editing / Draft Mode (needs a Viewer token + CORS credentials).
 - Deferred: schema conformance, Sanity `locale` document type, Blueprints/Functions.
