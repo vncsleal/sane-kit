@@ -1,6 +1,7 @@
 "use client";
 
 import type { CasesSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import LogoCarousel from "./logoCarousel";
 import CompactSlider from "./compactSlider";
 
@@ -18,7 +19,7 @@ export default function CasesSection({
 	};
 	
 	// Route to the appropriate variant component based on the variant prop
-	switch (variant) {
+	switch (stegaClean(variant)) {
 		case "logoCarousel":
 			return <LogoCarousel {...variantProps} />;
 		case "compactSlider":

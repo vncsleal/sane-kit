@@ -1,6 +1,7 @@
 "use client";
 
 import type { CompareFeaturesSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity'
 import { SectionHeader, FeatureValueCell, PlanButton } from "./shared";
 import { CompareFeatureWithTitle } from "./index";
 import React from "react";
@@ -64,7 +65,7 @@ export default function Default({
                   buttonUrl={plan.buttonUrl}
                   buttonVariant={plan.buttonVariant}
                   buttonIcon={plan.buttonIcon}
-                  highlighted={plan.highlighted === "true"}
+                  highlighted={stegaClean(plan.highlighted) === "true"}
                 />
               </div>
             ))}
@@ -94,7 +95,7 @@ export default function Default({
                       (fv) => fv.featureRef?._ref === feature._id
                     );
                     
-                    if (!featureValue || featureValue.value === "false") {
+                    if (!featureValue || stegaClean(featureValue.value) === "false") {
                       return (
                         <div
                           key={`${feature._id || index}-${plan._key || planIndex}`}
@@ -105,7 +106,7 @@ export default function Default({
                       );
                     }
 
-                    if (featureValue.value === "true") {
+                    if (stegaClean(featureValue.value) === "true") {
                       return (
                         <div
                           key={`${feature._id || index}-${plan._key || planIndex}`}

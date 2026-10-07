@@ -1,6 +1,7 @@
 "use client";
 
 import type { FeatureSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import SlidingComparison from "./slidingComparison";
 import CarouselFeature from "./carouselFeature";
 import BigMasonryGrid from "./bigMasonryGrid";
@@ -15,7 +16,7 @@ export default function FeatureSectionRouter(props: FeatureSection) {
   const { variant = "default" } = props;
 
   // Route to the appropriate variant component
-  switch (variant) {
+  switch (stegaClean(variant)) {
     case "slidingComparison":
       return <SlidingComparison {...props} />;
     case "carouselFeature":

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { stegaClean } from 'next-sanity'
 import { client } from "@/sanity/client";
 import type { BlogSection } from "@/sanity/types";
 import { BlogPostWithData, SectionHeader, ViewAllButton, BlogPostCard, BLOG_POSTS_QUERY } from "./shared";
@@ -38,7 +39,7 @@ export default function Default({
         // Use the shared query from shared.tsx
         const fetchedPosts = await client.fetch(BLOG_POSTS_QUERY, {
           language: locale,
-          featuredOnly: featuredPostsOnly === "true",
+          featuredOnly: stegaClean(featuredPostsOnly) === "true",
           start,
           end
         });

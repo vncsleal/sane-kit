@@ -1,6 +1,7 @@
 "use client";
 
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { stegaClean } from 'next-sanity'
 import { Button } from "@/components/ui/button";
 import { MoveRight, Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -125,8 +126,8 @@ export default function Transparent({
                 key={button._key}
                 variant={button.variant || "default"}
                 className={cn({
-                  "bg-white text-primary hover:bg-white/90": !scrolled && button.variant === "default",
-                  "border-white text-white hover:bg-white/10 hover:text-white": !scrolled && button.variant === "outline",
+                  "bg-white text-primary hover:bg-white/90": !scrolled && stegaClean(button.variant) === "default",
+                  "border-white text-white hover:bg-white/10 hover:text-white": !scrolled && stegaClean(button.variant) === "outline",
                 })}
                 asChild
               >

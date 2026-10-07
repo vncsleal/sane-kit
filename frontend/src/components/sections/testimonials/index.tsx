@@ -1,6 +1,7 @@
 "use client";
 
 import type { TestimonialsSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import Carousel from "./carousel";
 import Grid from "./grid";
 import MasonryGrid from "./masonryGrid";
@@ -21,7 +22,7 @@ export default function TestimonialsSectionRouter(props: TestimonialsSection) {
   };
 
   // Select the appropriate component based on the variant
-  switch (variant) {
+  switch (stegaClean(variant)) {
     case "carousel":
       return <Carousel {...variantProps} />;
     case "grid":

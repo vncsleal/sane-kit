@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarIcon, Check, MoveRight, PhoneCall } from "lucide-react";
+import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -71,9 +72,9 @@ export default function DefaultContact({
 	};
 
 	const ButtonIcon =
-		buttonIcon === "arrowRight"
+		stegaClean(buttonIcon) === "arrowRight"
 			? MoveRight
-			: buttonIcon === "phone"
+			: stegaClean(buttonIcon) === "phone"
 				? PhoneCall
 				: null;
 

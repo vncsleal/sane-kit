@@ -1,6 +1,7 @@
 "use client";
 
 import { MoveRight, PhoneCall, Plus } from "lucide-react";
+import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -35,7 +36,7 @@ export const SectionHeader = ({
     {badgeText && (
       <div>
         <Badge
-          variant={variant === "highlight" ? "secondary" : "default"}
+          variant={stegaClean(variant) === "highlight" ? "secondary" : "default"}
         >
           {badgeText}
         </Badge>
@@ -50,7 +51,7 @@ export const SectionHeader = ({
       {subheading && (
         <p
           className={`text-lg leading-relaxed tracking-tight max-w-xl ${
-            variant === "highlight"
+            stegaClean(variant) === "highlight"
               ? "text-primary-foreground/80"
               : "text-muted-foreground"
           }`}
@@ -79,9 +80,9 @@ export const ButtonsGroup = ({
 
           // Adjust button variants for highlight background
           let buttonVariant = button.variant || "default";
-          if (variant === "highlight") {
-            if (buttonVariant === "default") buttonVariant = "secondary";
-            else if (buttonVariant === "outline") buttonVariant = "ghost";
+          if (stegaClean(variant) === "highlight") {
+            if (stegaClean(buttonVariant) === "default") buttonVariant = "secondary";
+            else if (stegaClean(buttonVariant) === "outline") buttonVariant = "ghost";
           }
 
           return (

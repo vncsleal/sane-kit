@@ -12,6 +12,7 @@ import {
   Mail,
   Calendar,
 } from "lucide-react";
+import { stegaClean } from "next-sanity";
 import { Button } from "@/components/ui/button";
 import type { HeroSection } from "@/sanity/types";
 import { urlFor } from "@/sanity/client";
@@ -36,9 +37,9 @@ type IconKey = keyof typeof IconMap;
 
 // Function to render hero media (image or video)
 export const renderBackgroundMedia = (media: HeroSection['media']) => {
-  if (!media || media.type === "placeholder") return null;
+  if (!media || stegaClean(media.type) === "placeholder") return null;
 
-  if (media.type === "image" && media.image) {
+  if (stegaClean(media.type) === "image" && media.image) {
     return (
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/50 dark:bg-black/70 z-10" />
@@ -55,9 +56,9 @@ export const renderBackgroundMedia = (media: HeroSection['media']) => {
   }
 
   if (media.type === "video" && media.video?.url) {
-    const autoplay = media.video.autoplay === "true";
-    const loop = media.video.loop === "true";
-    const muted = media.video.muted === "true";
+    const autoplay = stegaClean(media.video.autoplay) === "true";
+    const loop = stegaClean(media.video.loop) === "true";
+    const muted = stegaClean(media.video.muted) === "true";
 
     return (
       <div className="absolute inset-0 z-0">

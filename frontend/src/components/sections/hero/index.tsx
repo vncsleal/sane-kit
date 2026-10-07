@@ -1,6 +1,7 @@
 "use client";
 
 import type { HeroSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import ButtonBanner from "./buttonBanner";
 import BadgeBanner from "./badgeBanner";
 import GridGallery from "./gridGallery";
@@ -9,7 +10,7 @@ export default function HeroSectionRouter(props: HeroSection) {
   const { variant = "buttonBanner" } = props;
 
   // Route to the appropriate variant component
-  switch (variant) {
+  switch (stegaClean(variant)) {
     case "badgeBanner":
       return <BadgeBanner {...props} />;
     case "gridGallery":

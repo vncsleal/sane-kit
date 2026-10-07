@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { stegaClean } from 'next-sanity'
 import { client } from "@/sanity/client";
 import type { BlogSection } from "@/sanity/types";
 import { BlogPostWithData, SectionHeader, ViewAllButton, BLOG_POSTS_QUERY } from "./shared";
@@ -40,7 +41,7 @@ export default function Grid({
         // Use the shared query from shared.tsx 
         const fetchedPosts = await client.fetch(BLOG_POSTS_QUERY, {
           language: locale,
-          featuredOnly: featuredPostsOnly === "true",
+          featuredOnly: stegaClean(featuredPostsOnly) === "true",
           start,
           end
         });
@@ -89,7 +90,7 @@ export default function Grid({
         <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
           <SectionHeader heading={heading} subheading={subheading} />
           
-          {viewAllButton === "true" && (
+          {stegaClean(viewAllButton) === "true" && (
             <ViewAllButton 
               viewAllButton={viewAllButton} 
               viewAllUrl={viewAllUrl} 

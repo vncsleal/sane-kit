@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Minus, MoveRight, PhoneCall, Plus } from "lucide-react";
+import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
@@ -43,11 +44,11 @@ export const FeatureValueCell = ({
   value: "true" | "false" | "custom"; 
   customText?: string 
 }) => {
-  if (value === "custom" && customText) {
+  if (stegaClean(value) === "custom" && customText) {
     return <p className="text-muted-foreground text-sm">{customText}</p>;
   }
 
-  if (value === "true") {
+  if (stegaClean(value) === "true") {
     return <Check className="w-4 h-4 text-primary" />;
   }
   

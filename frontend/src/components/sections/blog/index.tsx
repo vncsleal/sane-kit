@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import type { BlogSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import type { Locale } from "@/i18n/i18n-config";
 import type { BlogPostWithData } from "./shared";
 import Default from "./default";
@@ -16,7 +17,7 @@ export default function BlogSectionComponent(props: BlogSectionComponentProps) {
   const locale = params.locale as Locale;
   const { variant = "default" } = props;
 
-  switch (variant) {
+  switch (stegaClean(variant)) {
     case "grid":
       return <Grid {...props} locale={locale} />;
     case "default":

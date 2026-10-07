@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { MoveRight } from "lucide-react";
 import type { Header as SanityHeaderType } from "@/sanity/types";
 import { Locale } from "@/i18n/i18n-config";
-import { SanityDocument } from "next-sanity";
+import { stegaClean, type SanityDocument } from 'next-sanity';
 import { Dictionary } from "@/i18n/getDictionary";
 
 // Updated HeaderProps to include locale, dictionary, alternatePages and make SanityHeaderType fields optional
@@ -101,9 +101,9 @@ export function HeaderCTAButton({ label, url, variant = "default", _key, locale,
 export function createHeaderClassName(variant?: string, scrolled?: boolean) {
   return cn("w-full z-40 fixed top-0 left-0", {
     "bg-background":
-      variant === "default" || variant === "minimal" || variant === "centered",
-    "transition-all duration-300": variant === "transparent",
-    "bg-background/80 backdrop-blur-md": variant === "transparent" && scrolled,
-    "bg-transparent": variant === "transparent" && !scrolled,
+      stegaClean(variant) === "default" || stegaClean(variant) === "minimal" || stegaClean(variant) === "centered",
+    "transition-all duration-300": stegaClean(variant) === "transparent",
+    "bg-background/80 backdrop-blur-md": stegaClean(variant) === "transparent" && scrolled,
+    "bg-transparent": stegaClean(variant) === "transparent" && !scrolled,
   });
 }

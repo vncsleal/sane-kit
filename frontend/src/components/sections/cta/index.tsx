@@ -1,6 +1,7 @@
 "use client";
 
 import type { CtaSection } from "@/sanity/types";
+import { stegaClean } from 'next-sanity';
 import Default from "./default";
 import Highlight from "./highlight";
 import Minimal from "./minimal";
@@ -10,7 +11,7 @@ export default function CtaSectionRouter(props: CtaSection) {
   const { variant = "default" } = props;
 
   // Route to the appropriate variant component
-  switch (variant) {
+  switch (stegaClean(variant)) {
     case "highlight":
       return <Highlight {...props} />;
     case "minimal":

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MoveRight, Plus, Mail } from "lucide-react";
@@ -27,7 +28,7 @@ export const SectionHeader = ({
     {badgeText && (
       <div>
         <Badge
-          variant={variant === "highlight" ? "secondary" : "outline"}
+          variant={stegaClean(variant) === "highlight" ? "secondary" : "outline"}
         >
           {badgeText}
         </Badge>
@@ -93,8 +94,8 @@ export const SubscriptionForm = ({
   const Icon = buttonIcon && buttonIcon !== "none" ? IconMap[buttonIcon] : null;
 
   // Apply different styles based on variant
-  const isHighlightVariant = variant === "highlight";
-  const isFullVariant = variant === "full";
+  const isHighlightVariant = stegaClean(variant) === "highlight";
+  const isFullVariant = stegaClean(variant) === "full";
   const containerClass = (isHighlightVariant || isFullVariant) ? "rounded-md p-1 backdrop-blur-sm" : "";
   
   if (submitted) {
