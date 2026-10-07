@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { logger } from "@/lib/logger";
 import HeroSection from "./HeroSection";
 import CasesSection from "./CasesSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -76,9 +77,7 @@ export default function RenderSection({ section }: RenderSectionProps) {
 		case "newsletterSection":
 			return <NewsletterSection {...section} />;
 		default:
-			console.warn(
-				`Unknown section type: ${(section as { _type: string })._type}`,
-			);
+			logger.warn(`Unknown section type: ${(section as { _type: string })._type}`);
 			return null;
 	}
 }

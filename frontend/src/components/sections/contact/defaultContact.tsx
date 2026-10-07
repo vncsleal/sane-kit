@@ -2,6 +2,7 @@
 
 import { CalendarIcon, Check, MoveRight, PhoneCall } from "lucide-react";
 import { stegaClean } from 'next-sanity'
+import { logger } from "@/lib/logger";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -59,7 +60,7 @@ export default function DefaultContact({
 				const dict = await getDictionary(locale);
 				setDictionary(dict.contact);
 			} catch (error) {
-				console.warn('Failed to fetch dictionary:', error);
+				logger.warn('Failed to fetch dictionary', { error: String(error) });
 			}
 		};
 		

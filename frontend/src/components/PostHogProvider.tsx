@@ -4,6 +4,7 @@ import posthog from "posthog-js"
 import { PostHogProvider as PHProvider, usePostHog } from "posthog-js/react"
 import { Suspense, useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { logger } from "@/lib/logger"
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -16,7 +17,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     
     if (!posthogKey) {
       if (process.env.NODE_ENV === "development") {
-        console.warn("PostHog key is missing. Analytics tracking is disabled.");
+        logger.warn("PostHog key is missing. Analytics tracking is disabled.");
       }
       return;
     }

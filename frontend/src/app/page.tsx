@@ -1,6 +1,7 @@
 // Replace root page to redirect users to the detected locale
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import { logger } from '@/lib/logger';
 import { i18n, type Locale } from '@/i18n/i18n-config'; 
 
 // Function to get the best locale based on country
@@ -58,7 +59,7 @@ export default async function RootPage() {
     }
   } catch (error) {
     // If headers are not available (e.g., in static generation), use default
-    console.warn('Could not detect locale from headers, using default:', error);
+    logger.warn('Could not detect locale from headers, using default', { error: String(error) });
   }
 
   redirect(`/${detectedLocale}`);

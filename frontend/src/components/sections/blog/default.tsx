@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { stegaClean } from 'next-sanity'
+import { logger } from "@/lib/logger";
 import { client } from "@/sanity/client";
 import type { BlogSection } from "@/sanity/types";
 import { BlogPostWithData, SectionHeader, ViewAllButton, BlogPostCard, BLOG_POSTS_QUERY } from "./shared";
@@ -46,7 +47,7 @@ export default function Default({
         
         setPosts(fetchedPosts || []);
       } catch (err) {
-        console.error("Error fetching blog posts:", err);
+        logger.error("Error fetching blog posts", { error: String(err) });
         setError("Failed to load posts.");
         setPosts([]);
       } finally {
