@@ -72,6 +72,8 @@ pnpm dev          # run frontend + studio (Turborepo)
 pnpm build        # build both
 pnpm typecheck    # tsc across workspaces
 pnpm lint         # eslint across workspaces
+pnpm test         # Vitest unit tests
+pnpm test:e2e     # Playwright smoke tests (starts the dev server)
 pnpm typegen      # extract schema + regenerate frontend/src/sanity/types.ts
 pnpm verify       # typecheck + lint + build + test
 ```

@@ -38,3 +38,7 @@ next-env.d.ts
 # IDE - VS Code settings directory
 /.vscode
 
+
+# playwright
+/frontend/test-results
+/frontend/playwright-report

@@ -13,6 +13,7 @@
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:e2e": "pnpm --filter frontend test:e2e",
     "format": "prettier --write .",
     "typegen": "pnpm --filter studio typegen",
     "deploy:studio": "pnpm --filter studio deploy",
