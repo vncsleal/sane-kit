@@ -26,7 +26,8 @@ const labels = {
   footersByLanguage: isPortuguese ? 'Rodapés por Idioma' : 'Footers by Language',
   reusableContent: isPortuguese ? 'Conteúdo Reutilizável' : 'Reusable Content',
   compareFeatures: isPortuguese ? 'Comparar Recursos' : 'Compare Features',
-  redirects: isPortuguese ? 'Redirecionamentos' : 'Redirects'
+  redirects: isPortuguese ? 'Redirecionamentos' : 'Redirects',
+  locales: isPortuguese ? 'Idiomas' : 'Locales'
 }
 
 export const structure = (S: StructureBuilder) =>
@@ -225,5 +226,7 @@ export const structure = (S: StructureBuilder) =>
 
       S.divider(),
 
-      S.documentTypeListItem('redirect').title(labels.redirects)
+      S.documentTypeListItem('redirect').title(labels.redirects),
+
+      S.documentTypeListItem('locale').title(labels.locales)
     ])

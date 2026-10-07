@@ -15,6 +15,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | Data layer | `next-sanity` 13, `sanity/{env,client,image,live,translations}`, `defineQuery` from `next-sanity` |
 | Live / VE | `defineLive` / `sanityFetch` / `<SanityLive />`, `<VisualEditing />`, Server-Action `<DisableDraftMode />`, draft-mode + revalidate routes, `parseBody` |
 | Forms | **Resend-backed** contact + newsletter Server Actions — zod validation, honeypot, file attachments, server-only Resend env; wired via `useActionState` |
+| Locales | `locale` document type as the source of truth; the Studio fetches languages from Content Lake; seed via `studio/seed/locales.ndjson` |
 | stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
 | i18n | Server-driven language switcher (`sanity/translations.ts` + `x-pathname`); client-side Sanity fetch removed |
 | SEO | `sitemap.ts`, `robots.ts`, `rss.xml`, per-post dynamic OG images, **reusable `seo` schema type** (coalesce fallbacks + `noIndex`), **JSON-LD** (`BlogPosting`/`Organization`), **Sanity-managed redirects** (`redirect` type → `next.config` `redirects()`) |

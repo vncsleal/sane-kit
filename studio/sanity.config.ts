@@ -35,10 +35,10 @@ export default defineConfig({
     codeInput(),
     unsplashImageAsset(),
     documentInternationalization({
-      supportedLanguages: [
-        { id: 'pt-BR', title: 'Português (Brasil)' },
-        { id: 'en', title: 'English' },
-      ],
+      supportedLanguages: (client) =>
+        client.fetch(
+          `*[_type == "locale"] | order(coalesce(default, "false") desc, name asc){ "id": tag, "title": name }`,
+        ),
       schemaTypes: [
         'page',
         'blogPost',

@@ -22,6 +22,7 @@ import { contactSection } from "./contactSection";
 import { newsletterSection } from "./newsletterSection";
 import { redirect } from "./redirect";
 import { seo } from "./seo";
+import { locale } from "./locale";
 
 export const schemaTypes = [
   page,
@@ -48,4 +49,5 @@ export const schemaTypes = [
   newsletterSection,
   redirect,
   seo,
+  locale,
 ];

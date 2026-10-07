@@ -93,6 +93,17 @@ export type FeatureImage = {
   _type: 'image'
 }
 
+export type Locale = {
+  _id: string
+  _type: 'locale'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  tag?: string
+  default?: 'false' | 'true'
+}
+
 export type Seo = {
   _type: 'seo'
   title?: string
@@ -1008,6 +1019,7 @@ export type AllSanitySchemaTypes =
   | Logo
   | Avatar
   | FeatureImage
+  | Locale
   | Seo
   | Redirect
   | BlogSection

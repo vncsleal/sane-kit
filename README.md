@@ -65,6 +65,16 @@ pnpm dev
 `studio/.env.local`: `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`,
 `SANITY_STUDIO_SITE_URL` (the frontend origin used by the Presentation tool).
 
+## Locales
+
+Languages live in Sanity as `locale` documents — the single source of truth used
+by the Studio's translation workflow. Seed them once (the `tag` must match the
+frontend route segment):
+
+```bash
+pnpm --filter studio exec sanity dataset import seed/locales.ndjson production
+```
+
 ## Scripts
 
 ```bash
