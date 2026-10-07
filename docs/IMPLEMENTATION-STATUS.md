@@ -22,6 +22,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | UI | **shadcn v4**: `components/ui/*` refreshed, the `cn` package adopted (shadcn's official replacement for clsx + tailwind-merge), `shadcn/tailwind.css` imported; lucide v1 (brand icons via `react-icons/fa6`), react-day-picker v10 calendar, date-fns v4, nine `@radix-ui/react-*` packages consolidated into `radix-ui` |
 | Docs | README rewritten; vendored Sanity rules removed in favour of the official skill |
 | Tests | **Vitest** unit tests (20) + **Playwright** smoke suite (10) asserting real content renders against the live `sane-kit` dataset |
+| Performance | **React Compiler** enabled (`reactCompiler: true`, stable in Next 16; `babel-plugin-react-compiler`). The experimental Rust/Turbopack variant is intentionally not used. |
 | Resilience | `error.tsx` / `loading.tsx` / `global-error.tsx` boundaries (Next 16 `retry` prop) + a shared `logger` (no bare `console.*`) |
 
 **Verified:** frontend + studio `tsc` clean · frontend + studio ESLint 0 errors · frontend `next build` green · studio `sanity build` green · `sanity typegen` clean · Playwright green against the live dataset.

@@ -15,6 +15,9 @@ const sanity = createClient({
 })
 
 const nextConfig: NextConfig = {
+  // Stable since Next 16.0.0 (SWC-optimized). The experimental Rust/Turbopack
+  // variant (experimental.turbopackRustReactCompiler) is intentionally not used.
+  reactCompiler: true,
   images: {
     remotePatterns: [
       {
