@@ -479,3 +479,31 @@ export const REDIRECTS_QUERY = defineQuery(`*[
   destination,
   permanent
 }`);
+
+export const BLOG_POSTS_QUERY = defineQuery(`*[
+  _type == "blogPost"
+  && language == $language
+  && ($featuredOnly == false || featured == "true")
+] | order(publishedAt desc)[$start...$end]{
+  _id,
+  title,
+  slug,
+  publishedAt,
+  excerpt,
+  mainImage,
+  featured,
+  "author": authors[0]->{
+    _id,
+    name,
+    avatar
+  },
+  "categories": categories[]->{
+    _id,
+    title,
+    slug
+  }
+}`);
+
+export const COMPARE_FEATURES_QUERY = defineQuery(`*[
+  _type == "compareFeature" && _id in $ids
+]{ _id, title }`);

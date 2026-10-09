@@ -1,48 +1,24 @@
-"use client";
-
-import { urlFor } from "@/sanity/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { urlFor } from "@/sanity/image";
+import { stegaClean } from 'next-sanity';
 import Image from "next/image";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
+import type { StegaBranded, StegaCleaned } from '@sanity/client/stega';
 import type { BlogSection } from "@/sanity/types";
 import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
-import { defineQuery } from 'next-sanity';
 
-export const BLOG_POSTS_QUERY = defineQuery(`*[
-  _type == "blogPost"
-  && language == $language
-  && ($featuredOnly == false || featured == "true")
-] | order(publishedAt desc)[$start...$end]{
-  _id,
-  title,
-  slug,
-  publishedAt,
-  excerpt,
-  mainImage,
-  featured,
-  "author": authors[0]->{
-    _id,
-    name,
-    avatar
-  },
-  "categories": categories[]->{
-    _id,
-    title,
-    slug
-  }
-}`);
+/** Accepts both clean and stega-branded `sanityFetch` results. */
+type StegaAware<T> = StegaCleaned<T> | StegaBranded<T>;
+export type BlogPostWithData = StegaAware<BLOG_POSTS_QUERY_RESULT[0]>;
 
-// Use the generated type instead of custom interface
-export type BlogPostWithData = BLOG_POSTS_QUERY_RESULT[0];
-
-// Utility functions 
+// Utility functions
 export function formatDate(dateString: string, locale: string) {
   return new Date(dateString).toLocaleDateString(locale, {
     year: "numeric",
-    month: "short", 
+    month: "short",
     day: "numeric",
   });
 }
@@ -58,9 +34,9 @@ export function getInitials(name: string) {
 }
 
 // Section header component
-export const SectionHeader = ({ 
-  heading = "Artigos mais recentes", 
-  subheading 
+export const SectionHeader = ({
+  heading = "Artigos mais recentes",
+  subheading
 }: Pick<BlogSection, 'heading' | 'subheading'>) => (
   <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
     <div className="flex flex-col gap-2">
@@ -83,8 +59,8 @@ export const ViewAllButton = ({
   viewAllButtonText = "Ver todos os artigos",
   locale,
 }: Pick<BlogSection, 'viewAllButton' | 'viewAllUrl' | 'viewAllButtonText'> & { locale: string }) => {
-  if (viewAllButton !== "true") return null;
-  
+  if (stegaClean(viewAllButton) !== "true") return null;
+
   const localizedUrl = `/${locale}${viewAllUrl.startsWith("/") ? viewAllUrl : `/${viewAllUrl}`}`;
 
   return (
@@ -102,7 +78,7 @@ export const BlogPostCard = ({
   post,
   isFeatured = false,
   locale,
-}: { 
+}: {
   post: BlogPostWithData;
   isFeatured?: boolean;
   locale: string;
@@ -127,14 +103,14 @@ export const BlogPostCard = ({
           />
         ) : null}
       </div>
-      
+
       <div className="flex flex-row gap-4 items-center flex-wrap">
         {post.categories?.length ? (
           <Badge>
             {post.categories[0].title || ""}
           </Badge>
         ) : null}
-        
+
         <p className="flex flex-row gap-2 text-sm items-center">
           <span className="text-muted-foreground">Por</span>{" "}
           <Avatar className="h-6 w-6">
@@ -150,14 +126,14 @@ export const BlogPostCard = ({
           </Avatar>
           <span>{post.author?.name || ""}</span>
         </p>
-        
+
         {post.publishedAt && (
           <span className="text-sm text-muted-foreground">
             {formatDate(post.publishedAt, locale)}
           </span>
         )}
       </div>
-      
+
       <div className="flex flex-col gap-2">
         <h3 className={`max-w-3xl ${isFeatured ? "text-4xl" : "text-2xl"} tracking-tight`}>
           {post.title}

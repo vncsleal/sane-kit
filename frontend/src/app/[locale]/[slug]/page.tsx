@@ -72,7 +72,7 @@ export default async function DynamicPage({
     <>
       <main>
         {page.pageBuilder?.map((section) => (
-          <RenderSection key={section._key} section={section} />
+          <RenderSection key={section._key} section={section} locale={locale} />
         ))}
       </main>
     </>

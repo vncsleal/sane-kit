@@ -1,29 +1,45 @@
-"use client";
+import { stegaClean } from 'next-sanity'
 
-import { useParams } from "next/navigation";
-import type { BlogSection } from "@/sanity/types";
-import { stegaClean } from 'next-sanity';
-import type { Locale } from "@/i18n/i18n-config";
-import type { BlogPostWithData } from "./shared";
-import Default from "./default";
-import Grid from "./grid";
+import type { BlogSection as BlogSectionType } from '@/sanity/types'
+import type { Locale } from '@/i18n/i18n-config'
+import { sanityFetch } from '@/sanity/live'
+import { BLOG_POSTS_QUERY } from '@/sanity/queries'
 
-interface BlogSectionComponentProps extends BlogSection {
-  posts?: BlogPostWithData[];
+import type { BlogPostWithData } from './shared'
+import Default from './default'
+import Grid from './grid'
+
+export interface BlogSectionComponentProps extends BlogSectionType {
+  locale: Locale
 }
 
-export default function BlogSectionComponent(props: BlogSectionComponentProps) {
-  const params = useParams();
-  const locale = params.locale as Locale;
-  const { variant = "default" } = props;
+/**
+ * Server component: fetches the posts with `sanityFetch` and hands them to the
+ * presentational variant. Mirrors the official page-builder pattern (no
+ * client-side fetching).
+ */
+export default async function BlogSectionComponent(props: BlogSectionComponentProps) {
+  const { variant = 'default', postsToShow, featuredPostsOnly = 'false', locale } = props
+  const cleanVariant = stegaClean(variant)
+  const end = postsToShow ?? (cleanVariant === 'grid' ? 6 : 3)
 
-  switch (stegaClean(variant)) {
-    case "grid":
-      return <Grid {...props} locale={locale} />;
-    case "default":
+  const { data } = await sanityFetch({
+    query: BLOG_POSTS_QUERY,
+    params: {
+      language: locale,
+      featuredOnly: stegaClean(featuredPostsOnly) === 'true',
+      start: 0,
+      end,
+    },
+  })
+  const posts: BlogPostWithData[] = data ?? []
+
+  switch (cleanVariant) {
+    case 'grid':
+      return <Grid {...props} posts={posts} />
     default:
-      return <Default {...props} locale={locale} />;
+      return <Default {...props} posts={posts} />
   }
 }
 
-export type { BlogSection, BlogSectionComponentProps };
+export type { BlogSectionType as BlogSection, BlogPostWithData }

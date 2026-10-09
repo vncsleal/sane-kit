@@ -1079,43 +1079,6 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint
 
-// Source: ../frontend/src/components/sections/blog/shared.tsx
-// Variable: BLOG_POSTS_QUERY
-// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == "true")] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": authors[0]->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
-export type BLOG_POSTS_QUERY_RESULT = Array<{
-  _id: string
-  title: string | null
-  slug: Slug | null
-  publishedAt: string | null
-  excerpt: string | null
-  mainImage: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    caption?: string
-    _type: 'image'
-  } | null
-  featured: 'false' | 'true' | null
-  author: {
-    _id: string
-    name: string | null
-    avatar: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
-  } | null
-  categories: Array<{
-    _id: string
-    title: string | null
-    slug: Slug | null
-  }> | null
-}>
-
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: LAYOUT_HEADER_QUERY
 // Query: *[  _type == "header"  && language == $language][0]{  _id,  title,  logo,  variant,  navigationItems[]{    title,    href,    description,    items[]{      title,      href,      _key    },    _key  },  ctaButtons[]{    label,    url,    variant,    _key  },  dropdownCTALabel,  dropdownCTAUrl,  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{    _id,    title,    language  }}
@@ -2364,10 +2327,54 @@ export type REDIRECTS_QUERY_RESULT = Array<{
   permanent: 'false' | 'true' | null
 }>
 
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: BLOG_POSTS_QUERY
+// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == "true")] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": authors[0]->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
+export type BLOG_POSTS_QUERY_RESULT = Array<{
+  _id: string
+  title: string | null
+  slug: Slug | null
+  publishedAt: string | null
+  excerpt: string | null
+  mainImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    caption?: string
+    _type: 'image'
+  } | null
+  featured: 'false' | 'true' | null
+  author: {
+    _id: string
+    name: string | null
+    avatar: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+  } | null
+  categories: Array<{
+    _id: string
+    title: string | null
+    slug: Slug | null
+  }> | null
+}>
+
+// Source: ../frontend/src/sanity/queries.ts
+// Variable: COMPARE_FEATURES_QUERY
+// Query: *[  _type == "compareFeature" && _id in $ids]{ _id, title }
+export type COMPARE_FEATURES_QUERY_RESULT = Array<{
+  _id: string
+  title: string | null
+}>
+
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == "true")\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
     '*[\n  _type == "header"\n  && language == $language\n][0]{\n  _id,\n  title,\n  logo,\n  variant,\n  navigationItems[]{\n    title,\n    href,\n    description,\n    items[]{\n      title,\n      href,\n      _key\n    },\n    _key\n  },\n  ctaButtons[]{\n    label,\n    url,\n    variant,\n    _key\n  },\n  dropdownCTALabel,\n  dropdownCTAUrl,\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    language\n  }\n}': LAYOUT_HEADER_QUERY_RESULT
     '*[\n  _type == "footer"\n  && language == $language\n][0]{\n  _id,\n  title,\n  logo,\n  variant,\n  description,\n  address,\n  legalLinks[]{\n    title,\n    url,\n    _key\n  },\n  navigationItems[]{\n    title,\n    href,\n    description,\n    items[]{\n      title,\n      href,\n      _key\n    },\n    _key\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    language\n  }\n}': LAYOUT_FOOTER_QUERY_RESULT
     '*[\n  _type == "page"\n  && slug.current == "/"\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  description,\n  ogImage,\n  "seo": {\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, description),\n    "image": coalesce(seo.image, ogImage),\n    "noIndex": seo.noIndex == "true"\n  },\n  pageBuilder[]{\n    _key,\n    _type,\n    ...,\n    _type == "compareFeaturesSection" => {\n      ...,\n      "features": features[]{\n        "_ref": _ref,\n        "_key": _key,\n        "_type": _type\n      },\n      "plans": plans[]{\n        ...,\n        "featureValues": featureValues[]{\n          ...,\n          "featureRef": {\n            "_ref": featureRef._ref,\n            "_type": featureRef._type\n          }\n        }\n      }\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': HOME_PAGE_QUERY_RESULT
@@ -2380,6 +2387,8 @@ declare global {
     '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
     '*[\n  _type == "translation.metadata"\n  && references(*[\n    _type in ["page", "blogPost", "author", "category"]\n    && slug.current == $slug\n    && language == $currentLanguage\n  ][0]._id)\n][0]{\n  "translations": translations[]{\n    "value": value->{ _type, language, "slug": slug.current }\n  }\n}': LANGUAGE_ALTERNATES_QUERY_RESULT
     '*[\n  _type == "redirect"\n  && defined(source)\n  && defined(destination)\n]{\n  source,\n  destination,\n  permanent\n}': REDIRECTS_QUERY_RESULT
+    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == "true")\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
+    '*[\n  _type == "compareFeature" && _id in $ids\n]{ _id, title }': COMPARE_FEATURES_QUERY_RESULT
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

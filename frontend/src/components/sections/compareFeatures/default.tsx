@@ -3,7 +3,7 @@
 import type { CompareFeaturesSection } from "@/sanity/types";
 import { stegaClean } from 'next-sanity'
 import { SectionHeader, FeatureValueCell, PlanButton } from "./shared";
-import { CompareFeatureWithTitle } from "./index";
+import type { CompareFeatureWithTitle } from "./index";
 import React from "react";
 
 export interface DefaultProps extends Omit<CompareFeaturesSection, 'features'> {

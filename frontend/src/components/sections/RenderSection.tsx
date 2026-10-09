@@ -1,7 +1,3 @@
-"use client";
-
-import React from "react";
-import { logger } from "@/lib/logger";
 import HeroSection from "./HeroSection";
 import CasesSection from "./CasesSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -14,6 +10,8 @@ import FeatureSection from "./FeatureSection";
 import BlogSection from "./BlogSection";
 import ContactSection from "./ContactSection";
 import NewsletterSection from "./NewsletterSection";
+import { logger } from "@/lib/logger";
+import type { Locale } from "@/i18n/i18n-config";
 import type {
   HeroSection as HeroSectionType,
   CasesSection as CasesSectionType,
@@ -30,7 +28,7 @@ import type {
 } from "@/sanity/types";
 
 // Create a union type for all section types
-export type SectionType = 
+export type SectionType =
   | HeroSectionType
   | CasesSectionType
   | TestimonialsSectionType
@@ -46,11 +44,14 @@ export type SectionType =
 
 interface RenderSectionProps {
 	section: SectionType;
+	locale: Locale;
 }
 
-export default function RenderSection({ section }: RenderSectionProps) {
-
-	// Use discriminated union pattern with _type property to determine which component to render
+/**
+ * Server component that maps a page-builder block to its section component.
+ * Sections that need data fetch it on the server; the rest are presentational.
+ */
+export default function RenderSection({ section, locale }: RenderSectionProps) {
 	switch (section._type) {
 		case "heroSection":
 			return <HeroSection {...section} />;
@@ -71,7 +72,7 @@ export default function RenderSection({ section }: RenderSectionProps) {
 		case "featureSection":
 			return <FeatureSection {...section} />;
 		case "blogSection":
-			return <BlogSection {...section} />;
+			return <BlogSection {...section} locale={locale} />;
 		case "contactSection":
 			return <ContactSection {...section} />;
 		case "newsletterSection":

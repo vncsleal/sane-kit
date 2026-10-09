@@ -5,6 +5,7 @@ import RenderSection from '@/components/sections/RenderSection';
 import { dictionary } from '@/i18n/dictionaries.pt-BR';
 import type { Metadata } from 'next';
 import { HOME_PAGE_QUERY } from '@/sanity/queries';
+import { i18n, hasLocale, type Locale } from '@/i18n/i18n-config';
 
 
 
@@ -16,12 +17,13 @@ interface Props {
   params: Promise<PageParams>;
 }
 
-async function getHomePage(locale: string): Promise<Page | null> {
+async function getHomePage(locale: Locale): Promise<Page | null> {
   return client.fetch<Page | null>(HOME_PAGE_QUERY, { language: locale });
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getHomePage(locale);
 
   if (!page) {
@@ -42,13 +44,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function HomePage({ params }: Props) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getHomePage(locale);
   if (!page) notFound();
   return (
     <main>
       {page.pageBuilder?.map((section) => (
-        <RenderSection key={section._key} section={section} />
+        <RenderSection key={section._key} section={section} locale={locale} />
       ))}
     </main>
   );
