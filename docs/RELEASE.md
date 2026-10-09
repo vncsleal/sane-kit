@@ -44,7 +44,7 @@ In short, it requires:
    pnpm validate                     # sanity-template-validate
    pnpm typegen && git diff --exit-code frontend/src/sanity/types.ts
    pnpm --filter studio build
-   pnpm --filter frontend exec playwright test
+   pnpm --filter frontend test:e2e
    ```
 
 2. **Version & changelog** — update [`CHANGELOG.md`](../CHANGELOG.md) and bump

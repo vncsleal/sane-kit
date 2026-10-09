@@ -27,7 +27,7 @@ customizable Studio. Built on the 2026 stack.
 - **Live Content API** (`defineLive` / `<SanityLive />`) — published changes appear without a redeploy.
 - **Visual Editing + Presentation** — click-to-edit overlays and draft preview, with block-level updates.
 - **Document internationalization** (English / Portuguese) via the official Sanity plugin.
-- **Caching & revalidation** — CDN reads, ISR, and tag-based on-demand revalidation from a Sanity webhook.
+- **Live Content & revalidation** — `<SanityLive />` streams published changes without a redeploy; a Sanity webhook (declared in `sanity.blueprint.ts`) drives tag-based revalidation.
 - **SEO** — `sitemap.xml`, `robots.txt`, RSS feed, Open Graph metadata.
 - **Analytics** — GA4 via `@next/third-parties`, PostHog, both consent-gated.
 
@@ -73,6 +73,9 @@ pnpm dev
 | `SANITY_REVALIDATE_SECRET`          | for webhooks | Shared secret for `/api/revalidate`                            |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`     | no           | Google Analytics 4                                             |
 | `NEXT_PUBLIC_POSTHOG_KEY` / `_HOST` | no           | PostHog                                                        |
+| `RESEND_API_KEY`                    | for forms    | Resend API key (contact + newsletter forms)                    |
+| `CONTACT_FORM_TO`                   | for forms    | Recipient inbox for the contact form                           |
+| `CONTACT_FORM_FROM`                 | for forms    | Verified Resend sender, e.g. `Sane Kit <hello@yourdomain.com>` |
 
 `studio/.env.local`: `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`,
 `SANITY_STUDIO_SITE_URL` (the frontend origin used by the Presentation tool).
@@ -99,7 +102,7 @@ pnpm test:e2e     # Playwright smoke tests (builds + starts the production serve
 pnpm typegen      # extract schema + regenerate frontend/src/sanity/types.ts
 pnpm blueprint:plan    # preview Blueprint changes (CORS, webhook, functions)
 pnpm blueprint:deploy  # apply the Blueprint to your Sanity project
-pnpm verify       # typecheck + lint + build + test
+pnpm verify       # typecheck + typecheck:blueprint + lint + build + test
 ```
 
 ## TypeGen
