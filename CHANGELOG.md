@@ -62,6 +62,13 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 - Vitest unit tests and a Playwright smoke suite.
 
+### Project setup (Blueprints + Functions)
+
+- `sanity.blueprint.ts` declares the CORS origins and the `/api/revalidate`
+  webhook as code, deployed with `pnpm blueprint:deploy`.
+- An illustrative Sanity Function (`functions/derive-excerpt`) fills an empty
+  blog post excerpt from the body on publish.
+
 ## v2.0.0 — Document-based internationalization
 
 - Migrated from array-based to document-based i18n

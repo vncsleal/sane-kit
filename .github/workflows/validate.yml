@@ -14,6 +14,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
+      - run: pnpm typecheck:blueprint
       - run: pnpm lint
       - run: pnpm test
 

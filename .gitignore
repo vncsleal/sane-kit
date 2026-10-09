@@ -18,6 +18,12 @@
 *.pem
 /studio/dist
 /studio/.sanity
+/.sanity
+
+# sanity functions (local dev/test artifacts)
+/functions/**/.build
+/functions/**/node_modules
+/functions/**/.env*
 
 # debug
 npm-debug.log*

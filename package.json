@@ -18,11 +18,20 @@
     "typegen": "pnpm --filter studio typegen",
     "deploy:studio": "pnpm --filter studio deploy",
     "validate": "sanity-template-validate",
-    "verify": "pnpm typecheck && pnpm lint && pnpm build && pnpm test"
+    "typecheck:blueprint": "tsc --noEmit",
+    "blueprint:plan": "sanity blueprints plan",
+    "blueprint:deploy": "sanity blueprints deploy",
+    "verify": "pnpm typecheck && pnpm typecheck:blueprint && pnpm lint && pnpm build && pnpm test"
   },
   "devDependencies": {
+    "@sanity/blueprints": "^0.28.0",
+    "@sanity/client": "^8.9.0",
+    "@sanity/functions": "^1.8.1",
     "@sanity/template-validator": "^3.1.1",
+    "@types/node": "^24.19.1",
     "prettier": "^3.5.3",
-    "turbo": "^2.11.7"
+    "sanity": "^6.18.0",
+    "turbo": "^2.11.7",
+    "typescript": "^6.0.3"
   }
 }

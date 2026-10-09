@@ -17,7 +17,7 @@ npm create sanity@latest -- --template vncsleal/sane-kit
 
 > Sane-Kit uses the **Exchange template** flow. The separate `sanity.io/create`
 > "starter" flow — a `.sanity-template/manifest.json` (v2) in a repo named
-> `sanity-template-*` — is for one-click *deployment* templates. We are not on
+> `sanity-template-*` — is for one-click _deployment_ templates. We are not on
 > that path.
 
 ## What the validator checks
@@ -55,26 +55,57 @@ In short, it requires:
 
 4. **GitHub release** — tag the release commit and publish notes.
 
-5. **Exchange submission** (Community Studio → *Submit template*):
+5. **Exchange submission** (Community Studio → _Submit template_):
 
-   | Field | Value |
-   | --- | --- |
-   | Title | Sane-Kit |
-   | Description | Sanity + Next.js starter kit with a page-builder, i18n, and Visual Editing |
-   | Slug | `sane-kit` (page under `sanity.io/templates`) |
-   | Repository | `https://github.com/vncsleal/sane-kit` (must be public) |
-   | Preview image | the 1200 × 750 image from step 3 |
-   | Author(s) | a Sanity community profile that already exists |
-   | Frameworks | Next.js, Tailwind CSS |
-   | Use case(s) | Website / Blog |
+   | Field         | Value                                                                      |
+   | ------------- | -------------------------------------------------------------------------- |
+   | Title         | Sane-Kit                                                                   |
+   | Description   | Sanity + Next.js starter kit with a page-builder, i18n, and Visual Editing |
+   | Slug          | `sane-kit` (page under `sanity.io/templates`)                              |
+   | Repository    | `https://github.com/vncsleal/sane-kit` (must be public)                    |
+   | Preview image | the 1200 × 750 image from step 3                                           |
+   | Author(s)     | a Sanity community profile that already exists                             |
+   | Frameworks    | Next.js, Tailwind CSS                                                      |
+   | Use case(s)   | Website / Blog                                                             |
 
 6. **Deploy**
 
    - Studio: `pnpm --filter studio deploy`
    - Frontend: Vercel, **Root Directory `frontend/`**, env from
      `frontend/.env.example`.
-   - Re-check the project's **CORS origins** (with *Allow credentials*) for the
+   - Re-check the project's **CORS origins** (with _Allow credentials_) for the
      deployed frontend origin.
+
+## Project setup as code (Blueprints)
+
+`sanity.blueprint.ts` (repo root) declares the resources a project needs — the
+frontend/Studio CORS origins and the `/api/revalidate` webhook — so a fresh
+project is configured from code instead of dashboard clicks. It is validated in
+CI via `pnpm typecheck:blueprint`, and the illustrative Sanity Function in
+`functions/derive-excerpt` is deployed with it.
+
+One-time, per project:
+
+```bash
+# Creates the local Stack config and the remote Stack (keeps the repo's blueprint file)
+pnpm exec sanity blueprints init . --type ts --project-id <project-id> --stack-name production
+```
+
+Then preview and apply:
+
+```bash
+SANITY_PROJECT_ID=<id> \
+SANITY_SITE_URL=https://your-site.example \
+SANITY_REVALIDATE_SECRET=<secret> \
+  pnpm blueprint:plan
+
+# …then the same env with:
+pnpm blueprint:deploy
+```
+
+This replaces the manual "add CORS origins" and "create a webhook" steps. The
+webhook is only declared when `SANITY_SITE_URL` is a publicly reachable URL (a
+webhook cannot call `localhost`).
 
 ## Post-release
 

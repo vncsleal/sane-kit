@@ -13,12 +13,12 @@ customizable Studio. Built on the 2026 stack.
 > with `sanityFetch` live content and an optimistic page builder. See
 > [`CHANGELOG.md`](./CHANGELOG.md) and [`docs/RELEASE.md`](./docs/RELEASE.md).
 
-| | |
-| --- | --- |
+|          |                                                                            |
+| -------- | -------------------------------------------------------------------------- |
 | Frontend | **Next.js 16** (App Router, Turbopack) · **React 19** · **next-sanity 13** |
-| Studio | **Sanity 6** · `@sanity/document-internationalization` · Presentation tool |
-| UI | **Tailwind CSS v4** · shadcn/ui (Radix) |
-| Tooling | **pnpm 10 workspaces** · **Turborepo** · TypeScript · ESLint (flat config) |
+| Studio   | **Sanity 6** · `@sanity/document-internationalization` · Presentation tool |
+| UI       | **Tailwind CSS v4** · shadcn/ui (Radix)                                    |
+| Tooling  | **pnpm 10 workspaces** · **Turborepo** · TypeScript · ESLint (flat config) |
 
 ## Features
 
@@ -38,6 +38,8 @@ sane-kit/
 ├── frontend/   # Next.js app (routes under src/app/[locale])
 │   └── src/sanity/   # env, client, live, image, queries, generated types
 ├── studio/     # Sanity Studio (schemas, structure, presentation resolver)
+├── functions/  # Sanity Functions (deployed via the Blueprint)
+├── sanity.blueprint.ts   # project setup as code (CORS, webhook, functions)
 ├── turbo.json
 └── pnpm-workspace.yaml
 ```
@@ -60,17 +62,17 @@ pnpm dev
 
 `frontend/.env.local`
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | yes | Sanity project id |
-| `NEXT_PUBLIC_SANITY_DATASET` | yes | Dataset (e.g. `production`) |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | no | API version date (default `2026-10-01`) |
-| `NEXT_PUBLIC_SANITY_STUDIO_URL` | no | Studio URL for click-to-edit (default `http://localhost:3333`) |
-| `NEXT_PUBLIC_SITE_URL` | no | Canonical site URL (sitemap, RSS, OG) |
-| `SANITY_API_READ_TOKEN` | for previews | Viewer token — enables Draft Mode + Live Content |
-| `SANITY_REVALIDATE_SECRET` | for webhooks | Shared secret for `/api/revalidate` |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | no | Google Analytics 4 |
-| `NEXT_PUBLIC_POSTHOG_KEY` / `_HOST` | no | PostHog |
+| Variable                            | Required     | Purpose                                                        |
+| ----------------------------------- | ------------ | -------------------------------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`     | yes          | Sanity project id                                              |
+| `NEXT_PUBLIC_SANITY_DATASET`        | yes          | Dataset (e.g. `production`)                                    |
+| `NEXT_PUBLIC_SANITY_API_VERSION`    | no           | API version date (default `2026-10-01`)                        |
+| `NEXT_PUBLIC_SANITY_STUDIO_URL`     | no           | Studio URL for click-to-edit (default `http://localhost:3333`) |
+| `NEXT_PUBLIC_SITE_URL`              | no           | Canonical site URL (sitemap, RSS, OG)                          |
+| `SANITY_API_READ_TOKEN`             | for previews | Viewer token — enables Draft Mode + Live Content               |
+| `SANITY_REVALIDATE_SECRET`          | for webhooks | Shared secret for `/api/revalidate`                            |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID`     | no           | Google Analytics 4                                             |
+| `NEXT_PUBLIC_POSTHOG_KEY` / `_HOST` | no           | PostHog                                                        |
 
 `studio/.env.local`: `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`,
 `SANITY_STUDIO_SITE_URL` (the frontend origin used by the Presentation tool).
@@ -95,6 +97,8 @@ pnpm lint         # eslint across workspaces
 pnpm test         # Vitest unit tests
 pnpm test:e2e     # Playwright smoke tests (builds + starts the production server)
 pnpm typegen      # extract schema + regenerate frontend/src/sanity/types.ts
+pnpm blueprint:plan    # preview Blueprint changes (CORS, webhook, functions)
+pnpm blueprint:deploy  # apply the Blueprint to your Sanity project
 pnpm verify       # typecheck + lint + build + test
 ```
 
@@ -124,6 +128,14 @@ tags to invalidate, e.g.:
 
 ```json
 { "tags": [_type, _type + ":" + slug.current] }
+```
+
+Or declare it in code with Blueprints (`sanity.blueprint.ts` at the repo root,
+which also sets up CORS) — see [`docs/RELEASE.md`](./docs/RELEASE.md):
+
+```bash
+pnpm blueprint:plan
+pnpm blueprint:deploy
 ```
 
 ## Redirects
