@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
-import { logger } from '@/lib/logger'
+import {logger} from '@/lib/logger'
 
 export default function GlobalError({
   error,
   retry,
 }: {
-  error: Error & { digest?: string }
+  error: Error & {digest?: string}
   retry: () => void
 }) {
   useEffect(() => {
-    logger.error('Global error', { message: error.message, digest: error.digest })
+    logger.error('Global error', {message: error.message, digest: error.digest})
   }, [error])
 
   return (
@@ -29,7 +29,7 @@ export default function GlobalError({
             fontFamily: 'system-ui, sans-serif',
           }}
         >
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Algo deu errado</h1>
+          <h1 style={{fontSize: '1.5rem', fontWeight: 600}}>Algo deu errado</h1>
           <button
             type="button"
             onClick={() => retry()}

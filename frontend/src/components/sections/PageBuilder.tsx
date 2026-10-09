@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import type { SanityDocument } from 'next-sanity'
-import { useOptimistic } from 'next-sanity/hooks'
+import type {SanityDocument} from 'next-sanity'
+import {useOptimistic} from 'next-sanity/hooks'
 
-import type { Locale } from '@/i18n/i18n-config'
-import type { PageBuilderSection, ResolvedSectionData, StegaAware } from '@/sanity/page-builder'
-import type { PAGE_QUERY_RESULT } from '@/sanity/types'
-import { dataAttr } from '@/sanity/utils'
+import type {Locale} from '@/i18n/i18n-config'
+import type {PageBuilderSection, ResolvedSectionData, StegaAware} from '@/sanity/page-builder'
+import type {PAGE_QUERY_RESULT} from '@/sanity/types'
+import {dataAttr} from '@/sanity/utils'
 
 import RenderSection from './RenderSection'
 
@@ -29,10 +29,10 @@ interface PageBuilderProps {
  * `resolvedSections` (a server prop) rather than the optimistic document, which
  * carries references only. This keeps an in-flight edit from dropping it.
  */
-export default function PageBuilder({ page, locale, resolvedSections }: PageBuilderProps) {
+export default function PageBuilder({page, locale, resolvedSections}: PageBuilderProps) {
   const pageBuilderSections = useOptimistic<
     PageBuilderSection[],
-    SanityDocument<{ _id: string; _type: string; pageBuilder?: PageBuilderSection[] }>
+    SanityDocument<{_id: string; _type: string; pageBuilder?: PageBuilderSection[]}>
   >(page.pageBuilder ?? [], (currentSections, action) => {
     if (action.id === page._id && action.document.pageBuilder) {
       return action.document.pageBuilder

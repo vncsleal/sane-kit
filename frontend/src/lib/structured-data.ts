@@ -6,7 +6,7 @@ export interface BlogPostingJsonLd {
   description?: string
   image?: string
   datePublished?: string
-  author?: { '@type': 'Person'; name: string }
+  author?: {'@type': 'Person'; name: string}
 }
 
 export interface OrganizationJsonLd {
@@ -36,7 +36,7 @@ export function buildBlogPostingJsonLd(input: BlogPostingInput): BlogPostingJson
     description: input.description,
     image: input.image,
     datePublished: input.datePublished,
-    author: input.authorName ? { '@type': 'Person', name: input.authorName } : undefined,
+    author: input.authorName ? {'@type': 'Person', name: input.authorName} : undefined,
   }
 }
 

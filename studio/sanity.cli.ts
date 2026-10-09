@@ -2,7 +2,7 @@
  * Sanity CLI + TypeGen configuration.
  * https://www.sanity.io/docs/cli
  */
-import { defineCliConfig } from 'sanity/cli'
+import {defineCliConfig} from 'sanity/cli'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID
 const dataset = process.env.SANITY_STUDIO_DATASET
@@ -15,7 +15,7 @@ if (!dataset) {
 }
 
 export default defineCliConfig({
-  api: { projectId, dataset },
+  api: {projectId, dataset},
   deployment: {
     appId: process.env.SANITY_STUDIO_APP_ID || '',
     autoUpdates: true,

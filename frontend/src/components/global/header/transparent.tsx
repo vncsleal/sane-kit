@@ -1,14 +1,21 @@
-"use client";
+'use client'
 
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
-import { stegaClean } from 'next-sanity'
-import { Button } from "@/components/ui/button";
-import { MoveRight, Menu, X } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps } from "./shared";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu'
+import {stegaClean} from 'next-sanity'
+import {Button} from '@/components/ui/button'
+import {MoveRight, Menu, X} from 'lucide-react'
+import Link from 'next/link'
+import {useEffect, useState} from 'react'
+import {HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps} from './shared'
+import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {cn} from '@/lib/utils'
 
 export default function Transparent({
   title,
@@ -16,25 +23,25 @@ export default function Transparent({
   navigationItems = [],
   ctaButtons = [],
   dropdownCTALabel,
-  dropdownCTAUrl = "/contact",
+  dropdownCTAUrl = '/contact',
   locale,
-  dictionary
+  dictionary,
 }: HeaderProps) {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const siteName = title ?? undefined;
-  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || "Book a call today";
-  
+  const siteName = title ?? undefined
+  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || 'Book a call today'
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      setScrolled(window.scrollY > 10)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  const headerClasses = createHeaderClassName("transparent", scrolled);
+  const headerClasses = createHeaderClassName('transparent', scrolled)
 
   return (
     <header className={headerClasses}>
@@ -44,22 +51,26 @@ export default function Transparent({
           <NavigationMenu className="flex justify-start items-start">
             <NavigationMenuList className="flex justify-start gap-4 flex-row">
               {navigationItems?.map((item) => {
-                const navTitle = item.title;
+                const navTitle = item.title
                 return (
                   <NavigationMenuItem key={item._key}>
                     {item.href ? (
                       <NavigationMenuLink asChild>
-                        <Button variant="ghost" asChild className={cn({"text-white hover:text-white/80 hover:bg-white/10": !scrolled})}>
-                          <Link href={ensureAbsoluteUrl(item.href, locale)}>
-                            {navTitle}
-                          </Link>
+                        <Button
+                          variant="ghost"
+                          asChild
+                          className={cn({
+                            'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
+                          })}
+                        >
+                          <Link href={ensureAbsoluteUrl(item.href, locale)}>{navTitle}</Link>
                         </Button>
                       </NavigationMenuLink>
                     ) : (
                       <>
-                        <NavigationMenuTrigger 
-                          className={cn("font-medium text-sm", {
-                            "text-white hover:text-white/80 hover:bg-white/10": !scrolled,
+                        <NavigationMenuTrigger
+                          className={cn('font-medium text-sm', {
+                            'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
                           })}
                         >
                           {navTitle}
@@ -68,12 +79,8 @@ export default function Transparent({
                           <div className="flex flex-col lg:grid grid-cols-2 gap-4">
                             <div className="flex flex-col h-full justify-between">
                               <div className="flex flex-col">
-                                <p className="text-base">
-                                  {navTitle}
-                                </p>
-                                <p className="text-muted-foreground text-sm">
-                                  {item.description}
-                                </p>
+                                <p className="text-base">{navTitle}</p>
+                                <p className="text-muted-foreground text-sm">{item.description}</p>
                               </div>
                               <Button size="sm" className="mt-10" asChild>
                                 <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
@@ -88,9 +95,7 @@ export default function Transparent({
                                   key={subItem._key}
                                   className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
                                 >
-                                  <span>
-                                    {subItem.title}
-                                  </span>
+                                  <span>{subItem.title}</span>
                                   <MoveRight className="w-4 h-4 text-muted-foreground" />
                                 </NavigationMenuLink>
                               ))}
@@ -100,7 +105,7 @@ export default function Transparent({
                       </>
                     )}
                   </NavigationMenuItem>
-                );
+                )
               })}
             </NavigationMenuList>
           </NavigationMenu>
@@ -108,12 +113,12 @@ export default function Transparent({
 
         {/* MIDDLE COLUMN */}
         <div className="flex lg:justify-center">
-          <HeaderLogo 
-            logo={logo} 
-            title={siteName} 
+          <HeaderLogo
+            logo={logo}
+            title={siteName}
             locale={locale}
             className={cn({
-              "text-white": !scrolled
+              'text-white': !scrolled,
             })}
           />
         </div>
@@ -124,10 +129,12 @@ export default function Transparent({
             {ctaButtons?.map((button) => (
               <Button
                 key={button._key}
-                variant={stegaClean(button.variant) || "default"}
+                variant={stegaClean(button.variant) || 'default'}
                 className={cn({
-                  "bg-white text-primary hover:bg-white/90": !scrolled && stegaClean(button.variant) === "default",
-                  "border-white text-white hover:bg-white/10 hover:text-white": !scrolled && stegaClean(button.variant) === "outline",
+                  'bg-white text-primary hover:bg-white/90':
+                    !scrolled && stegaClean(button.variant) === 'default',
+                  'border-white text-white hover:bg-white/10 hover:text-white':
+                    !scrolled && stegaClean(button.variant) === 'outline',
                 })}
                 asChild
               >
@@ -144,22 +151,18 @@ export default function Transparent({
               <Button
                 variant="ghost"
                 size="icon"
-                className={cn("lg:hidden", {
-                  "text-white hover:text-white/80 hover:bg-white/10": !scrolled,
+                className={cn('lg:hidden', {
+                  'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
                 })}
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               >
-                {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
             </SheetTrigger>
             <SheetContent className="w-[300px] sm:w-[350px] px-4 sm:px-6">
               <SheetHeader>
                 <SheetTitle>
-                  <HeaderLogo logo={logo} title={siteName} className="max-h-8" locale={locale}/>
+                  <HeaderLogo logo={logo} title={siteName} className="max-h-8" locale={locale} />
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 py-6">
@@ -171,20 +174,14 @@ export default function Transparent({
                         className="text-lg font-medium hover:text-primary flex justify-between items-center"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        <span>
-                          {item.title}
-                        </span>
+                        <span>{item.title}</span>
                         <MoveRight className="w-4 h-4 text-muted-foreground" />
                       </Link>
                     ) : (
                       <>
-                        <p className="text-lg font-medium">
-                          {item.title}
-                        </p>
+                        <p className="text-lg font-medium">{item.title}</p>
                         {item.description && (
-                          <p className="text-muted-foreground text-sm pb-1">
-                            {item.description}
-                          </p>
+                          <p className="text-muted-foreground text-sm pb-1">{item.description}</p>
                         )}
                       </>
                     )}
@@ -195,9 +192,7 @@ export default function Transparent({
                         className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        <span>
-                          {subItem.title}
-                        </span>
+                        <span>{subItem.title}</span>
                         <MoveRight className="w-3.5 h-3.5" />
                       </Link>
                     ))}
@@ -207,7 +202,7 @@ export default function Transparent({
                   {ctaButtons?.map((button) => (
                     <Button
                       key={button._key}
-                      variant={stegaClean(button.variant) || "default"}
+                      variant={stegaClean(button.variant) || 'default'}
                       asChild
                       className="w-full"
                       onClick={() => setMobileMenuOpen(false)}
@@ -224,5 +219,5 @@ export default function Transparent({
         </div>
       </div>
     </header>
-  );
+  )
 }

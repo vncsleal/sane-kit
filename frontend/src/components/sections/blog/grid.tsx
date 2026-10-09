@@ -1,11 +1,10 @@
-import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { urlFor } from '@/sanity/image'
-import type { ExtractPageBuilderType } from "@/sanity/page-builder"
+import {urlFor} from '@/sanity/image'
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 
-import { BlogPostWithData, SectionHeader, ViewAllButton } from './shared'
+import {BlogPostWithData, SectionHeader, ViewAllButton} from './shared'
 
 type BlogSectionProps = ExtractPageBuilderType<'blogSection'> & {
   locale: string
@@ -29,7 +28,7 @@ export default function Grid({
         <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
           <SectionHeader heading={heading} subheading={subheading} />
 
-          {stegaClean(viewAllButton) === 'true' && (
+          {viewAllButton === true && (
             <ViewAllButton
               viewAllButton={viewAllButton}
               viewAllUrl={viewAllUrl}
@@ -40,9 +39,7 @@ export default function Grid({
         </div>
 
         {!hasPosts ? (
-          <div className="text-center py-20 text-muted-foreground">
-            No blog posts found.
-          </div>
+          <div className="text-center py-20 text-muted-foreground">No blog posts found.</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {posts.map((post) => (
@@ -66,9 +63,7 @@ export default function Grid({
                   {post.title || ''}
                 </h3>
                 {post.excerpt && (
-                  <p className="text-muted-foreground text-base line-clamp-2">
-                    {post.excerpt}
-                  </p>
+                  <p className="text-muted-foreground text-base line-clamp-2">{post.excerpt}</p>
                 )}
               </Link>
             ))}

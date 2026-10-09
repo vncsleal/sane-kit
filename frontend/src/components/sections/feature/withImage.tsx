@@ -1,17 +1,20 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { Badge } from "@/components/ui/badge";
-import { FeatureItem, FeatureImage } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {Badge} from '@/components/ui/badge'
+import {FeatureItem, FeatureImage} from './shared'
 
-type WithImageProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'features' | 'image'>;
+type WithImageProps = Pick<
+  ExtractPageBuilderType<'featureSection'>,
+  'badgeText' | 'heading' | 'subheading' | 'features' | 'image'
+>
 
 export default function WithImage({
   badgeText,
   heading,
   subheading,
   features = [],
-  image
+  image,
 }: WithImageProps) {
   return (
     <div className="w-full py-20 lg:py-40">
@@ -45,5 +48,5 @@ export default function WithImage({
         </div>
       </div>
     </div>
-  );
+  )
 }

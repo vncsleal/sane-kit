@@ -1,9 +1,9 @@
 'use server'
 
-import { sendEmail, type EmailAttachment } from '@/lib/forms/email'
-import { contactFormSchema, newsletterFormSchema } from '@/lib/forms/schema'
-import { logger } from '@/lib/logger'
-import { serverEnv } from '@/sanity/env.server'
+import {sendEmail, type EmailAttachment} from '@/lib/forms/email'
+import {contactFormSchema, newsletterFormSchema} from '@/lib/forms/schema'
+import {logger} from '@/lib/logger'
+import {serverEnv} from '@/sanity/env.server'
 
 export type FormState = {
   status: 'idle' | 'success' | 'error'
@@ -27,14 +27,11 @@ function escapeHtml(value: string): string {
 async function readAttachments(formData: FormData): Promise<EmailAttachment[] | undefined> {
   const file = formData.get('files')
   if (!(file instanceof File) || file.size === 0) return undefined
-  return [{ filename: file.name, content: Buffer.from(await file.arrayBuffer()) }]
+  return [{filename: file.name, content: Buffer.from(await file.arrayBuffer())}]
 }
 
-export async function submitContactForm(
-  _prev: FormState,
-  formData: FormData,
-): Promise<FormState> {
-  if (isSpam(formData)) return { status: 'success' }
+export async function submitContactForm(_prev: FormState, formData: FormData): Promise<FormState> {
+  if (isSpam(formData)) return {status: 'success'}
 
   const parsed = contactFormSchema.safeParse({
     firstName: formData.get('firstName') ?? undefined,
@@ -43,16 +40,16 @@ export async function submitContactForm(
     date: formData.get('date') ?? undefined,
   })
   if (!parsed.success) {
-    return { status: 'error', message: 'invalid' }
+    return {status: 'error', message: 'invalid'}
   }
 
   const to = serverEnv.CONTACT_FORM_TO
   if (!to) {
     logger.error('CONTACT_FORM_TO is not configured')
-    return { status: 'error', message: 'not-configured' }
+    return {status: 'error', message: 'not-configured'}
   }
 
-  const { firstName, lastName, email, date } = parsed.data
+  const {firstName, lastName, email, date} = parsed.data
   const name = [firstName, lastName].filter(Boolean).join(' ')
 
   try {
@@ -72,10 +69,10 @@ export async function submitContactForm(
         .filter(Boolean)
         .join(''),
     })
-    return { status: 'success' }
+    return {status: 'success'}
   } catch (error) {
-    logger.error('Contact form submission failed', { error: String(error) })
-    return { status: 'error', message: 'send-failed' }
+    logger.error('Contact form submission failed', {error: String(error)})
+    return {status: 'error', message: 'send-failed'}
   }
 }
 
@@ -83,17 +80,17 @@ export async function submitNewsletterForm(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  if (isSpam(formData)) return { status: 'success' }
+  if (isSpam(formData)) return {status: 'success'}
 
-  const parsed = newsletterFormSchema.safeParse({ email: formData.get('email') })
+  const parsed = newsletterFormSchema.safeParse({email: formData.get('email')})
   if (!parsed.success) {
-    return { status: 'error', message: 'invalid' }
+    return {status: 'error', message: 'invalid'}
   }
 
   const to = serverEnv.CONTACT_FORM_TO
   if (!to) {
     logger.error('CONTACT_FORM_TO is not configured')
-    return { status: 'error', message: 'not-configured' }
+    return {status: 'error', message: 'not-configured'}
   }
 
   try {
@@ -103,9 +100,9 @@ export async function submitNewsletterForm(
       subject: 'Nova inscrição na newsletter',
       html: `<p>Novo inscrito: ${escapeHtml(parsed.data.email)}</p>`,
     })
-    return { status: 'success' }
+    return {status: 'success'}
   } catch (error) {
-    logger.error('Newsletter form submission failed', { error: String(error) })
-    return { status: 'error', message: 'send-failed' }
+    logger.error('Newsletter form submission failed', {error: String(error)})
+    return {status: 'error', message: 'send-failed'}
   }
 }

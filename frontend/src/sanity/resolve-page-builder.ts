@@ -1,12 +1,12 @@
 import 'server-only'
 
-import { stegaClean } from 'next-sanity'
+import {stegaClean} from 'next-sanity'
 
-import type { Locale } from '@/i18n/i18n-config'
+import type {Locale} from '@/i18n/i18n-config'
 
-import { sanityFetch } from './live'
-import type { PageBuilderSection, ResolvedSectionData } from './page-builder'
-import { BLOG_POSTS_QUERY, COMPARE_FEATURES_QUERY } from './queries'
+import {sanityFetch} from './live'
+import type {PageBuilderSection, ResolvedSectionData} from './page-builder'
+import {BLOG_POSTS_QUERY, COMPARE_FEATURES_QUERY} from './queries'
 
 /**
  * Resolves the referenced documents for every page-builder section that needs
@@ -25,25 +25,25 @@ export async function resolvePageBuilderData(
         case 'blogSection': {
           const variant = stegaClean(section.variant)
           const end = section.postsToShow ?? (variant === 'grid' ? 6 : 3)
-          const { data } = await sanityFetch({
+          const {data} = await sanityFetch({
             query: BLOG_POSTS_QUERY,
             params: {
               language: locale,
-              featuredOnly: stegaClean(section.featuredPostsOnly) === 'true',
+              featuredOnly: section.featuredPostsOnly === true,
               start: 0,
               end,
             },
           })
-          return [section._key, { posts: data ?? [] }]
+          return [section._key, {posts: data ?? []}]
         }
         case 'compareFeaturesSection': {
           const refs = section.features ?? []
           const ids = refs
             .map((feature) => feature._ref)
             .filter((ref): ref is string => Boolean(ref))
-          const { data } = await sanityFetch({
+          const {data} = await sanityFetch({
             query: COMPARE_FEATURES_QUERY,
-            params: { ids },
+            params: {ids},
           })
           const features = refs.map((feature) => ({
             _id: feature._ref ?? '',
@@ -52,7 +52,7 @@ export async function resolvePageBuilderData(
               data?.find((result) => result._id === feature._ref)?.title ||
               `Feature not found (${feature._ref?.slice(0, 8)})`,
           }))
-          return [section._key, { features }]
+          return [section._key, {features}]
         }
         default:
           return null

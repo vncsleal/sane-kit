@@ -1,49 +1,49 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
+import {useState, useEffect} from 'react'
 import {
   Carousel as UICarousel,
   type CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
-import { User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { urlFor } from "@/sanity/client";
-import { SectionHeader, TestimonialVariantProps } from "./shared";
+} from '@/components/ui/carousel'
+import {User} from 'lucide-react'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {urlFor} from '@/sanity/client'
+import {SectionHeader, TestimonialVariantProps} from './shared'
 
 export default function Carousel({
   heading,
   subheading,
   testimonials = [],
 }: TestimonialVariantProps) {
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
 
   useEffect(() => {
     if (!api || testimonials.length === 0) {
-      return;
+      return
     }
 
     const timer = setTimeout(() => {
       if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
-        setCurrent(0);
-        api.scrollTo(0);
+        setCurrent(0)
+        api.scrollTo(0)
       } else {
-        api.scrollNext();
-        setCurrent(current + 1);
+        api.scrollNext()
+        setCurrent(current + 1)
       }
-    }, 4000);
+    }, 4000)
 
-    return () => clearTimeout(timer);
-  }, [api, current, testimonials.length]);
+    return () => clearTimeout(timer)
+  }, [api, current, testimonials.length])
 
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
         <div className="flex flex-col gap-10">
           <SectionHeader heading={heading} subheading={subheading} />
-          
+
           <UICarousel setApi={setApi} className="w-full">
             <CarouselContent>
               {testimonials.map((testimonial) => (
@@ -52,9 +52,7 @@ export default function Carousel({
                     <User className="w-8 h-8 stroke-1" />
                     <div className="flex flex-col gap-4">
                       <div className="flex flex-col">
-                        <h3 className="text-xl tracking-tight">
-                          {testimonial.title}
-                        </h3>
+                        <h3 className="text-xl tracking-tight">{testimonial.title}</h3>
                         <p className="text-muted-foreground max-w-xs text-base">
                           {testimonial.content}
                         </p>
@@ -64,7 +62,7 @@ export default function Carousel({
                           {testimonial.avatar ? (
                             <AvatarImage
                               src={urlFor(testimonial.avatar).url()}
-                              alt={testimonial.avatar.alt || testimonial.author || ""}
+                              alt={testimonial.avatar.alt || testimonial.author || ''}
                               className="object-cover"
                             />
                           ) : (
@@ -75,9 +73,7 @@ export default function Carousel({
                         </Avatar>
                         <span>{testimonial.author}</span>
                         {testimonial.role && (
-                          <span className="text-muted-foreground text-xs">
-                            {testimonial.role}
-                          </span>
+                          <span className="text-muted-foreground text-xs">{testimonial.role}</span>
                         )}
                       </p>
                     </div>
@@ -89,5 +85,5 @@ export default function Carousel({
         </div>
       </div>
     </div>
-  );
+  )
 }

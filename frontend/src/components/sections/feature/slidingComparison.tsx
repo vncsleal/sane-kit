@@ -1,39 +1,42 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import { urlFor } from "@/sanity/client";
-import { useState } from "react";
-import { GripVertical } from "lucide-react";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {Badge} from '@/components/ui/badge'
+import Image from 'next/image'
+import {urlFor} from '@/sanity/client'
+import {useState} from 'react'
+import {GripVertical} from 'lucide-react'
 
-type SlidingComparisonProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'image' | 'comparisonImage'>;
+type SlidingComparisonProps = Pick<
+  ExtractPageBuilderType<'featureSection'>,
+  'badgeText' | 'heading' | 'subheading' | 'image' | 'comparisonImage'
+>
 
 export default function SlidingComparison({
   badgeText,
   heading,
   subheading,
   image,
-  comparisonImage
+  comparisonImage,
 }: SlidingComparisonProps) {
-  const [inset, setInset] = useState<number>(50);
-  const [onMouseDown, setOnMouseDown] = useState<boolean>(false);
+  const [inset, setInset] = useState<number>(50)
+  const [onMouseDown, setOnMouseDown] = useState<boolean>(false)
 
   const onMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!onMouseDown) return;
+    if (!onMouseDown) return
 
-    const rect = e.currentTarget.getBoundingClientRect();
-    let x = 0;
+    const rect = e.currentTarget.getBoundingClientRect()
+    let x = 0
 
-    if ("touches" in e && e.touches.length > 0) {
-      x = e.touches[0].clientX - rect.left;
-    } else if ("clientX" in e) {
-      x = e.clientX - rect.left;
+    if ('touches' in e && e.touches.length > 0) {
+      x = e.touches[0].clientX - rect.left
+    } else if ('clientX' in e) {
+      x = e.clientX - rect.left
     }
 
-    const percentage = (x / rect.width) * 100;
-    setInset(percentage);
-  };
+    const percentage = (x / rect.width) * 100
+    setInset(percentage)
+  }
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -73,12 +76,12 @@ export default function SlidingComparison({
                     type="button"
                     className="bg-muted rounded hover:scale-110 transition-all w-5 h-10 select-none -translate-y-1/2 absolute top-1/2 -ml-2 z-30 cursor-ew-resize flex justify-center items-center"
                     onTouchStart={(e) => {
-                      setOnMouseDown(true);
-                      onMouseMove(e);
+                      setOnMouseDown(true)
+                      onMouseMove(e)
                     }}
                     onMouseDown={(e) => {
-                      setOnMouseDown(true);
-                      onMouseMove(e);
+                      setOnMouseDown(true)
+                      onMouseMove(e)
                     }}
                     onTouchEnd={() => setOnMouseDown(false)}
                     onMouseUp={() => setOnMouseDown(false)}
@@ -88,7 +91,7 @@ export default function SlidingComparison({
                 </div>
                 <Image
                   src={urlFor(image.asset._ref).url()}
-                  alt={image.alt || heading || ""}
+                  alt={image.alt || heading || ''}
                   width={1920}
                   height={1080}
                   preload
@@ -99,7 +102,7 @@ export default function SlidingComparison({
                 />
                 <Image
                   src={urlFor(comparisonImage.asset._ref).url()}
-                  alt={comparisonImage.alt || `${heading} comparison` || ""}
+                  alt={comparisonImage.alt || `${heading} comparison` || ''}
                   width={1920}
                   height={1080}
                   preload
@@ -111,5 +114,5 @@ export default function SlidingComparison({
         </div>
       </div>
     </div>
-  );
+  )
 }

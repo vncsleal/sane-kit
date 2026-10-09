@@ -1,5 +1,5 @@
-import { LinkIcon } from '@sanity/icons/Link'
-import { defineField, defineType } from 'sanity'
+import {LinkIcon} from '@sanity/icons/Link'
+import {defineField, defineType} from 'sanity'
 
 function isValidPath(value: string | undefined): true | string {
   if (!value) return 'Required'
@@ -35,18 +35,12 @@ export const redirect = defineType({
     defineField({
       name: 'permanent',
       title: 'Type',
-      type: 'string',
-      initialValue: 'true',
-      options: {
-        layout: 'radio',
-        list: [
-          { title: 'Permanent (308)', value: 'true' },
-          { title: 'Temporary (307)', value: 'false' },
-        ],
-      },
+      type: 'boolean',
+      initialValue: true,
+      description: 'Permanent (308) when on, temporary (307) when off.',
     }),
   ],
   preview: {
-    select: { title: 'source', subtitle: 'destination' },
+    select: {title: 'source', subtitle: 'destination'},
   },
 })

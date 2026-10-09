@@ -1,5 +1,5 @@
-import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe'
-import { defineField, defineType } from 'sanity'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {defineField, defineType} from 'sanity'
 
 /**
  * Reusable SEO object. Optional everywhere — queries fall back to the document's
@@ -10,7 +10,7 @@ export const seo = defineType({
   title: 'SEO',
   type: 'object',
   icon: EarthGlobeIcon,
-  options: { collapsible: true, collapsed: true },
+  options: {collapsible: true, collapsed: true},
   fields: [
     defineField({
       name: 'title',
@@ -31,7 +31,7 @@ export const seo = defineType({
       title: 'Social image',
       type: 'image',
       description: '1200×630 recommended.',
-      options: { hotspot: true },
+      options: {hotspot: true},
     }),
     defineField({
       name: 'noIndex',
@@ -41,8 +41,8 @@ export const seo = defineType({
       options: {
         layout: 'radio',
         list: [
-          { title: 'No', value: 'false' },
-          { title: 'Yes', value: 'true' },
+          {title: 'No', value: 'false'},
+          {title: 'Yes', value: 'true'},
         ],
       },
     }),

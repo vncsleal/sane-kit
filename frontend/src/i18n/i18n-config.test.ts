@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import {describe, expect, it} from 'vitest'
 
-import { i18n, hasLocale } from './i18n-config'
+import {i18n, hasLocale} from './i18n-config'
 
 describe('hasLocale', () => {
   it('accepts supported locales', () => {

@@ -1,6 +1,6 @@
-import type { StegaBranded, StegaCleaned } from '@sanity/client/stega'
+import type {StegaBranded, StegaCleaned} from '@sanity/client/stega'
 
-import type { BLOG_POSTS_QUERY_RESULT, PAGE_QUERY_RESULT } from './types'
+import type {BLOG_POSTS_QUERY_RESULT, PAGE_QUERY_RESULT} from './types'
 
 /**
  * Accepts both clean and stega-branded `sanityFetch` results.
@@ -26,7 +26,7 @@ export type PageBuilderSection = StegaAware<
 /** Narrow a page-builder block to a specific `_type`. */
 export type ExtractPageBuilderType<T extends PageBuilderSection['_type']> = Extract<
   PageBuilderSection,
-  { _type: T }
+  {_type: T}
 >
 
 /** A blog post as returned by `BLOG_POSTS_QUERY`. */

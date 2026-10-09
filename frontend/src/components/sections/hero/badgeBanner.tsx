@@ -1,9 +1,8 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { renderBackgroundMedia, ButtonsGroup } from "./shared";
-import { Badge } from "@/components/ui/badge";
-
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {renderBackgroundMedia, ButtonsGroup} from './shared'
+import {Badge} from '@/components/ui/badge'
 
 export default function BadgeBanner({
   heading,
@@ -11,7 +10,7 @@ export default function BadgeBanner({
   badgeText,
   buttons = [],
   media,
-}: ExtractPageBuilderType<"heroSection">) {
+}: ExtractPageBuilderType<'heroSection'>) {
   return (
     <div className="w-full relative">
       {/* Background media */}
@@ -23,9 +22,7 @@ export default function BadgeBanner({
           {/* Badge */}
           {badgeText && (
             <div>
-              <Badge variant="outline">
-                {badgeText}
-              </Badge>
+              <Badge variant="outline">{badgeText}</Badge>
             </div>
           )}
 
@@ -50,5 +47,5 @@ export default function BadgeBanner({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,54 +1,51 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, IconMap } from "./shared";
-import Image from "next/image";
-import { urlFor } from "@/sanity/client";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, IconMap} from './shared'
+import Image from 'next/image'
+import {urlFor} from '@/sanity/client'
 
-type BigMasonryGridProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'features'>;
+type BigMasonryGridProps = Pick<
+  ExtractPageBuilderType<'featureSection'>,
+  'badgeText' | 'heading' | 'subheading' | 'features'
+>
 
 export default function BigMasonryGrid({
   badgeText,
   heading,
   subheading,
-  features = []
+  features = [],
 }: BigMasonryGridProps) {
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
         <div className="flex flex-col gap-10">
           <div className="flex gap-4 flex-col items-start">
-            <SectionHeader
-              badgeText={badgeText}
-              heading={heading}
-              subheading={subheading}
-            />
+            <SectionHeader badgeText={badgeText} heading={heading} subheading={subheading} />
           </div>
 
           <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {features.map((feature, index) => {
               const Icon =
-                feature.icon && IconMap[feature.icon]
-                  ? IconMap[feature.icon]
-                  : IconMap.user;
+                feature.icon && IconMap[feature.icon] ? IconMap[feature.icon] : IconMap.user
 
-              const isFirstCard = index === 0;
-              const isEighthCard = index === 7;
+              const isFirstCard = index === 0
+              const isEighthCard = index === 7
 
               return (
                 <div
                   key={feature._key}
                   className={`relative bg-muted rounded-md overflow-hidden h-full
-                    ${isFirstCard ? "lg:col-span-2 lg:row-span-2" : ""} 
-                    ${isEighthCard ? "lg:col-span-2" : ""}
-                    ${!isEighthCard ? "aspect-square" : ""} 
+                    ${isFirstCard ? 'lg:col-span-2 lg:row-span-2' : ''} 
+                    ${isEighthCard ? 'lg:col-span-2' : ''}
+                    ${!isEighthCard ? 'aspect-square' : ''} 
                     p-6 flex justify-between flex-col`}
                 >
                   {feature.image?.asset?._ref ? (
                     <div className="absolute inset-0 w-full h-full">
                       <Image
                         src={urlFor(feature.image.asset._ref).url()}
-                        alt={feature.image.alt || feature.title || ""}
+                        alt={feature.image.alt || feature.title || ''}
                         fill
                         className="object-cover"
                       />
@@ -61,7 +58,7 @@ export default function BigMasonryGrid({
                   <div className="relative z-10 flex flex-col mt-auto">
                     <h3
                       className={`text-xl tracking-tight ${
-                        feature.image?.asset?._ref ? "text-white" : ""
+                        feature.image?.asset?._ref ? 'text-white' : ''
                       }`}
                     >
                       {feature.title}
@@ -69,9 +66,7 @@ export default function BigMasonryGrid({
                     {feature.description && (
                       <p
                         className={`max-w-xs text-base ${
-                          feature.image?.asset?._ref
-                            ? "text-white/80"
-                            : "text-muted-foreground"
+                          feature.image?.asset?._ref ? 'text-white/80' : 'text-muted-foreground'
                         }`}
                       >
                         {feature.description}
@@ -79,11 +74,11 @@ export default function BigMasonryGrid({
                     )}
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

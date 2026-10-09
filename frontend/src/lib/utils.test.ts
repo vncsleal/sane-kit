@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import {describe, expect, it} from 'vitest'
 
-import { cn } from './utils'
+import {cn} from './utils'
 
 describe('cn', () => {
   it('merges class names', () => {
@@ -16,6 +16,6 @@ describe('cn', () => {
   })
 
   it('supports conditional objects', () => {
-    expect(cn('a', { b: true, c: false })).toBe('a b')
+    expect(cn('a', {b: true, c: false})).toBe('a b')
   })
 })

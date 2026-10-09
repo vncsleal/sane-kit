@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { ContentSection, FaqAccordion } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {ContentSection, FaqAccordion} from './shared'
 
-type SideBySideProps = ExtractPageBuilderType<"faqSection">;
+type SideBySideProps = ExtractPageBuilderType<'faqSection'>
 
 export default function SideBySide({
-  badgeText = "FAQ",
+  badgeText = 'FAQ',
   heading,
   subheading,
   buttonText,
-  buttonUrl = "#",
-  buttonIcon = "phone",
+  buttonUrl = '#',
+  buttonIcon = 'phone',
   faqItems = [],
 }: SideBySideProps) {
   return (
@@ -36,5 +36,5 @@ export default function SideBySide({
         </div>
       </div>
     </div>
-  );
+  )
 }

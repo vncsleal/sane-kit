@@ -1,6 +1,6 @@
-import { createClient } from 'next-sanity'
+import {createClient} from 'next-sanity'
 
-import { apiVersion, dataset, projectId, studioUrl } from './env'
+import {apiVersion, dataset, projectId, studioUrl} from './env'
 
 export const client = createClient({
   projectId,
@@ -8,7 +8,7 @@ export const client = createClient({
   apiVersion,
   useCdn: true,
   perspective: 'published',
-  stega: { studioUrl },
+  stega: {studioUrl},
 })
 
-export { urlFor } from './image'
+export {urlFor} from './image'

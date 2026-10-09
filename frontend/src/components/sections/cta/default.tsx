@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, ButtonsGroup } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, ButtonsGroup} from './shared'
 
-type DefaultProps = ExtractPageBuilderType<"ctaSection">;
+type DefaultProps = ExtractPageBuilderType<'ctaSection'>
 
 export default function Default({
-  variant = "default",
+  variant = 'default',
   badgeText,
   heading,
   subheading,
   buttons = [],
 }: DefaultProps) {
   // Define container styles for the default variant
-  const containerStyle = "bg-muted rounded-md p-4 lg:p-14";
+  const containerStyle = 'bg-muted rounded-md p-4 lg:p-14'
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -29,5 +29,5 @@ export default function Default({
         </div>
       </div>
     </div>
-  );
+  )
 }

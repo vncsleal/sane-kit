@@ -1,5 +1,5 @@
-import { StructureBuilder } from 'sanity/structure'
-import { studioConfig } from '../config'
+import {StructureBuilder} from 'sanity/structure'
+import {studioConfig} from '../config'
 
 const isPortuguese = studioConfig.language === 'pt-BR'
 
@@ -18,7 +18,9 @@ const labels = {
   categories: isPortuguese ? 'Categorias' : 'Categories',
   categoriesByLanguage: isPortuguese ? 'Categorias por Idioma' : 'Categories by Language',
   blogSettings: isPortuguese ? 'Configurações do Blog' : 'Blog Settings',
-  blogSettingsByLanguage: isPortuguese ? 'Configurações do Blog por Idioma' : 'Blog Settings by Language',
+  blogSettingsByLanguage: isPortuguese
+    ? 'Configurações do Blog por Idioma'
+    : 'Blog Settings by Language',
   siteConfiguration: isPortuguese ? 'Configuração do Site' : 'Site Configuration',
   headers: isPortuguese ? 'Cabeçalhos' : 'Headers',
   headersByLanguage: isPortuguese ? 'Cabeçalhos por Idioma' : 'Headers by Language',
@@ -27,7 +29,7 @@ const labels = {
   reusableContent: isPortuguese ? 'Conteúdo Reutilizável' : 'Reusable Content',
   compareFeatures: isPortuguese ? 'Comparar Recursos' : 'Compare Features',
   redirects: isPortuguese ? 'Redirecionamentos' : 'Redirects',
-  locales: isPortuguese ? 'Idiomas' : 'Locales'
+  locales: isPortuguese ? 'Idiomas' : 'Locales',
 }
 
 export const structure = (S: StructureBuilder) =>
@@ -44,18 +46,20 @@ export const structure = (S: StructureBuilder) =>
               S.listItem()
                 .title(labels.portuguese)
                 .child(
-                  S.documentList().apiVersion('2025-02-19')
+                  S.documentList()
+                    .apiVersion('2025-02-19')
                     .title(`${labels.pages} (PT-BR)`)
-                    .filter('_type == "page" && language == "pt-BR"')
+                    .filter('_type == "page" && language == "pt-BR"'),
                 ),
               S.listItem()
                 .title(labels.english)
                 .child(
-                  S.documentList().apiVersion('2025-02-19')
+                  S.documentList()
+                    .apiVersion('2025-02-19')
                     .title(`${labels.pages} (EN)`)
-                    .filter('_type == "page" && language == "en"')
-                )
-            ])
+                    .filter('_type == "page" && language == "en"'),
+                ),
+            ]),
         ),
 
       S.divider(),
@@ -76,18 +80,20 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.posts} (PT-BR)`)
-                            .filter('_type == "blogPost" && language == "pt-BR"')
+                            .filter('_type == "blogPost" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.posts} (EN)`)
-                            .filter('_type == "blogPost" && language == "en"')
-                        )
-                    ])
+                            .filter('_type == "blogPost" && language == "en"'),
+                        ),
+                    ]),
                 ),
               S.listItem()
                 .title(labels.authors)
@@ -98,18 +104,20 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.authors} (PT-BR)`)
-                            .filter('_type == "author" && language == "pt-BR"')
+                            .filter('_type == "author" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.authors} (EN)`)
-                            .filter('_type == "author" && language == "en"')
-                        )
-                    ])
+                            .filter('_type == "author" && language == "en"'),
+                        ),
+                    ]),
                 ),
               S.listItem()
                 .title(labels.categories)
@@ -120,18 +128,20 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.categories} (PT-BR)`)
-                            .filter('_type == "category" && language == "pt-BR"')
+                            .filter('_type == "category" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.categories} (EN)`)
-                            .filter('_type == "category" && language == "en"')
-                        )
-                    ])
+                            .filter('_type == "category" && language == "en"'),
+                        ),
+                    ]),
                 ),
               S.listItem()
                 .title(labels.blogSettings)
@@ -142,20 +152,22 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.blogSettings} (PT-BR)`)
-                            .filter('_type == "blogPage" && language == "pt-BR"')
+                            .filter('_type == "blogPage" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.blogSettings} (EN)`)
-                            .filter('_type == "blogPage" && language == "en"')
-                        )
-                    ])
-                )
-            ])
+                            .filter('_type == "blogPage" && language == "en"'),
+                        ),
+                    ]),
+                ),
+            ]),
         ),
 
       S.divider(),
@@ -176,18 +188,20 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.headers} (PT-BR)`)
-                            .filter('_type == "header" && language == "pt-BR"')
+                            .filter('_type == "header" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.headers} (EN)`)
-                            .filter('_type == "header" && language == "en"')
-                        )
-                    ])
+                            .filter('_type == "header" && language == "en"'),
+                        ),
+                    ]),
                 ),
               S.listItem()
                 .title(labels.footers)
@@ -198,20 +212,22 @@ export const structure = (S: StructureBuilder) =>
                       S.listItem()
                         .title(labels.portuguese)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.footers} (PT-BR)`)
-                            .filter('_type == "footer" && language == "pt-BR"')
+                            .filter('_type == "footer" && language == "pt-BR"'),
                         ),
                       S.listItem()
                         .title(labels.english)
                         .child(
-                          S.documentList().apiVersion('2025-02-19')
+                          S.documentList()
+                            .apiVersion('2025-02-19')
                             .title(`${labels.footers} (EN)`)
-                            .filter('_type == "footer" && language == "en"')
-                        )
-                    ])
-                )
-            ])
+                            .filter('_type == "footer" && language == "en"'),
+                        ),
+                    ]),
+                ),
+            ]),
         ),
 
       S.divider(),
@@ -219,14 +235,11 @@ export const structure = (S: StructureBuilder) =>
       // Reusable Content
       S.listItem()
         .title(labels.reusableContent)
-        .child(
-          S.documentTypeList('compareFeature')
-            .title(labels.compareFeatures)
-        ),
+        .child(S.documentTypeList('compareFeature').title(labels.compareFeatures)),
 
       S.divider(),
 
       S.documentTypeListItem('redirect').title(labels.redirects),
 
-      S.documentTypeListItem('locale').title(labels.locales)
+      S.documentTypeListItem('locale').title(labels.locales),
     ])

@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { stegaClean } from "next-sanity";
-import type { HeaderProps } from ".";
-import { HeaderLogo, HeaderCTAButton, createHeaderClassName } from "./shared";
+import {useState} from 'react'
+import Link from 'next/link'
+import {Menu, X} from 'lucide-react'
+import {Button} from '@/components/ui/button'
+import {Sheet, SheetContent, SheetTrigger} from '@/components/ui/sheet'
+import {stegaClean} from 'next-sanity'
+import type {HeaderProps} from '.'
+import {HeaderLogo, HeaderCTAButton, createHeaderClassName} from './shared'
 
 export default function Minimal({
   title,
@@ -15,15 +15,15 @@ export default function Minimal({
   navigationItems = [],
   ctaButtons = [],
   locale: currentLocaleFromProps,
-  dictionary
+  dictionary,
 }: HeaderProps) {
-  const locale = currentLocaleFromProps;
+  const locale = currentLocaleFromProps
 
-  const [scrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const siteName = title ?? undefined;
-  const headerClasses = createHeaderClassName("minimal", scrolled);
+  const siteName = title ?? undefined
+  const headerClasses = createHeaderClassName('minimal', scrolled)
 
   return (
     <header className={headerClasses}>
@@ -39,7 +39,7 @@ export default function Minimal({
             {navigationItems?.map((item) => (
               <Link
                 key={item._key}
-                href={item.href || "#"}
+                href={item.href || '#'}
                 className="text-sm font-medium text-gray-700 hover:text-primary transition-colors"
               >
                 {item.title}
@@ -64,13 +64,13 @@ export default function Minimal({
                 variant="ghost"
                 size="icon"
                 className="lg:hidden"
-                aria-label={mobileMenuOpen ? (dictionary?.header?.closeMenu ?? "Close menu") : (dictionary?.header?.openMenu ?? "Open menu")}
+                aria-label={
+                  mobileMenuOpen
+                    ? (dictionary?.header?.closeMenu ?? 'Close menu')
+                    : (dictionary?.header?.openMenu ?? 'Open menu')
+                }
               >
-                {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-xs">
@@ -78,7 +78,7 @@ export default function Minimal({
                 {navigationItems?.map((item) => (
                   <Link
                     key={item._key}
-                    href={item.href || "#"}
+                    href={item.href || '#'}
                     className="text-lg font-medium text-gray-700 hover:text-primary transition-colors"
                     onClick={() => setMobileMenuOpen(false)} // Close menu on click
                   >
@@ -102,5 +102,5 @@ export default function Minimal({
         </div>
       </div>
     </header>
-  );
+  )
 }

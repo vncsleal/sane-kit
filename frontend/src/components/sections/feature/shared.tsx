@@ -1,10 +1,23 @@
-"use client";
+'use client'
 
-import { Check, LucideProps, User, Settings, Lock, Star, Heart, BarChart, DollarSign, Calendar, Clock, Mail } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import { urlFor } from "@/sanity/client";
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
+import {
+  Check,
+  LucideProps,
+  User,
+  Settings,
+  Lock,
+  Star,
+  Heart,
+  BarChart,
+  DollarSign,
+  Calendar,
+  Clock,
+  Mail,
+} from 'lucide-react'
+import {Badge} from '@/components/ui/badge'
+import Image from 'next/image'
+import {urlFor} from '@/sanity/client'
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 
 // Icon mapping used across multiple variants
 export const IconMap: Record<string, React.ComponentType<LucideProps>> = {
@@ -18,14 +31,14 @@ export const IconMap: Record<string, React.ComponentType<LucideProps>> = {
   calendar: Calendar,
   clock: Clock,
   mail: Mail,
-};
+}
 
 // Reusable header content component
-export const SectionHeader = ({ 
-  badgeText, 
-  heading, 
-  subheading 
-}: Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading'>) => (
+export const SectionHeader = ({
+  badgeText,
+  heading,
+  subheading,
+}: Pick<ExtractPageBuilderType<'featureSection'>, 'badgeText' | 'heading' | 'subheading'>) => (
   <div className="flex gap-4 flex-col">
     {badgeText && (
       <div>
@@ -43,45 +56,43 @@ export const SectionHeader = ({
       )}
     </div>
   </div>
-);
+)
 
 // Reusable image component
-export const FeatureImage = ({ 
-  image, 
-  heading = "" 
-}: { 
-  image?: ExtractPageBuilderType<"featureSection">['image'], 
-  heading?: string 
+export const FeatureImage = ({
+  image,
+  heading = '',
+}: {
+  image?: ExtractPageBuilderType<'featureSection'>['image']
+  heading?: string
 }) => (
   <div className="bg-muted rounded-md w-full aspect-video h-full flex-1">
     {image?.asset?._ref && (
       <div className="relative h-full w-full">
         <Image
           src={urlFor(image.asset._ref).url()}
-          alt={image.alt || heading || ""}
+          alt={image.alt || heading || ''}
           fill
           className="object-cover rounded-md"
         />
       </div>
     )}
   </div>
-);
+)
 
 // Feature item component used in default and withImage variants
-export const FeatureItem = ({ 
-  feature 
-}: { 
-  feature: NonNullable<ExtractPageBuilderType<"featureSection">['features']>[number] 
+export const FeatureItem = ({
+  feature,
+}: {
+  feature: NonNullable<ExtractPageBuilderType<'featureSection'>['features']>[number]
 }) => (
   <div className="flex flex-row gap-6 items-start">
     <Check className="w-4 h-4 mt-2 text-primary" />
     <div className="flex flex-col gap-1">
       <p>{feature.title}</p>
       {feature.description && (
-        <p className="text-muted-foreground text-sm">
-          {feature.description}
-        </p>
+        <p className="text-muted-foreground text-sm">{feature.description}</p>
       )}
     </div>
   </div>
-);
+)

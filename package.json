@@ -15,13 +15,14 @@
     "test": "turbo run test",
     "test:e2e": "pnpm --filter frontend test:e2e",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "typegen": "pnpm --filter studio typegen",
     "deploy:studio": "pnpm --filter studio deploy",
     "validate": "sanity-template-validate",
     "typecheck:blueprint": "tsc --noEmit",
     "blueprint:plan": "sanity blueprints plan",
     "blueprint:deploy": "sanity blueprints deploy",
-    "verify": "pnpm typecheck && pnpm typecheck:blueprint && pnpm lint && pnpm build && pnpm test"
+    "verify": "pnpm typecheck && pnpm typecheck:blueprint && pnpm lint && pnpm format:check && pnpm build && pnpm test"
   },
   "devDependencies": {
     "@sanity/blueprints": "^0.28.0",

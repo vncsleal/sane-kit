@@ -1,187 +1,172 @@
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
-import { BarChartIcon } from '@sanity/icons/BarChart'
-import { ComponentIcon } from '@sanity/icons/Component'
-import { defineField, defineType, defineArrayMember } from "sanity";
-import {
-  fields,
-  groups,
-  documents,
-  descriptions,
-  validation,
-  sanityOptions,
-} from "../dictionary";
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {BarChartIcon} from '@sanity/icons/BarChart'
+import {ComponentIcon} from '@sanity/icons/Component'
+import {defineField, defineType, defineArrayMember} from 'sanity'
+import {fields, groups, documents, descriptions, validation, sanityOptions} from '../dictionary'
 
 export const statsSection = defineType({
-  name: "statsSection",
+  name: 'statsSection',
   title: documents.statsSection,
-  type: "object",
+  type: 'object',
   icon: BarChartIcon,
   groups: [
     {
-      name: "content",
+      name: 'content',
       title: groups.content,
       icon: InfoOutlineIcon,
       default: true,
     },
     {
-      name: "appearance",
+      name: 'appearance',
       title: groups.appearance,
       icon: ComponentIcon,
     },
     {
-      name: "stats",
+      name: 'stats',
       title: fields.stats,
       icon: BarChartIcon,
     },
   ],
   fields: [
     defineField({
-      name: "variant",
+      name: 'variant',
       title: fields.variant,
-      type: "string",
-      group: "appearance",
+      type: 'string',
+      group: 'appearance',
       options: {
         list: sanityOptions.statsVariants,
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "grid",
+      initialValue: 'grid',
     }),
     defineField({
-      name: "badgeText",
+      name: 'badgeText',
       title: fields.badgeText,
-      type: "string",
+      type: 'string',
       description: descriptions.badgeTextDescriptionStats,
-      hidden: ({ parent }) => parent?.variant !== "withContent",
-      group: "content",
-      validation: (rule) =>
-        rule.max(30).warning(validation.badgeTextWarningStats),
+      hidden: ({parent}) => parent?.variant !== 'withContent',
+      group: 'content',
+      validation: (rule) => rule.max(30).warning(validation.badgeTextWarningStats),
     }),
     defineField({
-      name: "contentHeading",
+      name: 'contentHeading',
       title: fields.contentHeading,
-      type: "string",
+      type: 'string',
       description: descriptions.contentHeadingDescription,
-      hidden: ({ parent }) => parent?.variant !== "withContent",
-      group: "content",
-      validation: (rule) =>
-        rule.max(100).warning(validation.contentHeadingWarning),
+      hidden: ({parent}) => parent?.variant !== 'withContent',
+      group: 'content',
+      validation: (rule) => rule.max(100).warning(validation.contentHeadingWarning),
     }),
     defineField({
-      name: "contentText",
+      name: 'contentText',
       title: fields.contentText,
-      type: "text",
+      type: 'text',
       description: descriptions.contentTextDescription,
       rows: 4,
-      hidden: ({ parent }) => parent?.variant !== "withContent",
-      group: "content",
-      validation: (rule) =>
-        rule.max(400).warning(validation.contentTextWarning),
+      hidden: ({parent}) => parent?.variant !== 'withContent',
+      group: 'content',
+      validation: (rule) => rule.max(400).warning(validation.contentTextWarning),
     }),
     defineField({
-      name: "heading",
+      name: 'heading',
       title: fields.heading,
-      type: "string",
+      type: 'string',
       description: descriptions.statsHeadingDescription,
-      hidden: ({ parent }) => parent?.variant !== "grid",
-      group: "content",
+      hidden: ({parent}) => parent?.variant !== 'grid',
+      group: 'content',
     }),
     defineField({
-      name: "subheading",
+      name: 'subheading',
       title: fields.subheading,
-      type: "text",
+      type: 'text',
       description: descriptions.statsSubheadingDescription,
       rows: 2,
-      hidden: ({ parent }) => parent?.variant !== "grid",
-      group: "content",
+      hidden: ({parent}) => parent?.variant !== 'grid',
+      group: 'content',
     }),
     defineField({
-      name: "stats",
+      name: 'stats',
       title: fields.stats,
-      type: "array",
+      type: 'array',
       description: descriptions.statsArrayDescription,
-      group: "stats",
+      group: 'stats',
       of: [
         defineArrayMember({
-          type: "object",
-          name: "stat",
+          type: 'object',
+          name: 'stat',
           title: descriptions.defaultStatistic,
           fields: [
             defineField({
-              name: "value",
+              name: 'value',
               title: fields.value,
-              type: "string",
+              type: 'string',
               description: descriptions.statValueDescription,
-              validation: (rule) =>
-                rule.required().error(validation.statValueRequired),
+              validation: (rule) => rule.required().error(validation.statValueRequired),
             }),
             defineField({
-              name: "label",
+              name: 'label',
               title: fields.label,
-              type: "string",
+              type: 'string',
               description: descriptions.statLabelDescription,
-              validation: (rule) =>
-                rule.required().error(validation.statLabelRequired),
+              validation: (rule) => rule.required().error(validation.statLabelRequired),
             }),
             defineField({
-              name: "trendDirection",
+              name: 'trendDirection',
               title: fields.trendDirection,
-              type: "string",
+              type: 'string',
               options: {
                 list: sanityOptions.trendDirections,
-                layout: "radio",
+                layout: 'radio',
               },
-              initialValue: "none",
+              initialValue: 'none',
             }),
             defineField({
-              name: "trendValue",
+              name: 'trendValue',
               title: fields.trendValue,
-              type: "string",
+              type: 'string',
               description: descriptions.trendValueDescription,
             }),
             defineField({
-              name: "color",
+              name: 'color',
               title: fields.color,
-              type: "string",
+              type: 'string',
               options: {
                 list: sanityOptions.iconColors,
               },
-              initialValue: "primary",
+              initialValue: 'primary',
             }),
           ],
           preview: {
             select: {
-              value: "value",
-              label: "label",
-              trend: "trendValue",
+              value: 'value',
+              label: 'label',
+              trend: 'trendValue',
             },
-            prepare({ value, label, trend }) {
+            prepare({value, label, trend}) {
               return {
                 title: value || descriptions.defaultStatistic,
-                subtitle: `${label || ""}${trend ? ` (${trend})` : ""}`,
-              };
+                subtitle: `${label || ''}${trend ? ` (${trend})` : ''}`,
+              }
             },
           },
         }),
       ],
-      validation: (rule) =>
-        rule.min(1).error(validation.statsMinRequired),
+      validation: (rule) => rule.min(1).error(validation.statsMinRequired),
     }),
   ],
   preview: {
     select: {
-      title: "heading",
-      variant: "variant",
+      title: 'heading',
+      variant: 'variant',
     },
-    prepare({ title, variant }) {
-      const selectedVariant = sanityOptions.statsVariants.find(
-        (v) => v.value === variant
-      );
-      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+    prepare({title, variant}) {
+      const selectedVariant = sanityOptions.statsVariants.find((v) => v.value === variant)
+      const variantTitle = selectedVariant ? selectedVariant.title : variant
       return {
         title: title || descriptions.defaultStatsSection,
         subtitle: variantTitle || descriptions.defaultLayout,
         media: BarChartIcon,
-      };
+      }
     },
   },
-});
+})

@@ -1,14 +1,27 @@
-"use client";
+'use client'
 
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
-import { MoveRight } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps, HeaderCTAButton } from "./shared";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { stegaClean } from "next-sanity";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu'
+import {Button} from '@/components/ui/button'
+import {MoveRight} from 'lucide-react'
+import Link from 'next/link'
+import {useState} from 'react'
+import {
+  HeaderLogo,
+  createHeaderClassName,
+  ensureAbsoluteUrl,
+  HeaderProps,
+  HeaderCTAButton,
+} from './shared'
+import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {Menu} from 'lucide-react'
+import {stegaClean} from 'next-sanity'
 
 export default function Default({
   title,
@@ -16,15 +29,15 @@ export default function Default({
   navigationItems = [],
   ctaButtons = [],
   dropdownCTALabel,
-  dropdownCTAUrl = "/contact",
+  dropdownCTAUrl = '/contact',
   locale,
   dictionary,
 }: HeaderProps) {
-  const [scrolled] = useState(false);
-  
-  const siteName = title ?? undefined;
-  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || "Book a call today";
-  const headerClasses = createHeaderClassName("default", scrolled);
+  const [scrolled] = useState(false)
+
+  const siteName = title ?? undefined
+  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || 'Book a call today'
+  const headerClasses = createHeaderClassName('default', scrolled)
 
   return (
     <header className={headerClasses}>
@@ -43,9 +56,7 @@ export default function Default({
                   {item.href ? (
                     <NavigationMenuLink asChild>
                       <Button variant="ghost" asChild>
-                        <Link href={ensureAbsoluteUrl(item.href, locale)}>
-                          {item.title}
-                        </Link>
+                        <Link href={ensureAbsoluteUrl(item.href, locale)}>{item.title}</Link>
                       </Button>
                     </NavigationMenuLink>
                   ) : (
@@ -57,12 +68,8 @@ export default function Default({
                         <div className="flex flex-col lg:grid grid-cols-2 gap-4">
                           <div className="flex flex-col h-full justify-between">
                             <div className="flex flex-col">
-                              <p className="text-base">
-                                {item.title}
-                              </p>
-                              <p className="text-muted-foreground text-sm">
-                                {item.description}
-                              </p>
+                              <p className="text-base">{item.title}</p>
+                              <p className="text-muted-foreground text-sm">{item.description}</p>
                             </div>
                             <Button size="sm" className="mt-10" asChild>
                               <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
@@ -77,9 +84,7 @@ export default function Default({
                                 key={subItem._key}
                                 className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
                               >
-                                <span>
-                                  {subItem.title}
-                                </span>
+                                <span>{subItem.title}</span>
                                 <MoveRight className="w-4 h-4 text-muted-foreground" />
                               </NavigationMenuLink>
                             ))}
@@ -103,7 +108,7 @@ export default function Default({
                 label={button.label ?? undefined}
                 url={button.url ?? undefined}
                 variant={stegaClean(button.variant) ?? undefined}
-                locale={locale} 
+                locale={locale}
               />
             ))}
           </div>
@@ -111,11 +116,7 @@ export default function Default({
           {/* MOBILE MENU */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-              >
+              <Button variant="ghost" size="icon" className="lg:hidden">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -134,20 +135,14 @@ export default function Default({
                         href={ensureAbsoluteUrl(item.href, locale)}
                         className="text-lg font-medium hover:text-primary flex justify-between items-center"
                       >
-                        <span>
-                          {item.title}
-                        </span>
+                        <span>{item.title}</span>
                         <MoveRight className="w-4 h-4 text-muted-foreground" />
                       </Link>
                     ) : (
                       <>
-                        <p className="text-lg font-medium">
-                          {item.title}
-                        </p>
+                        <p className="text-lg font-medium">{item.title}</p>
                         {item.description && (
-                          <p className="text-muted-foreground text-sm pb-1">
-                            {item.description}
-                          </p>
+                          <p className="text-muted-foreground text-sm pb-1">{item.description}</p>
                         )}
                       </>
                     )}
@@ -157,9 +152,7 @@ export default function Default({
                         href={ensureAbsoluteUrl(subItem.href ?? undefined, locale)}
                         className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
                       >
-                        <span>
-                          {subItem.title}
-                        </span>
+                        <span>{subItem.title}</span>
                         <MoveRight className="w-3.5 h-3.5" />
                       </Link>
                     ))}
@@ -182,5 +175,5 @@ export default function Default({
         </div>
       </div>
     </header>
-  );
+  )
 }

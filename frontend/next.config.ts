@@ -1,8 +1,8 @@
-import type { NextConfig } from 'next'
-import { createClient } from 'next-sanity'
+import type {NextConfig} from 'next'
+import {createClient} from 'next-sanity'
 
-import { REDIRECTS_QUERY } from './src/sanity/queries'
-import { toNextRedirect } from './src/lib/redirects'
+import {REDIRECTS_QUERY} from './src/sanity/queries'
+import {toNextRedirect} from './src/lib/redirects'
 
 // Config-level client: `redirects()` is evaluated at build time, outside the
 // request lifecycle, so it can't reuse the request-scoped app client.

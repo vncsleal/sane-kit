@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { ContentSection, FaqAccordion } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {ContentSection, FaqAccordion} from './shared'
 
-type CenteredProps = ExtractPageBuilderType<"faqSection">;
+type CenteredProps = ExtractPageBuilderType<'faqSection'>
 
 export default function Centered({
-  badgeText = "FAQ",
+  badgeText = 'FAQ',
   heading,
   subheading,
   buttonText,
-  buttonUrl = "#",
-  buttonIcon = "phone",
+  buttonUrl = '#',
+  buttonIcon = 'phone',
   faqItems = [],
 }: CenteredProps) {
   return (
@@ -38,5 +38,5 @@ export default function Centered({
         </div>
       </div>
     </div>
-  );
+  )
 }

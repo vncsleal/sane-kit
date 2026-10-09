@@ -1,6 +1,6 @@
-import { Resend } from 'resend'
+import {Resend} from 'resend'
 
-import { serverEnv } from '@/sanity/env.server'
+import {serverEnv} from '@/sanity/env.server'
 
 export interface EmailAttachment {
   filename: string
@@ -28,7 +28,7 @@ export async function sendEmail(message: EmailMessage): Promise<void> {
   }
 
   const resend = new Resend(apiKey)
-  const { error } = await resend.emails.send({
+  const {error} = await resend.emails.send({
     from,
     to: message.to,
     subject: message.subject,

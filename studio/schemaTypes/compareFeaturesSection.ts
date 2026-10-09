@@ -1,222 +1,212 @@
-import { CheckmarkCircleIcon } from '@sanity/icons/CheckmarkCircle'
-import { CloseCircleIcon } from '@sanity/icons/CloseCircle'
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
-import { TagIcon } from '@sanity/icons/Tag'
-import { ComposeIcon } from '@sanity/icons/Compose'
-import { defineField, defineType, defineArrayMember, type ValidationContext } from "sanity";
-import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
+import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
+import {CloseCircleIcon} from '@sanity/icons/CloseCircle'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {TagIcon} from '@sanity/icons/Tag'
+import {ComposeIcon} from '@sanity/icons/Compose'
+import {defineField, defineType, defineArrayMember, type ValidationContext} from 'sanity'
+import {fields, groups, documents, descriptions, validation, sanityOptions} from '../dictionary'
 
 export const compareFeaturesSection = defineType({
-  name: "compareFeaturesSection",
+  name: 'compareFeaturesSection',
   title: documents.compareFeaturesSection,
-  type: "object",
+  type: 'object',
   icon: ComposeIcon,
   groups: [
     {
-      name: "content",
+      name: 'content',
       title: groups.content,
       icon: InfoOutlineIcon,
       default: true,
     },
     {
-      name: "features",
+      name: 'features',
       title: groups.features,
       icon: CheckmarkCircleIcon,
     },
     {
-      name: "plans",
+      name: 'plans',
       title: fields.plans,
       icon: TagIcon,
     },
   ],
   fields: [
     defineField({
-      name: "badgeText",
+      name: 'badgeText',
       title: fields.badgeText,
-      type: "string",
+      type: 'string',
       initialValue: descriptions.defaultPricing,
-      group: "content",
-      validation: (rule) =>
-        rule.max(30).warning(validation.badgeTextWarning),
+      group: 'content',
+      validation: (rule) => rule.max(30).warning(validation.badgeTextWarning),
     }),
     defineField({
-      name: "heading",
+      name: 'heading',
       title: fields.heading,
-      type: "string",
-      validation: (rule) =>
-        rule.required().error(validation.comparisonTitleRequired),
-      group: "content",
+      type: 'string',
+      validation: (rule) => rule.required().error(validation.comparisonTitleRequired),
+      group: 'content',
     }),
     defineField({
-      name: "subheading",
+      name: 'subheading',
       title: fields.subheading,
-      type: "text",
+      type: 'text',
       rows: 2,
-      group: "content",
-      validation: (rule) =>
-        rule.max(200).warning(validation.comparisonSubheadingWarning),
+      group: 'content',
+      validation: (rule) => rule.max(200).warning(validation.comparisonSubheadingWarning),
     }),
     defineField({
-      name: "features",
+      name: 'features',
       title: fields.features,
-      type: "array",
+      type: 'array',
       description: descriptions.featuresSelectDescription,
-      group: "features",
+      group: 'features',
       of: [
         defineArrayMember({
-          type: "reference",
-          to: [{ type: "compareFeature" }],
+          type: 'reference',
+          to: [{type: 'compareFeature'}],
         }),
       ],
-      validation: (rule) =>
-        rule.min(1).error(validation.featuresMinRequired),
+      validation: (rule) => rule.min(1).error(validation.featuresMinRequired),
     }),
     defineField({
-      name: "plans",
+      name: 'plans',
       title: fields.plans,
-      type: "array",
-      group: "plans",
+      type: 'array',
+      group: 'plans',
       of: [
         defineArrayMember({
-          type: "object",
-          name: "plan",
+          type: 'object',
+          name: 'plan',
           title: descriptions.defaultPlan,
           fields: [
             defineField({
-              name: "title",
+              name: 'title',
               title: fields.planTitle,
-              type: "string",
-              validation: (rule) =>
-                rule.required().error(validation.planTitleRequired),
+              type: 'string',
+              validation: (rule) => rule.required().error(validation.planTitleRequired),
             }),
             defineField({
-              name: "description",
+              name: 'description',
               title: fields.planDescription,
-              type: "text",
+              type: 'text',
               rows: 3,
-              validation: (rule) =>
-                rule.max(250).warning(validation.planDescriptionWarning),
+              validation: (rule) => rule.max(250).warning(validation.planDescriptionWarning),
             }),
             defineField({
-              name: "price",
+              name: 'price',
               title: fields.price,
-              type: "string",
+              type: 'string',
               description: descriptions.priceExample,
-              validation: (rule) =>
-                rule.required().error(validation.planPriceRequired),
+              validation: (rule) => rule.required().error(validation.planPriceRequired),
             }),
             defineField({
-              name: "billingPeriod",
+              name: 'billingPeriod',
               title: fields.billingPeriod,
-              type: "string",
+              type: 'string',
               description: descriptions.billingPeriodExample,
-              validation: (rule) =>
-                rule.max(20).warning(validation.billingPeriodWarning),
+              validation: (rule) => rule.max(20).warning(validation.billingPeriodWarning),
             }),
             defineField({
-              name: "highlighted",
+              name: 'highlighted',
               title: fields.highlighted,
-              type: "string",
+              type: 'boolean',
               description: descriptions.highlightPlanDescription,
-              options: {
-                list: sanityOptions.yesNo,
-                layout: "radio",
-              },
-              initialValue: "false",
+              initialValue: false,
             }),
             defineField({
-              name: "featureValues",
+              name: 'featureValues',
               title: fields.featureValues,
-              type: "array",
+              type: 'array',
               description: descriptions.featureValuesDescription,
               of: [
                 defineArrayMember({
-                  type: "object",
-                  name: "featureValue",
+                  type: 'object',
+                  name: 'featureValue',
                   title: fields.feature,
                   fields: [
                     defineField({
-                      name: "featureRef",
+                      name: 'featureRef',
                       title: fields.feature,
-                      type: "reference",
-                      to: [{ type: "compareFeature" }],
-                      validation: (rule) =>
-                        rule.required().error(validation.featureRefRequired),
+                      type: 'reference',
+                      to: [{type: 'compareFeature'}],
+                      validation: (rule) => rule.required().error(validation.featureRefRequired),
                       options: {
-                        filter: ({ document, parent }) => {
+                        filter: ({document, parent}) => {
                           if (!document || !Array.isArray(parent)) {
-                            return { filter: "" };
+                            return {filter: ''}
                           }
 
                           const existingRefs = parent
-                            .filter(item => {
-                              return item && typeof item === 'object' && 
-                                     'featureRef' in item && 
-                                     item.featureRef && 
-                                     typeof item.featureRef === 'object' && 
-                                     '_ref' in item.featureRef;
+                            .filter((item) => {
+                              return (
+                                item &&
+                                typeof item === 'object' &&
+                                'featureRef' in item &&
+                                item.featureRef &&
+                                typeof item.featureRef === 'object' &&
+                                '_ref' in item.featureRef
+                              )
                             })
-                            .map(item => {
-                              const typedItem = item as { featureRef: { _ref: string } };
-                              return typedItem.featureRef._ref;
-                            });
+                            .map((item) => {
+                              const typedItem = item as {featureRef: {_ref: string}}
+                              return typedItem.featureRef._ref
+                            })
 
                           return {
-                            filter: existingRefs.length > 0 ? "!(_id in $existingRefs)" : "",
-                            params: { existingRefs },
-                          };
+                            filter: existingRefs.length > 0 ? '!(_id in $existingRefs)' : '',
+                            params: {existingRefs},
+                          }
                         },
                       },
                     }),
                     defineField({
-                      name: "value",
+                      name: 'value',
                       title: fields.valueStatus,
-                      type: "string",
+                      type: 'string',
                       description: descriptions.featureValueDescription,
                       options: {
                         list: sanityOptions.featureValueOptions,
-                        layout: "radio",
+                        layout: 'radio',
                       },
-                      initialValue: "true",
-                      validation: (rule) =>
-                        rule.required().error(validation.featureValueRequired),
+                      initialValue: 'true',
+                      validation: (rule) => rule.required().error(validation.featureValueRequired),
                     }),
                     defineField({
-                      name: "customText",
+                      name: 'customText',
                       title: fields.customText,
-                      type: "string",
+                      type: 'string',
                       description: descriptions.customTextDescription,
-                      hidden: ({ parent }) => parent?.value !== "custom",
-                      validation: (rule) =>
-                        rule.max(100).warning(validation.customTextWarning),
+                      hidden: ({parent}) => parent?.value !== 'custom',
+                      validation: (rule) => rule.max(100).warning(validation.customTextWarning),
                     }),
                   ],
                   preview: {
                     select: {
-                      featureTitle: "featureRef.title",
-                      value: "value",
-                      customText: "customText",
+                      featureTitle: 'featureRef.title',
+                      value: 'value',
+                      customText: 'customText',
                     },
-                    prepare({ featureTitle, value, customText }) {
-                      let subtitle = "";
-                      let media = InfoOutlineIcon;
+                    prepare({featureTitle, value, customText}) {
+                      let subtitle = ''
+                      let media = InfoOutlineIcon
 
-                      const selectedOption = sanityOptions.featureValueOptions.find(opt => opt.value === value);
+                      const selectedOption = sanityOptions.featureValueOptions.find(
+                        (opt) => opt.value === value,
+                      )
 
                       if (selectedOption) {
-                        subtitle = selectedOption.title;
-                        if (value === "true") media = CheckmarkCircleIcon;
-                        else if (value === "false") media = CloseCircleIcon;
-                        else if (value === "custom") subtitle = customText || selectedOption.title;
+                        subtitle = selectedOption.title
+                        if (value === 'true') media = CheckmarkCircleIcon
+                        else if (value === 'false') media = CloseCircleIcon
+                        else if (value === 'custom') subtitle = customText || selectedOption.title
                       } else {
-                        subtitle = customText || descriptions.valueNotSpecified;
+                        subtitle = customText || descriptions.valueNotSpecified
                       }
 
                       return {
                         title: featureTitle || descriptions.defaultCompareFeature,
                         subtitle: subtitle,
                         media: media,
-                      };
+                      }
                     },
                   },
                 }),
@@ -228,65 +218,67 @@ export const compareFeaturesSection = defineType({
                   .error(validation.featureValuesMinRequired)
                   .unique()
                   .custom((featureValues, context: ValidationContext) => {
-                    const pageBuilder = context.document?.pageBuilder as unknown;
-                    const currentPath = context.path;
+                    const pageBuilder = context.document?.pageBuilder as unknown
+                    const currentPath = context.path
 
                     if (!Array.isArray(pageBuilder) || !currentPath || currentPath.length < 2) {
-                      return true;
+                      return true
                     }
 
-                    const parentPathSegment = currentPath[1];
+                    const parentPathSegment = currentPath[1]
                     const parentSectionKey =
-                      typeof parentPathSegment === "object" &&
+                      typeof parentPathSegment === 'object' &&
                       parentPathSegment !== null &&
-                      "_key" in parentPathSegment
+                      '_key' in parentPathSegment
                         ? parentPathSegment._key
-                        : undefined;
+                        : undefined
 
                     if (!parentSectionKey) {
-                      return true;
+                      return true
                     }
 
                     const parentSection = pageBuilder.find(
-                      (section: unknown): section is {
-                        _key?: string;
-                        _type?: string;
-                        features?: { _ref: string }[];
+                      (
+                        section: unknown,
+                      ): section is {
+                        _key?: string
+                        _type?: string
+                        features?: {_ref: string}[]
                       } =>
-                        typeof section === "object" &&
+                        typeof section === 'object' &&
                         section !== null &&
-                        "_key" in section &&
+                        '_key' in section &&
                         section._key === parentSectionKey,
-                    );
+                    )
 
-                    const allFeaturesRefs = parentSection?.features?.map((f) => f._ref) || [];
+                    const allFeaturesRefs = parentSection?.features?.map((f) => f._ref) || []
 
-                    if (allFeaturesRefs.length === 0) return true;
+                    if (allFeaturesRefs.length === 0) return true
 
                     const definedFeatureRefs = (
-                      featureValues as { featureRef?: { _ref: string } }[] | undefined
-                    )?.map((fv) => fv.featureRef?._ref);
+                      featureValues as {featureRef?: {_ref: string}}[] | undefined
+                    )?.map((fv) => fv.featureRef?._ref)
 
                     const missingRefs = allFeaturesRefs.filter(
                       (ref) => !definedFeatureRefs?.includes(ref),
-                    );
+                    )
 
                     if (missingRefs.length > 0) {
-                      return `${validation.featureValuesMissing} Refs de características ausentes: ${missingRefs.join(", ")}`;
+                      return `${validation.featureValuesMissing} Refs de características ausentes: ${missingRefs.join(', ')}`
                     }
 
-                    const refs = definedFeatureRefs?.filter(Boolean) as string[];
+                    const refs = definedFeatureRefs?.filter(Boolean) as string[]
                     if (new Set(refs).size !== refs.length) {
-                      return validation.featureValuesDuplicate;
+                      return validation.featureValuesDuplicate
                     }
 
-                    return true;
+                    return true
                   }),
             }),
             defineField({
-              name: "buttonText",
+              name: 'buttonText',
               title: fields.buttonText,
-              type: "string",
+              type: 'string',
               validation: (rule) =>
                 rule
                   .required()
@@ -295,74 +287,72 @@ export const compareFeaturesSection = defineType({
                   .warning(validation.planButtonTextWarning),
             }),
             defineField({
-              name: "buttonUrl",
+              name: 'buttonUrl',
               title: fields.buttonUrl,
-              type: "url",
+              type: 'url',
               validation: (rule) =>
                 rule
                   .required()
                   .error(validation.planButtonUrlRequired)
-                  .uri({ allowRelative: true, scheme: ['http', 'https'] })
+                  .uri({allowRelative: true, scheme: ['http', 'https']})
                   .error(validation.planButtonUrlInvalid),
             }),
             defineField({
-              name: "buttonIcon",
+              name: 'buttonIcon',
               title: fields.buttonIcon,
-              type: "string",
+              type: 'string',
               options: {
                 list: sanityOptions.buttonIconOptions,
-                layout: "radio",
+                layout: 'radio',
               },
-              initialValue: "arrowRight",
+              initialValue: 'arrowRight',
             }),
             defineField({
-              name: "buttonVariant",
+              name: 'buttonVariant',
               title: fields.buttonVariant,
-              type: "string",
+              type: 'string',
               options: {
                 list: sanityOptions.buttonVariantOptions,
               },
-              initialValue: "default",
+              initialValue: 'default',
             }),
           ],
           preview: {
             select: {
-              title: "title",
-              price: "price",
-              highlighted: "highlighted",
+              title: 'title',
+              price: 'price',
+              highlighted: 'highlighted',
             },
-            prepare({ title, price, highlighted }) {
+            prepare({title, price, highlighted}) {
               return {
-                title: `${highlighted === "true" ? "🌟 " : ""}${title || descriptions.defaultPlan}`,
+                title: `${highlighted === 'true' ? '🌟 ' : ''}${title || descriptions.defaultPlan}`,
                 subtitle: price ? `${price}` : descriptions.noPrice,
-              };
+              }
             },
           },
         }),
       ],
-      validation: (rule) =>
-        rule.min(1).error(validation.plansMinRequired),
+      validation: (rule) => rule.min(1).error(validation.plansMinRequired),
     }),
     defineField({
-      name: "footnote",
+      name: 'footnote',
       title: fields.footnote,
-      type: "text",
+      type: 'text',
       rows: 2,
       description: descriptions.footnoteDescription,
-      group: "content",
-      validation: (rule) =>
-        rule.max(300).warning(validation.footnoteWarning),
+      group: 'content',
+      validation: (rule) => rule.max(300).warning(validation.footnoteWarning),
     }),
   ],
   preview: {
     select: {
-      title: "heading",
+      title: 'heading',
     },
-    prepare({ title }) {
+    prepare({title}) {
       return {
         title: title || descriptions.defaultCompareFeaturesSection,
         media: ComposeIcon,
-      };
+      }
     },
   },
-});
+})

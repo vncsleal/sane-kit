@@ -1,4 +1,4 @@
-import { at, defineMigration, set } from 'sanity/migrate'
+import {at, defineMigration, set} from 'sanity/migrate'
 
 /**
  * `blogPost.featured` was a `"true" | "false"` string (radio). It is now a
@@ -10,7 +10,7 @@ export default defineMigration({
   documentTypes: ['blogPost'],
   migrate: {
     document(doc) {
-      const value = (doc as { featured?: unknown }).featured
+      const value = (doc as {featured?: unknown}).featured
       if (value !== 'true' && value !== 'false') {
         return undefined
       }

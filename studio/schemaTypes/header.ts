@@ -1,175 +1,177 @@
-import { MenuIcon } from '@sanity/icons/Menu'
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
-import { ComponentIcon } from '@sanity/icons/Component'
-import { LinkIcon } from '@sanity/icons/Link'
-import { defineField, defineType, defineArrayMember, type ValidationContext, type Reference } from "sanity";
-import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
+import {MenuIcon} from '@sanity/icons/Menu'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {ComponentIcon} from '@sanity/icons/Component'
+import {LinkIcon} from '@sanity/icons/Link'
+import {
+  defineField,
+  defineType,
+  defineArrayMember,
+  type ValidationContext,
+  type Reference,
+} from 'sanity'
+import {fields, groups, documents, descriptions, validation, sanityOptions} from '../dictionary'
 
 export const header = defineType({
-  name: "header",
+  name: 'header',
   title: documents.header,
-  type: "document",
+  type: 'document',
   icon: MenuIcon,
   groups: [
     {
-      name: "basic",
+      name: 'basic',
       title: groups.basic,
       icon: InfoOutlineIcon,
       default: true,
     },
     {
-      name: "appearance",
+      name: 'appearance',
       title: groups.appearance,
       icon: ComponentIcon,
     },
     {
-      name: "navigation",
-      title: "Navegação",
+      name: 'navigation',
+      title: 'Navegação',
       icon: MenuIcon,
     },
     {
-      name: "actions",
+      name: 'actions',
       title: groups.actions,
       icon: LinkIcon,
     },
   ],
   fields: [
     defineField({
-      name: "language",
-      type: "string",
+      name: 'language',
+      type: 'string',
       readOnly: true,
       hidden: true,
     }),
     defineField({
-      name: "title",
+      name: 'title',
       title: fields.siteName,
-      type: "string",
+      type: 'string',
       description: descriptions.siteNameDescription,
-      validation: (rule) =>
-        rule.required().error(validation.siteNameRequired),
-      group: "basic",
+      validation: (rule) => rule.required().error(validation.siteNameRequired),
+      group: 'basic',
     }),
     defineField({
-      name: "logo",
+      name: 'logo',
       title: fields.logo,
-      type: "image",
+      type: 'image',
       description: descriptions.logoDescription,
       options: {
         hotspot: true,
       },
       fields: [
         defineField({
-          name: "alt",
+          name: 'alt',
           title: fields.alt,
-          type: "string",
+          type: 'string',
           description: descriptions.logoAltDescription,
           validation: (rule) =>
             rule.custom((value, context: ValidationContext) => {
-              const parent = context.parent as { asset?: Reference };
+              const parent = context.parent as {asset?: Reference}
               if (parent?.asset && !value) {
-                return validation.logoAltRequiredHeader;
+                return validation.logoAltRequiredHeader
               }
-              return true;
+              return true
             }),
         }),
       ],
-      group: "basic",
+      group: 'basic',
     }),
     defineField({
-      name: "variant",
+      name: 'variant',
       title: fields.variant,
-      type: "string",
+      type: 'string',
       description: descriptions.headerVariantDescription,
       options: {
         list: sanityOptions.headerVariants,
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "default",
-      group: "appearance",
+      initialValue: 'default',
+      group: 'appearance',
     }),
     defineField({
-      name: "navigationItems",
+      name: 'navigationItems',
       title: fields.navigationItems,
-      type: "array",
-      group: "navigation",
+      type: 'array',
+      group: 'navigation',
       of: [
         defineArrayMember({
-          type: "object",
-          name: "navigationItem",
+          type: 'object',
+          name: 'navigationItem',
           title: descriptions.defaultNavigationItem,
           fields: [
             defineField({
-              name: "title",
+              name: 'title',
               title: fields.title,
-              type: "string",
-              validation: (rule) =>
-                rule.required().error(validation.navigationTitleRequired),
+              type: 'string',
+              validation: (rule) => rule.required().error(validation.navigationTitleRequired),
             }),
             defineField({
-              name: "href",
+              name: 'href',
               title: fields.href,
-              type: "url",
+              type: 'url',
               description: descriptions.navigationItemsDescription,
               validation: (rule) =>
                 rule
                   .uri({
                     allowRelative: true,
-                    scheme: ["http", "https", "mailto", "tel"],
+                    scheme: ['http', 'https', 'mailto', 'tel'],
                   })
                   .error(validation.navigationUrlInvalid),
             }),
             defineField({
-              name: "description",
+              name: 'description',
               title: fields.description,
-              type: "text",
+              type: 'text',
               description: descriptions.navigationDescriptionText,
-              validation: (rule) =>
-                rule.max(150).warning(validation.navigationDescriptionWarning),
+              validation: (rule) => rule.max(150).warning(validation.navigationDescriptionWarning),
             }),
             defineField({
-              name: "items",
+              name: 'items',
               title: fields.items,
-              type: "array",
+              type: 'array',
               description: descriptions.dropdownItemsDescription,
               of: [
                 defineArrayMember({
-                  type: "object",
-                  name: "subItem",
+                  type: 'object',
+                  name: 'subItem',
                   title: descriptions.defaultSubitem,
                   fields: [
                     defineField({
-                      name: "title",
+                      name: 'title',
                       title: fields.title,
-                      type: "string",
-                      validation: (rule) =>
-                        rule.required().error(validation.subitemTitleRequired),
+                      type: 'string',
+                      validation: (rule) => rule.required().error(validation.subitemTitleRequired),
                     }),
                     defineField({
-                      name: "href",
+                      name: 'href',
                       title: fields.href,
-                      type: "url",
+                      type: 'url',
                       validation: (rule) =>
                         rule
                           .required()
                           .error(validation.subitemUrlRequired)
                           .uri({
                             allowRelative: true,
-                            scheme: ["http", "https", "mailto", "tel"],
+                            scheme: ['http', 'https', 'mailto', 'tel'],
                           })
                           .error(validation.subitemUrlInvalid),
                     }),
                   ],
                   preview: {
                     select: {
-                      title: "title",
-                      subtitle: "href",
+                      title: 'title',
+                      subtitle: 'href',
                     },
-                    prepare({ title, subtitle }) {
+                    prepare({title, subtitle}) {
                       return {
                         title: title || descriptions.defaultSubitem,
                         subtitle: subtitle || descriptions.linkNotDefined,
                         media: LinkIcon,
-                      };
+                      }
                     },
                   },
                 }),
@@ -178,51 +180,51 @@ export const header = defineType({
           ],
           preview: {
             select: {
-              title: "title",
-              href: "href",
-              itemCount: "items.length",
+              title: 'title',
+              href: 'href',
+              itemCount: 'items.length',
             },
-            prepare({ title, href, itemCount = 0 }) {
-              const isDropdown = itemCount > 0;
-              let subtitle = "";
-              
+            prepare({title, href, itemCount = 0}) {
+              const isDropdown = itemCount > 0
+              let subtitle = ''
+
               if (isDropdown) {
-                const plural = itemCount === 1 ? "" : "s";
+                const plural = itemCount === 1 ? '' : 's'
                 subtitle = descriptions.dropdownWithItems
-                  .replace("{count}", itemCount.toString())
-                  .replace("{plural}", plural);
+                  .replace('{count}', itemCount.toString())
+                  .replace('{plural}', plural)
               } else if (href) {
-                subtitle = descriptions.linkTo.replace("{url}", href);
+                subtitle = descriptions.linkTo.replace('{url}', href)
               } else {
-                subtitle = descriptions.noLinkDropdownOnly;
+                subtitle = descriptions.noLinkDropdownOnly
               }
-              
+
               return {
                 title: title || descriptions.defaultNavigationItem,
                 subtitle,
                 media: MenuIcon,
-              };
+              }
             },
           },
         }),
       ],
     }),
     defineField({
-      name: "ctaButtons",
+      name: 'ctaButtons',
       title: fields.ctaButtons,
-      type: "array",
+      type: 'array',
       description: descriptions.ctaButtonsDescription,
-      group: "actions",
+      group: 'actions',
       of: [
         defineArrayMember({
-          type: "object",
-          name: "button",
+          type: 'object',
+          name: 'button',
           title: descriptions.defaultCtaButton,
           fields: [
             defineField({
-              name: "label",
+              name: 'label',
               title: fields.label,
-              type: "string",
+              type: 'string',
               validation: (rule) =>
                 rule
                   .required()
@@ -231,87 +233,88 @@ export const header = defineType({
                   .warning(validation.ctaButtonLabelWarning),
             }),
             defineField({
-              name: "url",
+              name: 'url',
               title: fields.url,
-              type: "url",
+              type: 'url',
               validation: (rule) =>
                 rule
                   .required()
                   .error(validation.ctaButtonUrlRequired)
                   .uri({
                     allowRelative: true,
-                    scheme: ["http", "https", "mailto", "tel"],
+                    scheme: ['http', 'https', 'mailto', 'tel'],
                   })
                   .error(validation.ctaButtonUrlInvalid),
             }),
             defineField({
-              name: "variant",
+              name: 'variant',
               title: fields.buttonVariant,
-              type: "string",
+              type: 'string',
               options: {
                 list: sanityOptions.headerButtonVariants,
               },
-              initialValue: "default",
+              initialValue: 'default',
             }),
           ],
           preview: {
             select: {
-              title: "label",
-              subtitle: "url",
-              variant: "variant",
+              title: 'label',
+              subtitle: 'url',
+              variant: 'variant',
             },
-            prepare({ title, subtitle, variant }) {
-              const selectedVariant = sanityOptions.headerButtonVariants.find(v => v.value === variant);
-              const variantTitle = selectedVariant ? selectedVariant.title : variant;
+            prepare({title, subtitle, variant}) {
+              const selectedVariant = sanityOptions.headerButtonVariants.find(
+                (v) => v.value === variant,
+              )
+              const variantTitle = selectedVariant ? selectedVariant.title : variant
               return {
                 title: title || descriptions.defaultCtaButton,
                 subtitle: `${variantTitle || descriptions.defaultLayout} | ${subtitle || descriptions.urlNotDefinedHeader}`,
                 media: LinkIcon,
-              };
+              }
             },
           },
         }),
       ],
     }),
     defineField({
-      name: "dropdownCTALabel",
+      name: 'dropdownCTALabel',
       title: fields.dropdownCTALabel,
-      type: "string",
+      type: 'string',
       description: descriptions.dropdownCtaLabelDescription,
       initialValue: descriptions.defaultScheduleCall,
-      group: "actions",
-      validation: (rule) =>
-        rule.max(40).warning(validation.dropdownCtaLabelWarning),
+      group: 'actions',
+      validation: (rule) => rule.max(40).warning(validation.dropdownCtaLabelWarning),
     }),
     defineField({
-      name: "dropdownCTAUrl",
+      name: 'dropdownCTAUrl',
       title: fields.dropdownCTAUrl,
-      type: "url",
+      type: 'url',
       description: descriptions.dropdownCtaUrlDescription,
       initialValue: descriptions.defaultContactPath,
-      group: "actions",
+      group: 'actions',
       validation: (rule) =>
         rule
           .uri({
             allowRelative: true,
-            scheme: ["http", "https", "mailto", "tel"],
+            scheme: ['http', 'https', 'mailto', 'tel'],
           })
           .error(validation.dropdownCtaUrlInvalid),
     }),
   ],
   preview: {
     select: {
-      title: "title",
-      variant: "variant",
+      title: 'title',
+      variant: 'variant',
     },
-    prepare({ title, variant }) {
-      const selectedVariant = sanityOptions.headerVariants.find(v => v.value === variant);
-      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+    prepare({title, variant}) {
+      const selectedVariant = sanityOptions.headerVariants.find((v) => v.value === variant)
+      const variantTitle = selectedVariant ? selectedVariant.title : variant
       return {
         title: title || descriptions.defaultHeader,
         subtitle: variantTitle || descriptions.defaultLayout,
         media: MenuIcon,
-      };
+      }
     },
   },
-});
+})

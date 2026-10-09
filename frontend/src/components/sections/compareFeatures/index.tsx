@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import type { CompareFeatureWithTitle, ExtractPageBuilderType } from '@/sanity/page-builder'
+import type {CompareFeatureWithTitle, ExtractPageBuilderType} from '@/sanity/page-builder'
 
 import Default from './default'
 
-export type { CompareFeatureWithTitle }
+export type {CompareFeatureWithTitle}
 
 export type CompareFeaturesSectionProps = Omit<
   ExtractPageBuilderType<'compareFeaturesSection'>,

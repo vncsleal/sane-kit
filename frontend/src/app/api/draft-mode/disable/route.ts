@@ -1,5 +1,5 @@
-import { draftMode } from 'next/headers'
-import { NextResponse } from 'next/server'
+import {draftMode} from 'next/headers'
+import {NextResponse} from 'next/server'
 
 export async function GET(request: Request) {
   const draft = await draftMode()

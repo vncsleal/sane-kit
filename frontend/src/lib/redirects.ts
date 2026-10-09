@@ -1,7 +1,7 @@
 export interface RedirectDoc {
   source: string
   destination: string
-  permanent?: string | null
+  permanent?: boolean | null
 }
 
 export interface NextRedirect {
@@ -15,6 +15,6 @@ export function toNextRedirect(doc: RedirectDoc): NextRedirect {
   return {
     source: doc.source,
     destination: doc.destination,
-    permanent: doc.permanent !== 'false',
+    permanent: doc.permanent ?? true,
   }
 }

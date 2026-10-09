@@ -1,9 +1,9 @@
-import type { MetadataRoute } from 'next'
+import type {MetadataRoute} from 'next'
 
-import { client } from '@/sanity/client'
-import { SITEMAP_QUERY } from '@/sanity/queries'
-import { i18n } from '@/i18n/i18n-config'
-import { siteUrl } from '@/sanity/env'
+import {client} from '@/sanity/client'
+import {SITEMAP_QUERY} from '@/sanity/queries'
+import {i18n} from '@/i18n/i18n-config'
+import {siteUrl} from '@/sanity/env'
 
 function pathFor(type: string, slug: string): string {
   switch (type) {
@@ -23,7 +23,7 @@ function pathFor(type: string, slug: string): string {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const perLocale = await Promise.all(
     i18n.locales.map(async (locale) => {
-      const docs = await client.fetch(SITEMAP_QUERY, { language: locale })
+      const docs = await client.fetch(SITEMAP_QUERY, {language: locale})
       return docs
         .filter((doc) => !doc.noIndex)
         .map((doc) => ({

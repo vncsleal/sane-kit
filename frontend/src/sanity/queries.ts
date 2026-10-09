@@ -1,6 +1,8 @@
-import { defineQuery } from "next-sanity";
+import {defineQuery} from 'next-sanity'
 
-{ /* frontend/src/app/[locale]/layout.tsx */}
+{
+  /* frontend/src/app/[locale]/layout.tsx */
+}
 
 export const LAYOUT_HEADER_QUERY = defineQuery(`*[
   _type == "header"
@@ -34,7 +36,7 @@ export const LAYOUT_HEADER_QUERY = defineQuery(`*[
     title,
     language
   }
-}`);
+}`)
 
 export const LAYOUT_FOOTER_QUERY = defineQuery(`*[
   _type == "footer"
@@ -67,9 +69,11 @@ export const LAYOUT_FOOTER_QUERY = defineQuery(`*[
     title,
     language
   }
-}`);
+}`)
 
-{ /* frontend/src/app/[locale]/page.tsx */}
+{
+  /* frontend/src/app/[locale]/page.tsx */
+}
 export const HOME_PAGE_QUERY = defineQuery(`*[
   _type == "page"
   && slug.current == "/"
@@ -115,9 +119,11 @@ export const HOME_PAGE_QUERY = defineQuery(`*[
     slug,
     language
   }
-}`);
+}`)
 
-{ /* frontend/src/app/[locale]/[slug]/page.tsx */}
+{
+  /* frontend/src/app/[locale]/[slug]/page.tsx */
+}
 export const PAGE_QUERY = defineQuery(`*[
   _type == "page"
   && slug.current == $slug
@@ -163,9 +169,11 @@ export const PAGE_QUERY = defineQuery(`*[
     slug,
     language
   }
-}`);
+}`)
 
-{ /* frontend/src/app/[locale]/blog/[slug]/page.tsx*/}
+{
+  /* frontend/src/app/[locale]/blog/[slug]/page.tsx*/
+}
 export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
   _type == "blogPost"
   && slug.current == $slug
@@ -219,9 +227,11 @@ export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
     slug,
     language
   }
-}`);
+}`)
 
-{ /* frontend/src/app/[locale]/blog/author/[slug]/page.tsx */}
+{
+  /* frontend/src/app/[locale]/blog/author/[slug]/page.tsx */
+}
 export const AUTHOR_PAGE_QUERY = defineQuery(`*[
   _type == "author"
   && defined(slug.current)
@@ -284,9 +294,11 @@ export const AUTHOR_PAGE_QUERY = defineQuery(`*[
     slug,
     language
   }
-}`);
+}`)
 
-{ /* frontend/src/app/[locale]/blog/category/[slug]/page.tsx */}
+{
+  /* frontend/src/app/[locale]/blog/category/[slug]/page.tsx */
+}
 export const CATEGORY_PAGE_QUERY = defineQuery(`*[
   _type == "category"
   && slug.current == $slug
@@ -349,9 +361,11 @@ export const CATEGORY_PAGE_QUERY = defineQuery(`*[
     slug,
     language
   }
-}`);
+}`)
 
-{/* frontend/src/app/[locale]/blog/page.tsx */}
+{
+  /* frontend/src/app/[locale]/blog/page.tsx */
+}
 export const BLOG_INDEX_PAGE_QUERY = defineQuery(`{
   "config": *[
     _type == "blogPage"
@@ -400,11 +414,11 @@ export const BLOG_INDEX_PAGE_QUERY = defineQuery(`{
     }
   },
   "totalPosts": count(*[_type == "blogPost" && language == $language])
-}`);
+}`)
 
-{ /* Consolidated Author Queries */}
-
-
+{
+  /* Consolidated Author Queries */
+}
 
 export const SITEMAP_QUERY = defineQuery(`*[
   _type in ["page", "blogPost", "author", "category"]
@@ -415,7 +429,7 @@ export const SITEMAP_QUERY = defineQuery(`*[
   _updatedAt,
   "slug": slug.current,
   "noIndex": seo.noIndex == "true"
-}`);
+}`)
 
 export const RSS_QUERY = defineQuery(`*[
   _type == "blogPost"
@@ -426,7 +440,7 @@ export const RSS_QUERY = defineQuery(`*[
   excerpt,
   publishedAt,
   "slug": slug.current
-}`);
+}`)
 
 export const LANGUAGE_ALTERNATES_QUERY = defineQuery(`*[
   _type == "translation.metadata"
@@ -439,7 +453,7 @@ export const LANGUAGE_ALTERNATES_QUERY = defineQuery(`*[
   "translations": translations[]{
     "value": value->{ _type, language, "slug": slug.current }
   }
-}`);
+}`)
 
 export const REDIRECTS_QUERY = defineQuery(`*[
   _type == "redirect"
@@ -449,7 +463,7 @@ export const REDIRECTS_QUERY = defineQuery(`*[
   source,
   destination,
   permanent
-}`);
+}`)
 
 export const BLOG_POSTS_QUERY = defineQuery(`*[
   _type == "blogPost"
@@ -473,8 +487,8 @@ export const BLOG_POSTS_QUERY = defineQuery(`*[
     title,
     slug
   }
-}`);
+}`)
 
 export const COMPARE_FEATURES_QUERY = defineQuery(`*[
   _type == "compareFeature" && _id in $ids
-]{ _id, title }`);
+]{ _id, title }`)

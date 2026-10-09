@@ -176,68 +176,28 @@
         "showDate": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "showFirstName": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "showLastName": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "showFileUpload": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
@@ -322,51 +282,21 @@
         "autoplay": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "loop": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "muted": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         }
@@ -752,17 +682,7 @@
       "permanent": {
         "type": "objectAttribute",
         "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "true"
-            },
-            {
-              "type": "string",
-              "value": "false"
-            }
-          ]
+          "type": "boolean"
         },
         "optional": true
       }
@@ -822,51 +742,21 @@
         "showFeaturedPostLarge": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "featuredPostsOnly": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
         "viewAllButton": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
@@ -1012,17 +902,7 @@
                       "blank": {
                         "type": "objectAttribute",
                         "value": {
-                          "type": "union",
-                          "of": [
-                            {
-                              "type": "string",
-                              "value": "true"
-                            },
-                            {
-                              "type": "string",
-                              "value": "false"
-                            }
-                          ]
+                          "type": "boolean"
                         },
                         "optional": true
                       },
@@ -1201,17 +1081,7 @@
         "showLineNumbers": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "true"
-              },
-              {
-                "type": "string",
-                "value": "false"
-              }
-            ]
+            "type": "boolean"
           },
           "optional": true
         },
@@ -2783,17 +2653,7 @@
                 "highlighted": {
                   "type": "objectAttribute",
                   "value": {
-                    "type": "union",
-                    "of": [
-                      {
-                        "type": "string",
-                        "value": "true"
-                      },
-                      {
-                        "type": "string",
-                        "value": "false"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "optional": true
                 },
@@ -3018,17 +2878,7 @@
                 "highlighted": {
                   "type": "objectAttribute",
                   "value": {
-                    "type": "union",
-                    "of": [
-                      {
-                        "type": "string",
-                        "value": "true"
-                      },
-                      {
-                        "type": "string",
-                        "value": "false"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "optional": true
                 },
@@ -3844,17 +3694,7 @@
                 "highlighted": {
                   "type": "objectAttribute",
                   "value": {
-                    "type": "union",
-                    "of": [
-                      {
-                        "type": "string",
-                        "value": "true"
-                      },
-                      {
-                        "type": "string",
-                        "value": "false"
-                      }
-                    ]
+                    "type": "boolean"
                   },
                   "optional": true
                 },
@@ -4668,17 +4508,7 @@
       "showOnlyFeaturedPosts": {
         "type": "objectAttribute",
         "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "true"
-            },
-            {
-              "type": "string",
-              "value": "false"
-            }
-          ]
+          "type": "boolean"
         },
         "optional": true
       },

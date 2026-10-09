@@ -1,13 +1,9 @@
-"use client";
+'use client'
 
-import { Quote } from "lucide-react";
-import { SectionHeader, TestimonialAuthor, TestimonialVariantProps } from "./shared";
+import {Quote} from 'lucide-react'
+import {SectionHeader, TestimonialAuthor, TestimonialVariantProps} from './shared'
 
-export default function Grid({
-  heading,
-  subheading,
-  testimonials = [],
-}: TestimonialVariantProps) {
+export default function Grid({heading, subheading, testimonials = []}: TestimonialVariantProps) {
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
@@ -24,9 +20,7 @@ export default function Grid({
 
                 <div className="flex flex-col gap-4">
                   <h3 className="text-xl tracking-tight">{testimonial.title}</h3>
-                  <p className="text-muted-foreground text-base flex-grow">
-                    {testimonial.content}
-                  </p>
+                  <p className="text-muted-foreground text-base flex-grow">{testimonial.content}</p>
                 </div>
 
                 <TestimonialAuthor testimonial={testimonial} />
@@ -36,5 +30,5 @@ export default function Grid({
         </div>
       </div>
     </div>
-  );
+  )
 }

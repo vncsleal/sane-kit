@@ -1,13 +1,20 @@
-"use client";
+'use client'
 
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
-import { MoveRight, Menu, X } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps } from "./shared";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { stegaClean } from "next-sanity";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu'
+import {Button} from '@/components/ui/button'
+import {MoveRight, Menu, X} from 'lucide-react'
+import Link from 'next/link'
+import {useState} from 'react'
+import {HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps} from './shared'
+import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {stegaClean} from 'next-sanity'
 
 export default function Centered({
   title,
@@ -15,19 +22,19 @@ export default function Centered({
   navigationItems = [],
   ctaButtons = [],
   dropdownCTALabel,
-  dropdownCTAUrl = "/contact",
+  dropdownCTAUrl = '/contact',
   locale,
-  dictionary
+  dictionary,
 }: HeaderProps) {
-  const [scrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Site name
-  const siteName = title ?? undefined;
+  const siteName = title ?? undefined
   // Dropdown CTA label
-  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || "Book a call today";
-  
-  const headerClasses = createHeaderClassName("centered", scrolled);
+  const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || 'Book a call today'
+
+  const headerClasses = createHeaderClassName('centered', scrolled)
 
   return (
     <header className={headerClasses}>
@@ -37,15 +44,13 @@ export default function Centered({
           <NavigationMenu className="flex justify-start items-start">
             <NavigationMenuList className="flex justify-start gap-4 flex-row">
               {navigationItems?.map((item) => {
-                const navTitle = item.title;
+                const navTitle = item.title
                 return (
                   <NavigationMenuItem key={item._key}>
                     {item.href ? (
                       <NavigationMenuLink asChild>
                         <Button variant="ghost" asChild>
-                          <Link href={ensureAbsoluteUrl(item.href, locale)}>
-                            {navTitle}
-                          </Link>
+                          <Link href={ensureAbsoluteUrl(item.href, locale)}>{navTitle}</Link>
                         </Button>
                       </NavigationMenuLink>
                     ) : (
@@ -57,12 +62,8 @@ export default function Centered({
                           <div className="flex flex-col lg:grid grid-cols-2 gap-4">
                             <div className="flex flex-col h-full justify-between">
                               <div className="flex flex-col">
-                                <p className="text-base">
-                                  {navTitle}
-                                </p>
-                                <p className="text-muted-foreground text-sm">
-                                  {item.description}
-                                </p>
+                                <p className="text-base">{navTitle}</p>
+                                <p className="text-muted-foreground text-sm">{item.description}</p>
                               </div>
                               <Button size="sm" className="mt-10" asChild>
                                 <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
@@ -77,9 +78,7 @@ export default function Centered({
                                   key={subItem._key}
                                   className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
                                 >
-                                  <span>
-                                    {subItem.title}
-                                  </span>
+                                  <span>{subItem.title}</span>
                                   <MoveRight className="w-4 h-4 text-muted-foreground" />
                                 </NavigationMenuLink>
                               ))}
@@ -89,7 +88,7 @@ export default function Centered({
                       </>
                     )}
                   </NavigationMenuItem>
-                );
+                )
               })}
             </NavigationMenuList>
           </NavigationMenu>
@@ -97,18 +96,14 @@ export default function Centered({
 
         {/* MIDDLE COLUMN */}
         <div className="flex lg:justify-center">
-          <HeaderLogo logo={logo} title={siteName} locale={locale}/>
+          <HeaderLogo logo={logo} title={siteName} locale={locale} />
         </div>
 
         {/* RIGHT COLUMN */}
         <div className="flex justify-end w-full gap-4 items-center">
           <div className="hidden lg:flex gap-4">
             {ctaButtons?.map((button) => (
-              <Button
-                key={button._key}
-                variant={stegaClean(button.variant) || "default"}
-                asChild
-              >
+              <Button key={button._key} variant={stegaClean(button.variant) || 'default'} asChild>
                 <Link href={ensureAbsoluteUrl(button.url ?? undefined, locale)}>
                   {button.label}
                 </Link>
@@ -123,13 +118,13 @@ export default function Centered({
                 variant="ghost"
                 size="icon"
                 className="lg:hidden"
-                aria-label={mobileMenuOpen ? (dictionary?.header?.closeMenu ?? "Close menu") : (dictionary?.header?.openMenu ?? "Open menu")}
+                aria-label={
+                  mobileMenuOpen
+                    ? (dictionary?.header?.closeMenu ?? 'Close menu')
+                    : (dictionary?.header?.openMenu ?? 'Open menu')
+                }
               >
-                 {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
             </SheetTrigger>
             <SheetContent className="w-[300px] sm:w-[350px] px-4 sm:px-6">
@@ -147,20 +142,14 @@ export default function Centered({
                         className="text-lg font-medium hover:text-primary flex justify-between items-center"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        <span>
-                          {item.title}
-                        </span>
+                        <span>{item.title}</span>
                         <MoveRight className="w-4 h-4 text-muted-foreground" />
                       </Link>
                     ) : (
                       <>
-                        <p className="text-lg font-medium">
-                          {item.title}
-                        </p>
+                        <p className="text-lg font-medium">{item.title}</p>
                         {item.description && (
-                          <p className="text-muted-foreground text-sm pb-1">
-                            {item.description}
-                          </p>
+                          <p className="text-muted-foreground text-sm pb-1">{item.description}</p>
                         )}
                       </>
                     )}
@@ -171,9 +160,7 @@ export default function Centered({
                         className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        <span>
-                          {subItem.title}
-                        </span>
+                        <span>{subItem.title}</span>
                         <MoveRight className="w-3.5 h-3.5" />
                       </Link>
                     ))}
@@ -183,7 +170,7 @@ export default function Centered({
                   {ctaButtons?.map((button) => (
                     <Button
                       key={button._key}
-                      variant={stegaClean(button.variant) || "default"}
+                      variant={stegaClean(button.variant) || 'default'}
                       asChild
                       className="w-full"
                       onClick={() => setMobileMenuOpen(false)}
@@ -200,5 +187,5 @@ export default function Centered({
         </div>
       </div>
     </header>
-  );
+  )
 }

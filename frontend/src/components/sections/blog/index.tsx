@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { stegaClean } from 'next-sanity'
+import {stegaClean} from 'next-sanity'
 
-import type { BlogSectionPost, ExtractPageBuilderType } from '@/sanity/page-builder'
-import type { Locale } from '@/i18n/i18n-config'
+import type {BlogSectionPost, ExtractPageBuilderType} from '@/sanity/page-builder'
+import type {Locale} from '@/i18n/i18n-config'
 
 import Default from './default'
 import Grid from './grid'
@@ -20,7 +20,7 @@ export type BlogSectionComponentProps = ExtractPageBuilderType<'blogSection'> & 
  * optimistic page builder can render.
  */
 export default function BlogSectionComponent(props: BlogSectionComponentProps) {
-  const { variant = 'default', ...rest } = props
+  const {variant = 'default', ...rest} = props
 
   switch (stegaClean(variant)) {
     case 'grid':
@@ -30,4 +30,4 @@ export default function BlogSectionComponent(props: BlogSectionComponentProps) {
   }
 }
 
-export type { BlogPostWithData } from './shared'
+export type {BlogPostWithData} from './shared'

@@ -1,10 +1,9 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { renderBackgroundMedia, ButtonsGroup } from "./shared";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {renderBackgroundMedia, ButtonsGroup} from './shared'
+import {Button} from '@/components/ui/button'
+import Link from 'next/link'
 
 export default function ButtonBanner({
   heading,
@@ -12,7 +11,7 @@ export default function ButtonBanner({
   bannerButton,
   buttons = [],
   media,
-}: ExtractPageBuilderType<"heroSection">) {
+}: ExtractPageBuilderType<'heroSection'>) {
   return (
     <div className="w-full relative">
       {/* Background media */}
@@ -24,15 +23,8 @@ export default function ButtonBanner({
           {/* Banner button */}
           {bannerButton?.label && (
             <div>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="gap-4"
-                asChild
-              >
-                <Link href={bannerButton.url || "#"}>
-                  {bannerButton.label}
-                </Link>
+              <Button variant="secondary" size="sm" className="gap-4" asChild>
+                <Link href={bannerButton.url || '#'}>{bannerButton.label}</Link>
               </Button>
             </div>
           )}
@@ -42,7 +34,7 @@ export default function ButtonBanner({
             <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular">
               {heading}
             </h1>
-            
+
             {/* Subheading */}
             {subheading && (
               <p className="text-lg md:text-xl leading-relaxed tracking-tight text-muted-foreground max-w-2xl text-center">
@@ -58,5 +50,5 @@ export default function ButtonBanner({
         </div>
       </div>
     </div>
-  );
+  )
 }

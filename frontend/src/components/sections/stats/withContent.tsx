@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { Badge } from "@/components/ui/badge";
-import { StatCard } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {Badge} from '@/components/ui/badge'
+import {StatCard} from './shared'
 
 export default function WithContent({
   badgeText,
   contentHeading,
   contentText,
   stats = [],
-}: ExtractPageBuilderType<"statsSection">) {
+}: ExtractPageBuilderType<'statsSection'>) {
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
@@ -46,5 +46,5 @@ export default function WithContent({
         </div>
       </div>
     </div>
-  );
+  )
 }

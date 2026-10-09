@@ -1,20 +1,14 @@
-"use client";
+'use client'
 
-import { MoveRight, PhoneCall, Plus } from "lucide-react";
-import { stegaClean } from 'next-sanity'
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
+import {MoveRight, PhoneCall, Plus} from 'lucide-react'
+import {stegaClean} from 'next-sanity'
+import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
+import Link from 'next/link'
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 
 // Define the button variant type to match Shadcn's Button component
-export type ButtonVariant =
-  | "default"
-  | "secondary"
-  | "outline"
-  | "ghost"
-  | "link"
-  | "destructive";
+export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'link' | 'destructive'
 
 // Icon mapping used across variants
 export const IconMap = {
@@ -22,22 +16,22 @@ export const IconMap = {
   phone: PhoneCall,
   plus: Plus,
   none: null,
-};
+}
 
 // Common section header component
-export const SectionHeader = ({ 
-  badgeText, 
-  heading, 
+export const SectionHeader = ({
+  badgeText,
+  heading,
   subheading,
-  variant = "default"
-}: Pick<ExtractPageBuilderType<"ctaSection">, 'badgeText' | 'heading' | 'subheading'> & { variant?: string }) => (
+  variant = 'default',
+}: Pick<ExtractPageBuilderType<'ctaSection'>, 'badgeText' | 'heading' | 'subheading'> & {
+  variant?: string
+}) => (
   <>
     {/* Badge */}
     {badgeText && (
       <div>
-        <Badge
-          variant={stegaClean(variant) === "highlight" ? "secondary" : "default"}
-        >
+        <Badge variant={stegaClean(variant) === 'highlight' ? 'secondary' : 'default'}>
           {badgeText}
         </Badge>
       </div>
@@ -45,15 +39,13 @@ export const SectionHeader = ({
 
     {/* Content */}
     <div className="flex flex-col gap-2">
-      <h3 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular">
-        {heading}
-      </h3>
+      <h3 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular">{heading}</h3>
       {subheading && (
         <p
           className={`text-lg leading-relaxed tracking-tight max-w-xl ${
-            stegaClean(variant) === "highlight"
-              ? "text-primary-foreground/80"
-              : "text-muted-foreground"
+            stegaClean(variant) === 'highlight'
+              ? 'text-primary-foreground/80'
+              : 'text-muted-foreground'
           }`}
         >
           {subheading}
@@ -61,29 +53,26 @@ export const SectionHeader = ({
       )}
     </div>
   </>
-);
+)
 
 // Buttons component
-export const ButtonsGroup = ({ 
-  buttons = [], 
-  variant = "default" 
-}: Pick<ExtractPageBuilderType<"ctaSection">, 'buttons'> & { variant?: string }) => (
+export const ButtonsGroup = ({
+  buttons = [],
+  variant = 'default',
+}: Pick<ExtractPageBuilderType<'ctaSection'>, 'buttons'> & {variant?: string}) => (
   <>
     {buttons && buttons.length > 0 && (
       <div className="flex flex-row gap-4 flex-wrap justify-center">
         {buttons.map((button) => {
           // Map icon name to component
-          const iconName = stegaClean(button.icon);
-          const Icon =
-            iconName && iconName !== "none"
-              ? IconMap[iconName]
-              : null;
+          const iconName = stegaClean(button.icon)
+          const Icon = iconName && iconName !== 'none' ? IconMap[iconName] : null
 
           // Adjust button variants for highlight background
-          let buttonVariant = button.variant || "default";
-          if (stegaClean(variant) === "highlight") {
-            if (stegaClean(buttonVariant) === "default") buttonVariant = "secondary";
-            else if (stegaClean(buttonVariant) === "outline") buttonVariant = "ghost";
+          let buttonVariant = button.variant || 'default'
+          if (stegaClean(variant) === 'highlight') {
+            if (stegaClean(buttonVariant) === 'default') buttonVariant = 'secondary'
+            else if (stegaClean(buttonVariant) === 'outline') buttonVariant = 'ghost'
           }
 
           return (
@@ -93,14 +82,14 @@ export const ButtonsGroup = ({
               className="gap-4"
               asChild
             >
-              <Link href={button.url || "#"}>
+              <Link href={button.url || '#'}>
                 {button.label}
                 {Icon && <Icon className="w-4 h-4" />}
               </Link>
             </Button>
-          );
+          )
         })}
       </div>
     )}
   </>
-);
+)

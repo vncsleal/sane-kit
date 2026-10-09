@@ -38,8 +38,9 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 ### Schema conformance
 
-- `blogPost.featured` is a boolean (was a `"true"/"false"` string radio).
-- `blogPost.authors[]` → a single `author` reference.
+- No string-boolean fields remain: `blogPost.featured`, `blogPost.authors[]` →
+  single `author`, the 16 page-builder/portable-text `yesNo` flags, and
+  `redirect.permanent` are all real booleans/references.
 - Existing content migrated with the official `sanity migrations` CLI
   (`studio/migrations/*`).
 

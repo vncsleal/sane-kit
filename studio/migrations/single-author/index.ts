@@ -1,4 +1,4 @@
-import { at, defineMigration, set, unset } from 'sanity/migrate'
+import {at, defineMigration, set, unset} from 'sanity/migrate'
 
 /**
  * `blogPost.authors` was an array of author references. It is now a single
@@ -10,7 +10,7 @@ export default defineMigration({
   documentTypes: ['blogPost'],
   migrate: {
     document(doc) {
-      const authors = (doc as { authors?: Array<{ _ref?: string }> }).authors
+      const authors = (doc as {authors?: Array<{_ref?: string}>}).authors
       if (!Array.isArray(authors) || authors.length === 0) {
         return undefined
       }
@@ -18,10 +18,7 @@ export default defineMigration({
       if (!ref) {
         return undefined
       }
-      return [
-        at('author', set({ _type: 'reference', _ref: ref })),
-        at('authors', unset()),
-      ]
+      return [at('author', set({_type: 'reference', _ref: ref})), at('authors', unset())]
     },
   },
 })

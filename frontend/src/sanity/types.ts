@@ -43,10 +43,10 @@ export type Media = {
 }
 
 export type FormFields = {
-  showDate?: 'true' | 'false'
-  showFirstName?: 'true' | 'false'
-  showLastName?: 'true' | 'false'
-  showFileUpload?: 'true' | 'false'
+  showDate?: boolean
+  showFirstName?: boolean
+  showLastName?: boolean
+  showFileUpload?: boolean
   fileUploadLabel?: string
 }
 
@@ -61,9 +61,9 @@ export type MediaImage = {
 
 export type Video = {
   url?: string
-  autoplay?: 'true' | 'false'
-  loop?: 'true' | 'false'
-  muted?: 'true' | 'false'
+  autoplay?: boolean
+  loop?: boolean
+  muted?: boolean
 }
 
 export type Logo = {
@@ -126,7 +126,7 @@ export type Redirect = {
   _rev: string
   source?: string
   destination?: string
-  permanent?: 'true' | 'false'
+  permanent?: boolean
 }
 
 export type BlogSection = {
@@ -135,9 +135,9 @@ export type BlogSection = {
   variant?: 'default' | 'grid'
   subheading?: string
   postsToShow?: number
-  showFeaturedPostLarge?: 'true' | 'false'
-  featuredPostsOnly?: 'true' | 'false'
-  viewAllButton?: 'true' | 'false'
+  showFeaturedPostLarge?: boolean
+  featuredPostsOnly?: boolean
+  viewAllButton?: boolean
   viewAllUrl?: string
   viewAllButtonText?: string
 }
@@ -154,7 +154,7 @@ export type PortableText = Array<
       listItem?: 'bullet' | 'number'
       markDefs?: Array<{
         href?: string
-        blank?: 'true' | 'false'
+        blank?: boolean
         _type: 'link'
         _key: string
       }>
@@ -182,7 +182,7 @@ export type CodeBlock = {
   title?: string
   code?: Code
   highlightLines?: string
-  showLineNumbers?: 'true' | 'false'
+  showLineNumbers?: boolean
   caption?: string
 }
 
@@ -457,7 +457,7 @@ export type CompareFeaturesSection = {
     description?: string
     price?: string
     billingPeriod?: string
-    highlighted?: 'true' | 'false'
+    highlighted?: boolean
     featureValues?: Array<{
       featureRef?: CompareFeatureReference
       value?: 'true' | 'false' | 'custom'
@@ -483,7 +483,7 @@ export type PricingSection = {
   plans?: Array<{
     title?: string
     description?: string
-    highlighted?: 'true' | 'false'
+    highlighted?: boolean
     price?: string
     billingPeriod?: string
     features?: Array<{
@@ -604,7 +604,7 @@ export type FeatureSection = {
       | 'calendar'
       | 'clock'
       | 'mail'
-    highlighted?: 'true' | 'false'
+    highlighted?: boolean
     image?: FeatureImage
     _type: 'feature'
     _key: string
@@ -720,7 +720,7 @@ export type BlogPage = {
   layout?: 'grid' | 'featured' | 'compact'
   postsPerPage?: number
   featuredPostsCount?: number
-  showOnlyFeaturedPosts?: 'true' | 'false'
+  showOnlyFeaturedPosts?: boolean
   seo?: {
     metaTitle?: string
     metaDescription?: string
@@ -1218,9 +1218,9 @@ export type HOME_PAGE_QUERY_RESULT = {
         variant?: 'default' | 'grid'
         subheading?: string
         postsToShow?: number
-        showFeaturedPostLarge?: 'false' | 'true'
-        featuredPostsOnly?: 'false' | 'true'
-        viewAllButton?: 'false' | 'true'
+        showFeaturedPostLarge?: boolean
+        featuredPostsOnly?: boolean
+        viewAllButton?: boolean
         viewAllUrl?: string
         viewAllButtonText?: string
       }
@@ -1254,7 +1254,7 @@ export type HOME_PAGE_QUERY_RESULT = {
           description?: string
           price?: string
           billingPeriod?: string
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           featureValues: Array<{
             featureRef: {
               _ref: string | null
@@ -1370,7 +1370,7 @@ export type HOME_PAGE_QUERY_RESULT = {
             | 'settings'
             | 'star'
             | 'user'
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           image?: FeatureImage
           _type: 'feature'
           _key: string
@@ -1426,7 +1426,7 @@ export type HOME_PAGE_QUERY_RESULT = {
         plans?: Array<{
           title?: string
           description?: string
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           price?: string
           billingPeriod?: string
           features?: Array<{
@@ -1548,9 +1548,9 @@ export type PAGE_QUERY_RESULT = {
         variant?: 'default' | 'grid'
         subheading?: string
         postsToShow?: number
-        showFeaturedPostLarge?: 'false' | 'true'
-        featuredPostsOnly?: 'false' | 'true'
-        viewAllButton?: 'false' | 'true'
+        showFeaturedPostLarge?: boolean
+        featuredPostsOnly?: boolean
+        viewAllButton?: boolean
         viewAllUrl?: string
         viewAllButtonText?: string
       }
@@ -1584,7 +1584,7 @@ export type PAGE_QUERY_RESULT = {
           description?: string
           price?: string
           billingPeriod?: string
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           featureValues: Array<{
             featureRef: {
               _ref: string | null
@@ -1700,7 +1700,7 @@ export type PAGE_QUERY_RESULT = {
             | 'settings'
             | 'star'
             | 'user'
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           image?: FeatureImage
           _type: 'feature'
           _key: string
@@ -1756,7 +1756,7 @@ export type PAGE_QUERY_RESULT = {
         plans?: Array<{
           title?: string
           description?: string
-          highlighted?: 'false' | 'true'
+          highlighted?: boolean
           price?: string
           billingPeriod?: string
           features?: Array<{
@@ -2134,7 +2134,7 @@ export type BLOG_INDEX_PAGE_QUERY_RESULT = {
     layout: 'compact' | 'featured' | 'grid' | null
     postsPerPage: number | null
     featuredPostsCount: number | null
-    showOnlyFeaturedPosts: 'false' | 'true' | null
+    showOnlyFeaturedPosts: boolean | null
     seo: {
       metaTitle: string | null
       metaDescription: string | null
@@ -2279,7 +2279,7 @@ export type LANGUAGE_ALTERNATES_QUERY_RESULT = {
 export type REDIRECTS_QUERY_RESULT = Array<{
   source: string
   destination: string
-  permanent: 'false' | 'true' | null
+  permanent: boolean | null
 }>
 
 // Source: ../frontend/src/sanity/queries.ts

@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, SubscriptionForm } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, SubscriptionForm} from './shared'
 
-type FullProps = ExtractPageBuilderType<"newsletterSection">;
+type FullProps = ExtractPageBuilderType<'newsletterSection'>
 
 export default function Full({
-  variant = "full",
+  variant = 'full',
   badgeText,
   heading,
   subheading,
@@ -20,13 +20,13 @@ export default function Full({
     <div className="w-full py-20 lg:py-40 bg-muted">
       <div className="container mx-auto">
         <div className="flex flex-col text-center py-14 gap-8 items-center">
-          <SectionHeader 
-            badgeText={badgeText} 
-            heading={heading} 
-            subheading={subheading} 
+          <SectionHeader
+            badgeText={badgeText}
+            heading={heading}
+            subheading={subheading}
             variant={variant}
           />
-          
+
           <SubscriptionForm
             inputPlaceholder={inputPlaceholder}
             buttonText={buttonText}
@@ -38,5 +38,5 @@ export default function Full({
         </div>
       </div>
     </div>
-  );
+  )
 }

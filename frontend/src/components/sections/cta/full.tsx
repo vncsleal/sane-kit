@@ -1,20 +1,15 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { stegaClean } from 'next-sanity';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { IconMap, ButtonVariant } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {stegaClean} from 'next-sanity'
+import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
+import Link from 'next/link'
+import {IconMap, ButtonVariant} from './shared'
 
-type FullProps = ExtractPageBuilderType<"ctaSection">;
+type FullProps = ExtractPageBuilderType<'ctaSection'>
 
-export default function Full({
-  badgeText,
-  heading,
-  subheading,
-  buttons = [],
-}: FullProps) {
+export default function Full({badgeText, heading, subheading, buttons = []}: FullProps) {
   return (
     <div className="w-full py-20 lg:py-40 bg-muted">
       <div className="container mx-auto">
@@ -42,30 +37,27 @@ export default function Full({
           {buttons.length > 0 && (
             <div className="flex flex-row gap-4 flex-wrap justify-center">
               {buttons.map((button) => {
-                const iconName = stegaClean(button.icon);
-                const Icon =
-                  iconName && iconName !== "none"
-                    ? IconMap[iconName]
-                    : null;
+                const iconName = stegaClean(button.icon)
+                const Icon = iconName && iconName !== 'none' ? IconMap[iconName] : null
 
                 return (
                   <Button
                     key={button._key}
-                    variant={(button.variant as ButtonVariant) || "default"}
+                    variant={(button.variant as ButtonVariant) || 'default'}
                     className="gap-4"
                     asChild
                   >
-                    <Link href={button.url || "#"}>
+                    <Link href={button.url || '#'}>
                       {button.label}
                       {Icon && <Icon className="w-4 h-4" />}
                     </Link>
                   </Button>
-                );
+                )
               })}
             </div>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

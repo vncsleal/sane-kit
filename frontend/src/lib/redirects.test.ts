@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import {describe, expect, it} from 'vitest'
 
-import { toNextRedirect } from './redirects'
+import {toNextRedirect} from './redirects'
 
 describe('toNextRedirect', () => {
   it('defaults to a permanent redirect', () => {
-    expect(toNextRedirect({ source: '/a', destination: '/b' })).toEqual({
+    expect(toNextRedirect({source: '/a', destination: '/b'})).toEqual({
       source: '/a',
       destination: '/b',
       permanent: true,
@@ -12,14 +12,12 @@ describe('toNextRedirect', () => {
   })
 
   it('maps an explicit temporary redirect', () => {
-    expect(toNextRedirect({ source: '/a', destination: '/b', permanent: 'false' }).permanent).toBe(
+    expect(toNextRedirect({source: '/a', destination: '/b', permanent: false}).permanent).toBe(
       false,
     )
   })
 
-  it('treats "true" as permanent', () => {
-    expect(toNextRedirect({ source: '/a', destination: '/b', permanent: 'true' }).permanent).toBe(
-      true,
-    )
+  it('treats true as permanent', () => {
+    expect(toNextRedirect({source: '/a', destination: '/b', permanent: true}).permanent).toBe(true)
   })
 })

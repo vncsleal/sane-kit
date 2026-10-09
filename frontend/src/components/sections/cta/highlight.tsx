@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, ButtonsGroup } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, ButtonsGroup} from './shared'
 
-type HighlightProps = ExtractPageBuilderType<"ctaSection">;
+type HighlightProps = ExtractPageBuilderType<'ctaSection'>
 
 export default function Highlight({
-  variant = "highlight",
+  variant = 'highlight',
   badgeText,
   heading,
   subheading,
   buttons = [],
 }: HighlightProps) {
   // Define container styles for the highlight variant
-  const containerStyle = "bg-primary text-primary-foreground rounded-md p-4 lg:p-14";
+  const containerStyle = 'bg-primary text-primary-foreground rounded-md p-4 lg:p-14'
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -29,5 +29,5 @@ export default function Highlight({
         </div>
       </div>
     </div>
-  );
+  )
 }

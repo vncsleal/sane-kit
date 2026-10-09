@@ -1,7 +1,7 @@
-import { client } from '@/sanity/client'
-import { RSS_QUERY } from '@/sanity/queries'
-import { i18n } from '@/i18n/i18n-config'
-import { siteUrl } from '@/sanity/env'
+import {client} from '@/sanity/client'
+import {RSS_QUERY} from '@/sanity/queries'
+import {i18n} from '@/i18n/i18n-config'
+import {siteUrl} from '@/sanity/env'
 
 function escapeXml(value: string): string {
   return value
@@ -14,7 +14,7 @@ function escapeXml(value: string): string {
 
 export async function GET() {
   const locale = i18n.defaultLocale
-  const posts = await client.fetch(RSS_QUERY, { language: locale })
+  const posts = await client.fetch(RSS_QUERY, {language: locale})
 
   const items = posts
     .map((post) => {
@@ -24,7 +24,9 @@ export async function GET() {
         `      <title>${escapeXml(post.title ?? '')}</title>`,
         `      <link>${link}</link>`,
         `      <guid>${link}</guid>`,
-        post.publishedAt ? `      <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>` : '',
+        post.publishedAt
+          ? `      <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>`
+          : '',
         post.excerpt ? `      <description>${escapeXml(post.excerpt)}</description>` : '',
         '    </item>',
       ]
@@ -44,6 +46,6 @@ ${items}
 </rss>`
 
   return new Response(xml, {
-    headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
+    headers: {'Content-Type': 'application/rss+xml; charset=utf-8'},
   })
 }

@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { LogoOrSiteTitle, Copyright, LegalLinks, NavigationItems, FooterProps } from "./shared";
-import { LanguageSwitcher } from "../LanguageSwitcher";
+import {LogoOrSiteTitle, Copyright, LegalLinks, NavigationItems, FooterProps} from './shared'
+import {LanguageSwitcher} from '../LanguageSwitcher'
 
 export default function SimpleFooter({
   title,
@@ -55,10 +55,15 @@ export default function SimpleFooter({
         <div className="mt-16 py-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <Copyright siteTitle={title ?? undefined} dictionary={dictionary} />
-            <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
+            <LanguageSwitcher
+              variant="minimal"
+              locale={locale}
+              alternates={alternates}
+              languageNames={languageNames}
+            />
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

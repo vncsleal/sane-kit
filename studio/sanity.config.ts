@@ -1,17 +1,17 @@
-import { defineConfig } from 'sanity'
-import { structureTool } from 'sanity/structure'
-import { presentationTool } from 'sanity/presentation'
-import { visionTool } from '@sanity/vision'
-import { codeInput } from '@sanity/code-input'
-import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
-import { ptBRLocale } from '@sanity/locale-pt-br'
-import { documentInternationalization } from '@sanity/document-internationalization'
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {presentationTool} from 'sanity/presentation'
+import {visionTool} from '@sanity/vision'
+import {codeInput} from '@sanity/code-input'
+import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
+import {ptBRLocale} from '@sanity/locale-pt-br'
+import {documentInternationalization} from '@sanity/document-internationalization'
 
-import { schemaTypes } from './schemaTypes'
-import { structure } from './structure'
-import { resolve } from './presentation/resolve'
+import {schemaTypes} from './schemaTypes'
+import {structure} from './structure'
+import {resolve} from './presentation/resolve'
 import Logo from './components/Logo'
-import { studioConfig } from './config'
+import {studioConfig} from './config'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-project-id'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
@@ -24,12 +24,12 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
-    structureTool({ structure }),
+    structureTool({structure}),
     presentationTool({
       resolve,
       previewUrl: {
         initial: siteUrl,
-        previewMode: { enable: '/api/draft-mode/enable' },
+        previewMode: {enable: '/api/draft-mode/enable'},
       },
     }),
     codeInput(),

@@ -1,16 +1,18 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { stegaClean } from 'next-sanity'
-import { SectionHeader, FeatureValueCell, PlanButton } from "./shared";
-import type { CompareFeatureWithTitle } from "./index";
-import React from "react";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {stegaClean} from 'next-sanity'
+import {SectionHeader, FeatureValueCell, PlanButton} from './shared'
+import type {CompareFeatureWithTitle} from './index'
+import React from 'react'
 
-export interface DefaultProps
-  extends Omit<ExtractPageBuilderType<"compareFeaturesSection">, 'features' | 'plans'> {
-  features: CompareFeatureWithTitle[];
-  plans: NonNullable<ExtractPageBuilderType<"compareFeaturesSection">['plans']>;
-  isLoading: boolean;
+export interface DefaultProps extends Omit<
+  ExtractPageBuilderType<'compareFeaturesSection'>,
+  'features' | 'plans'
+> {
+  features: CompareFeatureWithTitle[]
+  plans: NonNullable<ExtractPageBuilderType<'compareFeaturesSection'>['plans']>
+  isLoading: boolean
 }
 
 export default function Default({
@@ -29,7 +31,7 @@ export default function Default({
           <p className="text-center">Loading comparison data...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -50,16 +52,12 @@ export default function Default({
               >
                 <p className="text-2xl">{plan.title}</p>
                 {plan.description && (
-                  <p className="text-sm text-muted-foreground">
-                    {plan.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{plan.description}</p>
                 )}
                 <p className="flex flex-col lg:flex-row lg:items-center gap-2 text-xl mt-8">
                   <span className="text-4xl">{plan.price}</span>
                   {plan.billingPeriod && (
-                    <span className="text-sm text-muted-foreground">
-                      {plan.billingPeriod}
-                    </span>
+                    <span className="text-sm text-muted-foreground">{plan.billingPeriod}</span>
                   )}
                 </p>
                 <PlanButton
@@ -67,7 +65,7 @@ export default function Default({
                   buttonUrl={plan.buttonUrl}
                   buttonVariant={stegaClean(plan.buttonVariant)}
                   buttonIcon={stegaClean(plan.buttonIcon)}
-                  highlighted={stegaClean(plan.highlighted) === "true"}
+                  highlighted={plan.highlighted === true}
                 />
               </div>
             ))}
@@ -94,10 +92,10 @@ export default function Default({
                   {plans.map((plan, planIndex) => {
                     // Find the value for this feature in this plan
                     const featureValue = plan.featureValues?.find(
-                      (fv) => fv.featureRef?._ref === feature._id
-                    );
-                    
-                    if (!featureValue || stegaClean(featureValue.value) === "false") {
+                      (fv) => fv.featureRef?._ref === feature._id,
+                    )
+
+                    if (!featureValue || stegaClean(featureValue.value) === 'false') {
                       return (
                         <div
                           key={`${feature._id || index}-${plan._key || planIndex}`}
@@ -105,10 +103,10 @@ export default function Default({
                         >
                           <FeatureValueCell value="false" />
                         </div>
-                      );
+                      )
                     }
 
-                    if (stegaClean(featureValue.value) === "true") {
+                    if (stegaClean(featureValue.value) === 'true') {
                       return (
                         <div
                           key={`${feature._id || index}-${plan._key || planIndex}`}
@@ -116,9 +114,9 @@ export default function Default({
                         >
                           <FeatureValueCell value="true" />
                         </div>
-                      );
+                      )
                     }
-                    
+
                     return (
                       <div
                         key={`${feature._id || index}-${plan._key || planIndex}`}
@@ -126,23 +124,21 @@ export default function Default({
                       >
                         <FeatureValueCell value="custom" customText={featureValue.customText} />
                       </div>
-                    );
+                    )
                   })}
                 </React.Fragment>
-              );
+              )
             })}
           </div>
-          
+
           {/* Footnote */}
           {footnote && (
             <div className="w-full pt-10 mt-10 border-t">
-              <p className="text-sm text-center text-muted-foreground">
-                {footnote}
-              </p>
+              <p className="text-sm text-center text-muted-foreground">{footnote}</p>
             </div>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

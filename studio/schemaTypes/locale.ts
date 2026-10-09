@@ -1,5 +1,5 @@
-import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe'
-import { defineField, defineType } from 'sanity'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {defineField, defineType} from 'sanity'
 
 /**
  * Locale document. Single source of truth for the languages used by
@@ -33,13 +33,13 @@ export const locale = defineType({
       options: {
         layout: 'radio',
         list: [
-          { title: 'No', value: 'false' },
-          { title: 'Yes', value: 'true' },
+          {title: 'No', value: 'false'},
+          {title: 'Yes', value: 'true'},
         ],
       },
     }),
   ],
   preview: {
-    select: { title: 'name', subtitle: 'tag' },
+    select: {title: 'name', subtitle: 'tag'},
   },
 })

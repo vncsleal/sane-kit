@@ -1,11 +1,4 @@
-import {
-  FaFacebook,
-  FaGithub,
-  FaInstagram,
-  FaLinkedin,
-  FaXTwitter,
-  FaYoutube,
-} from 'react-icons/fa6'
+import {FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube} from 'react-icons/fa6'
 
 /**
  * Brand/social icons. lucide-react v1 removed brand marks, so social platforms

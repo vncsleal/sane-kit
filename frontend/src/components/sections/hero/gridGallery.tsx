@@ -1,11 +1,10 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { ButtonsGroup } from "./shared";
-import { Badge } from "@/components/ui/badge";
-import { urlFor } from "@/sanity/client";
-import Image from "next/image";
-
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {ButtonsGroup} from './shared'
+import {Badge} from '@/components/ui/badge'
+import {urlFor} from '@/sanity/client'
+import Image from 'next/image'
 
 export default function GridGallery({
   heading,
@@ -13,12 +12,12 @@ export default function GridGallery({
   badgeText,
   buttons = [],
   media,
-}: ExtractPageBuilderType<"heroSection">) {
-  const additionalImages = media?.additionalImages || [];
-  const mainImage = media?.type === "image" && media.image ? 1 : 0;
-  const additionalImagesCount = additionalImages.length;
-  const totalImages = mainImage + additionalImagesCount;
-  
+}: ExtractPageBuilderType<'heroSection'>) {
+  const additionalImages = media?.additionalImages || []
+  const mainImage = media?.type === 'image' && media.image ? 1 : 0
+  const additionalImagesCount = additionalImages.length
+  const totalImages = mainImage + additionalImagesCount
+
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
@@ -53,11 +52,11 @@ export default function GridGallery({
             </div>
 
             {/* Main image */}
-            {media?.type === "image" && media.image && (
+            {media?.type === 'image' && media.image && (
               <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
                 <Image
                   src={urlFor(media.image).width(800).height(600).url()}
-                  alt={media.image.alt || "Hero image"}
+                  alt={media.image.alt || 'Hero image'}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -100,11 +99,11 @@ export default function GridGallery({
               {/* Images grid column */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Main image */}
-                {media?.type === "image" && media.image && (
+                {media?.type === 'image' && media.image && (
                   <div className="col-span-2 aspect-[4/3] relative rounded-lg overflow-hidden">
                     <Image
                       src={urlFor(media.image).width(800).height(600).url()}
-                      alt={media.image.alt || "Hero image"}
+                      alt={media.image.alt || 'Hero image'}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -115,10 +114,7 @@ export default function GridGallery({
 
                 {/* Additional images */}
                 {additionalImages.slice(0, 4).map((image, index) => (
-                  <div
-                    key={index}
-                    className="aspect-square relative rounded-lg overflow-hidden"
-                  >
+                  <div key={index} className="aspect-square relative rounded-lg overflow-hidden">
                     <Image
                       src={urlFor(image).width(400).height(400).url()}
                       alt={`Gallery image ${index + 1}`}
@@ -134,5 +130,5 @@ export default function GridGallery({
         )}
       </div>
     </div>
-  );
+  )
 }

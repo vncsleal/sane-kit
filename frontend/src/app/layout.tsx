@@ -1,21 +1,21 @@
-import type { Metadata } from 'next'
-import { draftMode } from 'next/headers'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { GoogleAnalytics } from '@next/third-parties/google'
-import { VisualEditing } from 'next-sanity/visual-editing'
+import type {Metadata} from 'next'
+import {draftMode} from 'next/headers'
+import {Geist, Geist_Mono} from 'next/font/google'
+import {GoogleAnalytics} from '@next/third-parties/google'
+import {VisualEditing} from 'next-sanity/visual-editing'
 
 import './globals.css'
-import { Toaster } from 'sonner'
-import { ThemeProvider } from '@/components/global/ThemeProvider'
-import { ThemeToggle } from '@/components/global/ThemeToggle'
-import { PostHogProvider } from '@/components/PostHogProvider'
+import {Toaster} from 'sonner'
+import {ThemeProvider} from '@/components/global/ThemeProvider'
+import {ThemeToggle} from '@/components/global/ThemeToggle'
+import {PostHogProvider} from '@/components/PostHogProvider'
 import DraftModeToast from '@/components/global/DraftModeToast'
-import { handleError } from '@/app/client-utils'
-import { SanityLive } from '@/sanity/live'
-import { env } from '@/sanity/env'
-import { buildOrganizationJsonLd } from '@/lib/structured-data'
-import { getDictionary } from '@/i18n/getDictionary'
-import { i18n } from '@/i18n/i18n-config'
+import {handleError} from '@/app/client-utils'
+import {SanityLive} from '@/sanity/live'
+import {env} from '@/sanity/env'
+import {buildOrganizationJsonLd} from '@/lib/structured-data'
+import {getDictionary} from '@/i18n/getDictionary'
+import {i18n} from '@/i18n/i18n-config'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,8 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
+export default async function RootLayout({children}: {children: React.ReactNode}) {
+  const {isEnabled} = await draftMode()
   const organizationJsonLd = buildOrganizationJsonLd({
     name: 'Sane Kit',
     url: env.NEXT_PUBLIC_SITE_URL,
@@ -52,7 +52,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
         <PostHogProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
             <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
               <ThemeToggle />

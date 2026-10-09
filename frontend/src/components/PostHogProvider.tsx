@@ -1,53 +1,52 @@
-"use client"
+'use client'
 
-import posthog from "posthog-js"
-import { PostHogProvider as PHProvider, usePostHog } from "posthog-js/react"
-import { Suspense, useEffect } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
-import { logger } from "@/lib/logger"
+import posthog from 'posthog-js'
+import {PostHogProvider as PHProvider, usePostHog} from 'posthog-js/react'
+import {Suspense, useEffect} from 'react'
+import {usePathname, useSearchParams} from 'next/navigation'
+import {logger} from '@/lib/logger'
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+export function PostHogProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     // Check for user consent before initializing PostHog
-    const consentChoice = typeof window !== 'undefined'
-      ? window.localStorage.getItem('cookie-consent-choice')
-      : null;
-      
-    const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-    
+    const consentChoice =
+      typeof window !== 'undefined' ? window.localStorage.getItem('cookie-consent-choice') : null
+
+    const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
+
     if (!posthogKey) {
-      if (process.env.NODE_ENV === "development") {
-        logger.warn("PostHog key is missing. Analytics tracking is disabled.");
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('PostHog key is missing. Analytics tracking is disabled.')
       }
-      return;
+      return
     }
-    
+
     posthog.init(posthogKey, {
-      api_host: "/ingest",
-      ui_host: "https://us.posthog.com",
+      api_host: '/ingest',
+      ui_host: 'https://us.posthog.com',
       capture_pageview: false, // We capture pageviews manually
       capture_pageleave: true, // Enable pageleave capture
-      debug: process.env.NODE_ENV === "development",
+      debug: process.env.NODE_ENV === 'development',
       loaded: (posthog) => {
         // If consent is rejected or not yet given, opt out of tracking
         if (consentChoice !== 'accepted') {
-          posthog.opt_out_capturing();
+          posthog.opt_out_capturing()
         }
-      }
+      },
     })
-    
+
     // Listen for consent changes
     const handleConsentChange = () => {
-      const consentStatus = window.localStorage.getItem('cookie-consent-choice');
+      const consentStatus = window.localStorage.getItem('cookie-consent-choice')
       if (consentStatus === 'accepted') {
-        posthog.opt_in_capturing();
+        posthog.opt_in_capturing()
       } else {
-        posthog.opt_out_capturing();
+        posthog.opt_out_capturing()
       }
-    };
-    
-    window.addEventListener('storage', handleConsentChange);
-    return () => window.removeEventListener('storage', handleConsentChange);
+    }
+
+    window.addEventListener('storage', handleConsentChange)
+    return () => window.removeEventListener('storage', handleConsentChange)
   }, [])
 
   return (
@@ -70,7 +69,7 @@ function PostHogPageView() {
       if (search) {
         url += `?${search}`
       }
-      posthog.capture("$pageview", { "$current_url": url })
+      posthog.capture('$pageview', {$current_url: url})
     }
   }, [pathname, searchParams, posthog])
 

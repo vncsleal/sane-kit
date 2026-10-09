@@ -1,15 +1,15 @@
-import { DocumentTextIcon } from '@sanity/icons/DocumentText'
-import { defineType, defineArrayMember, defineField } from "sanity";
-import { fields, documents, descriptions, validation, sanityOptions } from "../dictionary";
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
+import {defineType, defineArrayMember, defineField} from 'sanity'
+import {fields, documents, descriptions, validation, sanityOptions} from '../dictionary'
 
 export const portableText = defineType({
-  name: "portableText",
+  name: 'portableText',
   title: documents.portableText,
-  type: "array",
+  type: 'array',
   icon: DocumentTextIcon,
   of: [
     defineArrayMember({
-      type: "block",
+      type: 'block',
       title: descriptions.defaultBlock,
       styles: sanityOptions.blockStyles,
       lists: sanityOptions.listStyles,
@@ -17,30 +17,29 @@ export const portableText = defineType({
         decorators: sanityOptions.textDecorators,
         annotations: [
           {
-            name: "link",
-            type: "object",
+            name: 'link',
+            type: 'object',
             title: descriptions.defaultLink,
             fields: [
               defineField({
-                name: "href",
-                type: "url",
+                name: 'href',
+                type: 'url',
                 title: fields.href,
-                validation: (rule) => 
-                  rule.required().error(validation.linkUrlRequired)
-                  .uri({
-                    allowRelative: true,
-                    scheme: ["http", "https", "mailto", "tel"]
-                  }).error(validation.linkUrlInvalid),
+                validation: (rule) =>
+                  rule
+                    .required()
+                    .error(validation.linkUrlRequired)
+                    .uri({
+                      allowRelative: true,
+                      scheme: ['http', 'https', 'mailto', 'tel'],
+                    })
+                    .error(validation.linkUrlInvalid),
               }),
               defineField({
-                name: "blank",
+                name: 'blank',
                 title: fields.blank,
-                type: "string",
-                options: {
-                  list: sanityOptions.yesNo,
-                  layout: "radio",
-                },
-                initialValue: "true",
+                type: 'boolean',
+                initialValue: true,
               }),
             ],
           },
@@ -48,29 +47,28 @@ export const portableText = defineType({
       },
     }),
     defineArrayMember({
-      type: "codeBlock",
+      type: 'codeBlock',
       title: descriptions.defaultCodeBlock,
     }),
     defineArrayMember({
-      type: "image",
+      type: 'image',
       title: descriptions.defaultImage,
       options: {
         hotspot: true,
       },
       fields: [
         defineField({
-          name: "alt",
-          type: "string",
+          name: 'alt',
+          type: 'string',
           title: fields.alt,
-          validation: (rule) => 
-            rule.required().error(validation.imageAltRequired),
+          validation: (rule) => rule.required().error(validation.imageAltRequired),
         }),
         defineField({
-          name: "caption",
-          type: "string",
+          name: 'caption',
+          type: 'string',
           title: fields.caption,
         }),
       ],
     }),
   ],
-});
+})

@@ -1,78 +1,79 @@
-import { client } from "@/sanity/client";
-import { sanityFetch } from "@/sanity/live";
-import CategoryPageUI from "@/components/blog/CategoryPageUI";
-import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
-import { getDictionary } from "@/i18n/getDictionary";
-import type { Metadata, ResolvingMetadata } from 'next';
-import { notFound } from 'next/navigation';
-import { CATEGORY_PAGE_QUERY } from "@/sanity/queries";
-
+import {client} from '@/sanity/client'
+import {sanityFetch} from '@/sanity/live'
+import CategoryPageUI from '@/components/blog/CategoryPageUI'
+import {i18n, hasLocale, type Locale} from '@/i18n/i18n-config'
+import {getDictionary} from '@/i18n/getDictionary'
+import type {Metadata, ResolvingMetadata} from 'next'
+import {notFound} from 'next/navigation'
+import {CATEGORY_PAGE_QUERY} from '@/sanity/queries'
 
 // Define PageParams interface
 interface PageParams {
-  slug: string;
-  locale: string;
+  slug: string
+  locale: string
 }
 
 // Define SearchParams interface
 interface SearchParams {
-  [key: string]: string | string[] | undefined;
+  [key: string]: string | string[] | undefined
 }
 
 // Define PageProps to expect a Promise of PageParams
 interface PageProps {
-  params: Promise<PageParams>;
-  searchParams: Promise<SearchParams>; 
+  params: Promise<PageParams>
+  searchParams: Promise<SearchParams>
 }
 
 // Fetch the category by slug and locale using the composite query
 async function getCategory(slug: string, locale: Locale) {
-  const { data } = await sanityFetch({
+  const {data} = await sanityFetch({
     query: CATEGORY_PAGE_QUERY,
-    params: { slug, language: locale },
-  });
-  return data;
+    params: {slug, language: locale},
+  })
+  return data
 }
 
 export async function generateMetadata(
-  { params }: PageProps, 
+  {params}: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { slug, locale: rawLocale } = await params;
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const dictionary = await getDictionary(locale);
-  const { data: result } = await sanityFetch({
+  const {slug, locale: rawLocale} = await params
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+  const dictionary = await getDictionary(locale)
+  const {data: result} = await sanityFetch({
     query: CATEGORY_PAGE_QUERY,
-    params: { slug, language: locale },
+    params: {slug, language: locale},
     // Metadata must never contain stega
     stega: false,
-  });
+  })
 
   if (!result) {
     return {
       title: dictionary.notFound.categoryTitle,
       description: dictionary.notFound.categoryMessage,
-    };
+    }
   }
 
-  const previousImages = (await parent).openGraph?.images || [];
+  const previousImages = (await parent).openGraph?.images || []
 
   return {
-    title: result.title ? `${result.title} | ${dictionary.app.title}` : dictionary.notFound.categoryTitle,
+    title: result.title
+      ? `${result.title} | ${dictionary.app.title}`
+      : dictionary.notFound.categoryTitle,
     description: result.description || dictionary.blog.defaultDescription,
     openGraph: {
       images: [...previousImages],
     },
-  };
+  }
 }
 
 // Generate static paths for all categories and locales
 export async function generateStaticParams(): Promise<PageParams[]> {
-  const locales = i18n.locales;
-  const allParams: PageParams[] = [];
+  const locales = i18n.locales
+  const allParams: PageParams[] = []
 
   for (const locale of locales) {
-    const categoriesForLocale = await client.fetch<Array<{ slug: { current: string } }>>(
+    const categoriesForLocale = await client.fetch<Array<{slug: {current: string}}>>(
       `*[
         _type == "category"
         && language == $language
@@ -82,34 +83,33 @@ export async function generateStaticParams(): Promise<PageParams[]> {
         slug,
         description
       }`,
-      { language: locale }
-    );
-    categoriesForLocale.forEach(category => {
+      {language: locale},
+    )
+    categoriesForLocale.forEach((category) => {
       if (category.slug?.current) {
-        allParams.push({ slug: category.slug.current, locale });
+        allParams.push({slug: category.slug.current, locale})
       }
-    });
+    })
   }
-  return allParams;
+  return allParams
 }
 
-export default async function CategoryPage({
-  params}: PageProps) { 
-  const { slug, locale: rawLocale } = await params;
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const dictionary = await getDictionary(locale);
-  const result = await getCategory(slug, locale);
+export default async function CategoryPage({params}: PageProps) {
+  const {slug, locale: rawLocale} = await params
+  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+  const dictionary = await getDictionary(locale)
+  const result = await getCategory(slug, locale)
 
   if (!result) {
-    notFound();
+    notFound()
   }
 
   return (
     <CategoryPageUI
-      category={result} 
+      category={result}
       posts={result.posts}
       dictionary={dictionary}
-      locale={locale} 
+      locale={locale}
     />
-  );
+  )
 }

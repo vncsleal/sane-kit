@@ -1,6 +1,6 @@
-import { client } from './client'
-import { LANGUAGE_ALTERNATES_QUERY } from './queries'
-import { i18n, type Locale } from '@/i18n/i18n-config'
+import {client} from './client'
+import {LANGUAGE_ALTERNATES_QUERY} from './queries'
+import {i18n, type Locale} from '@/i18n/i18n-config'
 
 function buildPath(type: string, slug: string, locale: string): string {
   const base =
@@ -32,7 +32,7 @@ export async function getLanguageAlternates(
   const segments = base.split('/').filter(Boolean)
   const last = segments[segments.length - 1]
 
-  const map: Record<string, string> = { [locale]: pathname }
+  const map: Record<string, string> = {[locale]: pathname}
 
   if (!last) {
     for (const l of i18n.locales) map[l] = `/${l}`

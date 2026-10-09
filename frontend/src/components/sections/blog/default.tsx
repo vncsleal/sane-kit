@@ -1,8 +1,6 @@
-import { stegaClean } from 'next-sanity'
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder"
-
-import { BlogPostWithData, SectionHeader, ViewAllButton, BlogPostCard } from './shared'
+import {BlogPostWithData, SectionHeader, ViewAllButton, BlogPostCard} from './shared'
 
 type BlogSectionProps = ExtractPageBuilderType<'blogSection'> & {
   locale: string
@@ -12,7 +10,7 @@ type BlogSectionProps = ExtractPageBuilderType<'blogSection'> & {
 export default function Default({
   heading = 'Artigos mais recentes',
   subheading,
-  showFeaturedPostLarge = 'true',
+  showFeaturedPostLarge = true,
   viewAllButton,
   viewAllUrl = '/blog',
   viewAllButtonText = 'Ver todos os artigos',
@@ -20,7 +18,7 @@ export default function Default({
   posts,
 }: BlogSectionProps) {
   const hasPosts = posts.length > 0
-  const showFeatured = stegaClean(showFeaturedPostLarge) === 'true' && hasPosts
+  const showFeatured = showFeaturedPostLarge === true && hasPosts
   const featuredPost = showFeatured ? posts[0] : null
   const regularPosts = showFeatured ? posts.slice(1) : posts
 
@@ -39,9 +37,7 @@ export default function Default({
         </div>
 
         {!hasPosts ? (
-          <div className="text-center py-20 text-muted-foreground">
-            No blog posts found.
-          </div>
+          <div className="text-center py-20 text-muted-foreground">No blog posts found.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featuredPost && <BlogPostCard post={featuredPost} isFeatured={true} locale={locale} />}

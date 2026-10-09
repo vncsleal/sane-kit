@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
-import { logger } from '@/lib/logger'
+import {logger} from '@/lib/logger'
 
 export default function Error({
   error,
   retry,
 }: {
-  error: Error & { digest?: string }
+  error: Error & {digest?: string}
   retry: () => void
 }) {
   useEffect(() => {
-    logger.error('Route error', { message: error.message, digest: error.digest })
+    logger.error('Route error', {message: error.message, digest: error.digest})
   }, [error])
 
   return (

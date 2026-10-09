@@ -1,11 +1,11 @@
 'use client'
 
-import { useIsPresentationTool } from 'next-sanity/hooks'
-import { useRouter } from 'next/navigation'
-import { useEffect, useTransition } from 'react'
-import { toast } from 'sonner'
+import {useIsPresentationTool} from 'next-sanity/hooks'
+import {useRouter} from 'next/navigation'
+import {useEffect, useTransition} from 'react'
+import {toast} from 'sonner'
 
-import { disableDraftMode } from '@/app/actions/draft'
+import {disableDraftMode} from '@/app/actions/draft'
 
 /**
  * Draft-mode indicator. Inside the Presentation tool the Studio owns Draft Mode

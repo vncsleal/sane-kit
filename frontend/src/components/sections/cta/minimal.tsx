@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, ButtonsGroup } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, ButtonsGroup} from './shared'
 
-type MinimalProps = ExtractPageBuilderType<"ctaSection">;
+type MinimalProps = ExtractPageBuilderType<'ctaSection'>
 
 export default function Minimal({
-  variant = "minimal",
+  variant = 'minimal',
   badgeText,
   heading,
   subheading,
   buttons = [],
 }: MinimalProps) {
   // Minimal variant has no special container styles
-  const containerStyle = "";
+  const containerStyle = ''
 
   return (
     <div className="w-full py-20 lg:py-40">
@@ -29,5 +29,5 @@ export default function Minimal({
         </div>
       </div>
     </div>
-  );
+  )
 }

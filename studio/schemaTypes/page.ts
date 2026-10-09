@@ -1,133 +1,132 @@
-import { DocumentIcon } from '@sanity/icons/Document'
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
-import { EarthGlobeIcon } from '@sanity/icons/EarthGlobe'
-import { StackCompactIcon } from '@sanity/icons/StackCompact'
-import { defineField, defineType } from "sanity";
-import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
-import { fields, groups, documents, descriptions, validation } from "../dictionary";
+import {DocumentIcon} from '@sanity/icons/Document'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {EarthGlobeIcon} from '@sanity/icons/EarthGlobe'
+import {StackCompactIcon} from '@sanity/icons/StackCompact'
+import {defineField, defineType} from 'sanity'
+import {isUniqueOtherThanLanguage} from '../utils/isUniqueOtherThanLanguage'
+import {fields, groups, documents, descriptions, validation} from '../dictionary'
 
 export const page = defineType({
-  name: "page",
+  name: 'page',
   title: documents.page,
-  type: "document",
+  type: 'document',
   icon: DocumentIcon,
   groups: [
     {
-      name: "basic",
+      name: 'basic',
       title: groups.basic,
       icon: InfoOutlineIcon,
       default: true,
     },
     {
-      name: "seo",
+      name: 'seo',
       title: groups.seo,
       icon: EarthGlobeIcon,
     },
     {
-      name: "content",
+      name: 'content',
       title: groups.content,
       icon: StackCompactIcon,
     },
   ],
   fields: [
     defineField({
-      name: "language",
-      type: "string",
+      name: 'language',
+      type: 'string',
       hidden: true,
       readOnly: true,
     }),
     defineField({
-      name: "title",
+      name: 'title',
       title: fields.title,
-      type: "string",
-      validation: (rule) => 
-        rule.required().error(validation.pageTitleRequired)
-        .max(70).warning(validation.pageTitleWarning),
-      group: "basic",
+      type: 'string',
+      validation: (rule) =>
+        rule
+          .required()
+          .error(validation.pageTitleRequired)
+          .max(70)
+          .warning(validation.pageTitleWarning),
+      group: 'basic',
     }),
     defineField({
-      name: "slug",
+      name: 'slug',
       title: fields.slug,
-      type: "slug",
+      type: 'slug',
       options: {
-        source: "title",
+        source: 'title',
         maxLength: 96,
         isUnique: isUniqueOtherThanLanguage,
       },
-      validation: (rule) => 
-        rule.required().error(validation.pageSlugRequired),
-      group: "basic",
+      validation: (rule) => rule.required().error(validation.pageSlugRequired),
+      group: 'basic',
     }),
     defineField({
-      name: "description",
+      name: 'description',
       title: fields.metaDescription,
-      type: "text",
+      type: 'text',
       description: descriptions.metaDescription,
-      group: "seo",
-      validation: (rule) => 
-        rule.max(160).warning(validation.metaDescriptionWarning),
+      group: 'seo',
+      validation: (rule) => rule.max(160).warning(validation.metaDescriptionWarning),
     }),
     defineField({
-      name: "ogImage",
+      name: 'ogImage',
       title: fields.ogImage,
-      type: "image",
+      type: 'image',
       description: descriptions.ogImage,
       options: {
         hotspot: true,
       },
       fields: [
         {
-          name: "alt",
+          name: 'alt',
           title: fields.alt,
-          type: "string",
-          validation: (rule) => 
-            rule.required().error(validation.altRequired),
+          type: 'string',
+          validation: (rule) => rule.required().error(validation.altRequired),
         },
       ],
-      group: "seo",
+      group: 'seo',
     }),
     defineField({
-      name: "seo",
-      title: "SEO",
-      type: "seo",
-      group: "seo",
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
     }),
     defineField({
-      name: "pageBuilder",
+      name: 'pageBuilder',
       title: fields.pageBuilder,
-      type: "array",
+      type: 'array',
       description: descriptions.pageBuilder,
-      group: "content",
+      group: 'content',
       of: [
-        { type: "heroSection" },
-        { type: "casesSection" },
-        { type: "testimonialsSection" },
-        { type: "pricingSection" },
-        { type: "compareFeaturesSection" },
-        { type: "statsSection" },
-        { type: "ctaSection" },
-        { type: "faqSection" },
-        { type: "featureSection" },
-        { type: "blogSection" },
-        { type: "contactSection" },
-        { type: "newsletterSection" },
+        {type: 'heroSection'},
+        {type: 'casesSection'},
+        {type: 'testimonialsSection'},
+        {type: 'pricingSection'},
+        {type: 'compareFeaturesSection'},
+        {type: 'statsSection'},
+        {type: 'ctaSection'},
+        {type: 'faqSection'},
+        {type: 'featureSection'},
+        {type: 'blogSection'},
+        {type: 'contactSection'},
+        {type: 'newsletterSection'},
       ],
-      validation: (rule) => 
-        rule.min(1).error(validation.pageBuilderRequired),
+      validation: (rule) => rule.min(1).error(validation.pageBuilderRequired),
     }),
   ],
   preview: {
     select: {
-      title: "title",
-      slug: "slug.current",
-      description: "description",
+      title: 'title',
+      slug: 'slug.current',
+      description: 'description',
     },
-    prepare({ title, slug, description }) {
+    prepare({title, slug, description}) {
       return {
         title: title || descriptions.untitledPage,
-        subtitle: `/${slug || ""} - ${description || descriptions.noDescription}`,
+        subtitle: `/${slug || ''} - ${description || descriptions.noDescription}`,
         media: DocumentIcon,
-      };
+      }
     },
   },
-});
+})

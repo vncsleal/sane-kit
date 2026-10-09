@@ -1,123 +1,120 @@
-import { StarIcon } from '@sanity/icons/Star'
-import { InfoOutlineIcon } from '@sanity/icons/InfoOutline'
-import { UsersIcon } from '@sanity/icons/Users'
-import { ComponentIcon } from '@sanity/icons/Component'
-import { defineField, defineType, defineArrayMember } from "sanity";
-import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
+import {StarIcon} from '@sanity/icons/Star'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {UsersIcon} from '@sanity/icons/Users'
+import {ComponentIcon} from '@sanity/icons/Component'
+import {defineField, defineType, defineArrayMember} from 'sanity'
+import {fields, groups, documents, descriptions, validation, sanityOptions} from '../dictionary'
 
 export const testimonialsSection = defineType({
-  name: "testimonialsSection",
+  name: 'testimonialsSection',
   title: documents.testimonialsSection,
-  type: "object",
+  type: 'object',
   icon: StarIcon,
   groups: [
     {
-      name: "content",
+      name: 'content',
       title: groups.content,
       icon: InfoOutlineIcon,
       default: true,
     },
     {
-      name: "appearance",
+      name: 'appearance',
       title: groups.appearance,
       icon: ComponentIcon,
     },
     {
-      name: "quotes",
+      name: 'quotes',
       title: fields.testimonials,
       icon: UsersIcon,
     },
   ],
   fields: [
     defineField({
-      name: "variant",
+      name: 'variant',
       title: fields.variant,
-      type: "string",
-      group: "appearance",
+      type: 'string',
+      group: 'appearance',
       options: {
         list: sanityOptions.testimonialsVariants,
-        layout: "radio", 
+        layout: 'radio',
       },
-      initialValue: "carousel",
-      validation: (rule) => 
-        rule.required().error(validation.testimonialsVariantRequired),
+      initialValue: 'carousel',
+      validation: (rule) => rule.required().error(validation.testimonialsVariantRequired),
     }),
     defineField({
-      name: "heading",
+      name: 'heading',
       title: fields.heading,
-      type: "string",
-      validation: (rule) => 
-        rule.required().error(validation.testimonialsSectionTitleRequired),
-      group: "content",
+      type: 'string',
+      validation: (rule) => rule.required().error(validation.testimonialsSectionTitleRequired),
+      group: 'content',
     }),
     defineField({
-      name: "subheading",
+      name: 'subheading',
       title: fields.subheading,
-      type: "text",
+      type: 'text',
       rows: 2,
-      group: "content",
-      validation: (rule) =>
-        rule.max(160).warning(validation.testimonialsSubheadingWarning),
+      group: 'content',
+      validation: (rule) => rule.max(160).warning(validation.testimonialsSubheadingWarning),
     }),
     defineField({
-      name: "testimonials",
+      name: 'testimonials',
       title: fields.testimonials,
-      type: "array",
-      group: "quotes",
+      type: 'array',
+      group: 'quotes',
       of: [
         defineArrayMember({
-          type: "object",
-          name: "testimonial",
+          type: 'object',
+          name: 'testimonial',
           title: descriptions.defaultTestimonial,
           fields: [
             defineField({
-              name: "title",
+              name: 'title',
               title: fields.title,
-              type: "string",
+              type: 'string',
               description: descriptions.testimonialTitleDescription,
-              validation: (rule) => 
-                rule.max(100).warning(validation.featureTitleWarning),
+              validation: (rule) => rule.max(100).warning(validation.featureTitleWarning),
             }),
             defineField({
-              name: "content",
+              name: 'content',
               title: fields.content,
-              type: "text",
+              type: 'text',
               description: descriptions.testimonialContentDescription,
               rows: 3,
-              validation: (rule) => 
-                rule.required().error(validation.testimonialContentRequired)
-                .max(500).warning(validation.testimonialContentWarning),
+              validation: (rule) =>
+                rule
+                  .required()
+                  .error(validation.testimonialContentRequired)
+                  .max(500)
+                  .warning(validation.testimonialContentWarning),
             }),
             defineField({
-              name: "author",
+              name: 'author',
               title: fields.author,
-              type: "string",
+              type: 'string',
               description: descriptions.testimonialAuthorDescription,
-              validation: (rule) => 
-                rule.required().error(validation.testimonialAuthorRequired),
+              validation: (rule) => rule.required().error(validation.testimonialAuthorRequired),
             }),
             defineField({
-              name: "role",
+              name: 'role',
               title: fields.authorRole,
-              type: "string",
+              type: 'string',
               description: descriptions.testimonialRoleDescription,
-              validation: (rule) => 
-                rule.max(100).warning(validation.testimonialRoleWarning),
+              validation: (rule) => rule.max(100).warning(validation.testimonialRoleWarning),
             }),
             defineField({
-              name: "avatar",
+              name: 'avatar',
               title: fields.authorAvatar,
-              type: "image",
+              type: 'image',
               description: descriptions.testimonialAvatarDescription,
               options: {
                 hotspot: true,
               },
               fields: [
                 defineField({
-                  name: "alt",
+                  name: 'alt',
                   title: fields.alt,
-                  type: "string",
-                  validation: (rule) => 
+                  type: 'string',
+                  validation: (rule) =>
                     rule.required().error(validation.testimonialAvatarAltRequired),
                 }),
               ],
@@ -125,17 +122,19 @@ export const testimonialsSection = defineType({
           ],
           preview: {
             select: {
-              title: "title",
-              subtitle: "author",
-              media: "avatar",
-              content: "content"
+              title: 'title',
+              subtitle: 'author',
+              media: 'avatar',
+              content: 'content',
             },
-            prepare({ title, subtitle, media, content }) {
+            prepare({title, subtitle, media, content}) {
               return {
                 title: title || descriptions.noTestimonialTitle,
-                subtitle: subtitle ? `${subtitle} - ${content?.substring(0, 30)}...` : descriptions.noTestimonialAuthor,
+                subtitle: subtitle
+                  ? `${subtitle} - ${content?.substring(0, 30)}...`
+                  : descriptions.noTestimonialAuthor,
                 media: media || StarIcon,
-              };
+              }
             },
           },
         }),
@@ -145,17 +144,17 @@ export const testimonialsSection = defineType({
   ],
   preview: {
     select: {
-      title: "heading",
-      variant: "variant",
+      title: 'heading',
+      variant: 'variant',
     },
-    prepare({ title, variant }) {
-      const selectedVariant = sanityOptions.testimonialsVariants.find(v => v.value === variant);
-      const variantTitle = selectedVariant ? selectedVariant.title : variant;
+    prepare({title, variant}) {
+      const selectedVariant = sanityOptions.testimonialsVariants.find((v) => v.value === variant)
+      const variantTitle = selectedVariant ? selectedVariant.title : variant
       return {
         title: title || descriptions.defaultTestimonialsSection,
-        subtitle: `${descriptions.testimonialVariantLabel}${variantTitle || "carousel"}`,
+        subtitle: `${descriptions.testimonialVariantLabel}${variantTitle || 'carousel'}`,
         media: StarIcon,
-      };
+      }
     },
   },
-});
+})

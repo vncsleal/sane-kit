@@ -1,8 +1,8 @@
-import { createDataAttribute, type CreateDataAttributeProps } from 'next-sanity'
-import type { SanityImageSource } from '@sanity/image-url'
+import {createDataAttribute, type CreateDataAttributeProps} from 'next-sanity'
+import type {SanityImageSource} from '@sanity/image-url'
 
-import { dataset, projectId, studioUrl } from './env'
-import { urlFor } from './image'
+import {dataset, projectId, studioUrl} from './env'
+import {urlFor} from './image'
 
 /** Resolve an Open Graph image (`fit: 'crop'`), respecting hotspot. */
 export function resolveOpenGraphImage(
@@ -13,7 +13,7 @@ export function resolveOpenGraphImage(
   if (!image) return
   const url = urlFor(image).width(width).height(height).fit('crop').url()
   if (!url) return
-  return { url, alt: (image as { alt?: string })?.alt || '', width, height }
+  return {url, alt: (image as {alt?: string})?.alt || '', width, height}
 }
 
 type DataAttributeConfig = CreateDataAttributeProps &
@@ -25,5 +25,5 @@ type DataAttributeConfig = CreateDataAttributeProps &
  * https://www.sanity.io/docs/visual-editing/visual-editing-overlays
  */
 export function dataAttr(config: DataAttributeConfig) {
-  return createDataAttribute({ projectId, dataset, baseUrl: studioUrl }).combine(config).toString()
+  return createDataAttribute({projectId, dataset, baseUrl: studioUrl}).combine(config).toString()
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import { SectionHeader, SubscriptionForm } from "./shared";
+import type {ExtractPageBuilderType} from '@/sanity/page-builder'
+import {SectionHeader, SubscriptionForm} from './shared'
 
-type MinimalProps = ExtractPageBuilderType<"newsletterSection">;
+type MinimalProps = ExtractPageBuilderType<'newsletterSection'>
 
 export default function Minimal({
-  variant = "minimal",
+  variant = 'minimal',
   badgeText,
   heading,
   subheading,
@@ -17,19 +17,19 @@ export default function Minimal({
   privacyText,
 }: MinimalProps) {
   // Minimal variant has no special container styles
-  const containerStyle = "";
-  
+  const containerStyle = ''
+
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">
         <div className={`flex flex-col text-center gap-8 items-center ${containerStyle}`}>
-          <SectionHeader 
-            badgeText={badgeText} 
-            heading={heading} 
-            subheading={subheading} 
+          <SectionHeader
+            badgeText={badgeText}
+            heading={heading}
+            subheading={subheading}
             variant={variant}
           />
-          
+
           <SubscriptionForm
             inputPlaceholder={inputPlaceholder}
             buttonText={buttonText}
@@ -41,5 +41,5 @@ export default function Minimal({
         </div>
       </div>
     </div>
-  );
+  )
 }

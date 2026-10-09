@@ -1,4 +1,4 @@
-import { studioConfig } from '../config'
+import {studioConfig} from '../config'
 
 const isPortuguese = studioConfig.language === 'pt-BR'
 
@@ -30,7 +30,9 @@ export const fields = {
   layout: isPortuguese ? 'Layout' : 'Layout',
   postsPerPage: isPortuguese ? 'Posts por Página' : 'Posts per Page',
   featuredPostsCount: isPortuguese ? 'Quantidade de Posts em Destaque' : 'Featured Posts Count',
-  showOnlyFeaturedPosts: isPortuguese ? 'Exibir Somente Posts Marcados como Destaque' : 'Show Only Featured Posts',
+  showOnlyFeaturedPosts: isPortuguese
+    ? 'Exibir Somente Posts Marcados como Destaque'
+    : 'Show Only Featured Posts',
   seo: isPortuguese ? 'Configurações de SEO' : 'SEO Settings',
   metaTitle: isPortuguese ? 'Título Meta' : 'Meta Title',
   // BlogPost fields
@@ -47,11 +49,13 @@ export const fields = {
   subheading: isPortuguese ? 'Subtítulo' : 'Subheading',
   variant: isPortuguese ? 'Variante de Layout' : 'Layout Variant',
   postsToShow: isPortuguese ? 'Número de Posts a Exibir' : 'Number of Posts to Show',
-  showFeaturedPostLarge: isPortuguese ? 'Exibir Post em Destaque em Formato Grande' : 'Show Featured Post Large',
+  showFeaturedPostLarge: isPortuguese
+    ? 'Exibir Post em Destaque em Formato Grande'
+    : 'Show Featured Post Large',
   featuredPostsOnly: isPortuguese ? 'Exibir Apenas Posts em Destaque' : 'Show Only Featured Posts',
-  viewAllButton: isPortuguese ? 'Exibir Botão \'Ver Todos\'' : 'Show View All Button',
-  viewAllUrl: isPortuguese ? 'URL para \'Ver Todos\'' : 'View All URL',
-  viewAllButtonText: isPortuguese ? 'Texto do Botão \'Ver Todos\'' : 'View All Button Text',
+  viewAllButton: isPortuguese ? "Exibir Botão 'Ver Todos'" : 'Show View All Button',
+  viewAllUrl: isPortuguese ? "URL para 'Ver Todos'" : 'View All URL',
+  viewAllButtonText: isPortuguese ? "Texto do Botão 'Ver Todos'" : 'View All Button Text',
   // CasesSection fields
   cases: isPortuguese ? 'Cases de Estudo/Logos' : 'Case Studies/Logos',
   websiteUrl: isPortuguese ? 'URL do Site' : 'Website URL',
@@ -170,8 +174,7 @@ export const groups = {
   questions: isPortuguese ? 'Itens do FAQ' : 'FAQ Items',
 } as const
 
-export const sections = {
-} as const
+export const sections = {} as const
 
 export const documents = {
   author: isPortuguese ? 'Autor' : 'Author',
@@ -182,7 +185,9 @@ export const documents = {
   blogSection: isPortuguese ? 'Seção do Blog' : 'Blog Section',
   casesSection: isPortuguese ? 'Seção de Cases' : 'Cases Section',
   compareFeature: isPortuguese ? 'Comparar Característica' : 'Compare Feature',
-  compareFeaturesSection: isPortuguese ? 'Seção de Comparação de Características' : 'Compare Features Section',
+  compareFeaturesSection: isPortuguese
+    ? 'Seção de Comparação de Características'
+    : 'Compare Features Section',
   contactSection: isPortuguese ? 'Seção de Contato' : 'Contact Section',
   ctaSection: isPortuguese ? 'Seção CTA' : 'CTA Section',
   faqSection: isPortuguese ? 'Seção de FAQ' : 'FAQ Section',
