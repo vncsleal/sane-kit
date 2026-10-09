@@ -1,18 +1,34 @@
-import Link from 'next/link'
+'use client'
+
+import { useTransition } from 'react'
+import { useIsPresentationTool } from 'next-sanity/hooks'
+
+import { disableDraftMode } from '@/app/actions/draft'
 
 /**
- * Shown only inside Sanity's Presentation iframe (draft mode). A plain link to
- * the disable route — deliberately not a form/Server Action, so nothing can
- * submit it unintentionally.
+ * Floating "exit preview" button. Hidden inside the Presentation tool (the
+ * Studio controls Draft Mode there); shown only when the frontend is opened
+ * directly. Invokes a Server Action from a click handler — never a form, so
+ * nothing can submit it unintentionally.
  */
 export function DisableDraftMode() {
+  const isPresentationTool = useIsPresentationTool()
+  const [pending, startTransition] = useTransition()
+
+  if (isPresentationTool) return null
+
   return (
-    <Link
-      href="/api/draft-mode/disable"
-      prefetch={false}
-      className="fixed bottom-4 left-4 z-50 rounded-md bg-black/80 px-3 py-2 text-xs font-medium text-white shadow-lg"
+    <button
+      type="button"
+      disabled={pending}
+      onClick={() =>
+        startTransition(async () => {
+          await disableDraftMode()
+        })
+      }
+      className="fixed bottom-4 right-4 z-50 rounded-full bg-gray-900 px-4 py-2 text-sm text-white shadow-lg"
     >
       Sair do preview
-    </Link>
+    </button>
   )
 }
