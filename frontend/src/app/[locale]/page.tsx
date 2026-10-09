@@ -1,14 +1,13 @@
-import type { Page } from '@/sanity/types';
-import { client } from '@/sanity/client';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
 import RenderSection from '@/components/sections/RenderSection';
 import { dictionary } from '@/i18n/dictionaries.pt-BR';
-import type { Metadata } from 'next';
-import { HOME_PAGE_QUERY } from '@/sanity/queries';
 import { i18n, hasLocale, type Locale } from '@/i18n/i18n-config';
+import { client } from '@/sanity/client';
+import { HOME_PAGE_QUERY } from '@/sanity/queries';
 import { dataAttr, resolveOpenGraphImage } from '@/sanity/utils';
-
-
+import type { Page } from '@/sanity/types';
 
 interface PageParams {
   locale: string;
@@ -18,7 +17,7 @@ interface Props {
   params: Promise<PageParams>;
 }
 
-async function getHomePage(locale: Locale): Promise<Page | null> {
+async function getHomePage(locale: Locale) {
   return client.fetch<Page | null>(HOME_PAGE_QUERY, { language: locale });
 }
 
@@ -47,7 +46,9 @@ export default async function HomePage({ params }: Props) {
   const { locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const page = await getHomePage(locale);
+
   if (!page) notFound();
+
   return (
     <main>
       {page.pageBuilder?.map((section) => (
