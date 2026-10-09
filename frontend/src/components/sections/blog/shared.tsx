@@ -6,13 +6,10 @@ import { stegaClean } from 'next-sanity';
 import Image from "next/image";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
-import type { StegaBranded, StegaCleaned } from '@sanity/client/stega';
-import type { ExtractPageBuilderType } from "@/sanity/page-builder";
-import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
+import type { ExtractPageBuilderType, BlogSectionPost } from "@/sanity/page-builder";
 
-/** Accepts both clean and stega-branded `sanityFetch` results. */
-type StegaAware<T> = StegaCleaned<T> | StegaBranded<T>;
-export type BlogPostWithData = StegaAware<BLOG_POSTS_QUERY_RESULT[0]>;
+/** A blog post as returned by `BLOG_POSTS_QUERY`. */
+export type BlogPostWithData = BlogSectionPost;
 
 // Utility functions
 export function formatDate(dateString: string, locale: string) {

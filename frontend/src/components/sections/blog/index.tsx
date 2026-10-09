@@ -1,45 +1,33 @@
+"use client";
+
 import { stegaClean } from 'next-sanity'
 
-import type { ExtractPageBuilderType } from '@/sanity/page-builder'
+import type { BlogSectionPost, ExtractPageBuilderType } from '@/sanity/page-builder'
 import type { Locale } from '@/i18n/i18n-config'
-import { sanityFetch } from '@/sanity/live'
-import { BLOG_POSTS_QUERY } from '@/sanity/queries'
 
-import type { BlogPostWithData } from './shared'
 import Default from './default'
 import Grid from './grid'
 
 export type BlogSectionComponentProps = ExtractPageBuilderType<'blogSection'> & {
   locale: Locale
+  /** Posts resolved server-side by `resolvePageBuilderData`. */
+  posts: BlogSectionPost[]
 }
 
 /**
- * Server component: fetches the posts with `sanityFetch` and hands them to the
- * presentational variant. Mirrors the official page-builder pattern (no
- * client-side fetching).
+ * Presentational router for the blog section. The posts are resolved on the
+ * server (see `resolvePageBuilderData`) so this stays a client component the
+ * optimistic page builder can render.
  */
-export default async function BlogSectionComponent(props: BlogSectionComponentProps) {
-  const { variant = 'default', postsToShow, featuredPostsOnly = 'false', locale } = props
-  const cleanVariant = stegaClean(variant)
-  const end = postsToShow ?? (cleanVariant === 'grid' ? 6 : 3)
+export default function BlogSectionComponent(props: BlogSectionComponentProps) {
+  const { variant = 'default', ...rest } = props
 
-  const { data } = await sanityFetch({
-    query: BLOG_POSTS_QUERY,
-    params: {
-      language: locale,
-      featuredOnly: stegaClean(featuredPostsOnly) === 'true',
-      start: 0,
-      end,
-    },
-  })
-  const posts: BlogPostWithData[] = data ?? []
-
-  switch (cleanVariant) {
+  switch (stegaClean(variant)) {
     case 'grid':
-      return <Grid {...props} posts={posts} />
+      return <Grid {...rest} />
     default:
-      return <Default {...props} posts={posts} />
+      return <Default {...rest} />
   }
 }
 
-export type { BlogPostWithData }
+export type { BlogPostWithData } from './shared'

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import RenderSection from "@/components/sections/RenderSection";
+import PageBuilder from "@/components/sections/PageBuilder";
 import { getDictionary } from "@/i18n/getDictionary";
 import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
 import { sanityFetch } from "@/sanity/live";
 import { PAGE_QUERY } from "@/sanity/queries";
-import { dataAttr, resolveOpenGraphImage } from "@/sanity/utils";
+import { resolvePageBuilderData } from "@/sanity/resolve-page-builder";
+import { resolveOpenGraphImage } from "@/sanity/utils";
 
 // Define the PageParams interface specifically for params
 interface PageParams {
@@ -70,20 +71,11 @@ export default async function DynamicPage({ params }: PageProps) {
     notFound();
   }
 
+  const resolvedSections = await resolvePageBuilderData(page.pageBuilder ?? [], locale);
+
   return (
     <main>
-      {page.pageBuilder?.map((section) => (
-        <div
-          key={section._key}
-          data-sanity={dataAttr({
-            id: page._id,
-            type: 'page',
-            path: `pageBuilder[_key=="${section._key}"]`,
-          })}
-        >
-          <RenderSection section={section} locale={locale} />
-        </div>
-      ))}
+      <PageBuilder page={page} locale={locale} resolvedSections={resolvedSections} />
     </main>
   );
 }

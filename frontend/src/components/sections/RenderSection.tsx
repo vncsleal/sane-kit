@@ -1,3 +1,5 @@
+"use client";
+
 import HeroSection from "./HeroSection";
 import CasesSection from "./CasesSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -12,18 +14,22 @@ import ContactSection from "./ContactSection";
 import NewsletterSection from "./NewsletterSection";
 import { logger } from "@/lib/logger";
 import type { Locale } from "@/i18n/i18n-config";
-import type { PageBuilderSection } from "@/sanity/page-builder";
+import type { PageBuilderSection, ResolvedSectionData } from "@/sanity/page-builder";
 
 interface RenderSectionProps {
 	section: PageBuilderSection;
 	locale: Locale;
+	/** Server-resolved data for sections that reference other documents. */
+	resolved?: ResolvedSectionData;
 }
 
 /**
- * Maps a page-builder block to its section component.
- * Sections that need extra data fetch it on the server; the rest are presentational.
+ * Maps a page-builder block to its section component. Rendered inside the
+ * client `<PageBuilder>` so optimistic edits pushed from the Studio reconcile.
+ * Sections that reference other documents receive their resolved data via
+ * `resolved` (see `resolvePageBuilderData`).
  */
-export default function RenderSection({ section, locale }: RenderSectionProps) {
+export default function RenderSection({ section, locale, resolved }: RenderSectionProps) {
 	switch (section._type) {
 		case "heroSection":
 			return <HeroSection {...section} />;
@@ -34,7 +40,7 @@ export default function RenderSection({ section, locale }: RenderSectionProps) {
 		case "pricingSection":
 			return <PricingSection {...section} />;
 		case "compareFeaturesSection":
-			return <CompareFeaturesSection {...section} />;
+			return <CompareFeaturesSection {...section} features={resolved?.features ?? []} />;
 		case "statsSection":
 			return <StatsSection {...section} />;
 		case "ctaSection":
@@ -44,7 +50,7 @@ export default function RenderSection({ section, locale }: RenderSectionProps) {
 		case "featureSection":
 			return <FeatureSection {...section} />;
 		case "blogSection":
-			return <BlogSection {...section} locale={locale} />;
+			return <BlogSection {...section} locale={locale} posts={resolved?.posts ?? []} />;
 		case "contactSection":
 			return <ContactSection {...section} />;
 		case "newsletterSection":
