@@ -745,6 +745,45 @@ export type Slug = {
   source?: string
 }
 
+export type BlogPost = {
+  _id: string
+  _type: 'blogPost'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  language?: string
+  title?: string
+  slug?: Slug
+  publishedAt?: string
+  excerpt?: string
+  author?: AuthorReference
+  mainImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    caption?: string
+    _type: 'image'
+  }
+  categories?: Array<
+    {
+      _key: string
+    } & CategoryReference
+  >
+  body?: PortableText
+  featured?: boolean
+  seo?: Seo
+}
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
+}
+
 export type Author = {
   _id: string
   _type: 'author'
@@ -797,49 +836,6 @@ export type Author = {
     _key: string
   }>
   email?: string
-}
-
-export type BlogPost = {
-  _id: string
-  _type: 'blogPost'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  language?: string
-  title?: string
-  slug?: Slug
-  publishedAt?: string
-  excerpt?: string
-  authors?: Array<
-    {
-      _key: string
-    } & AuthorReference
-  >
-  mainImage?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    caption?: string
-    _type: 'image'
-  }
-  categories?: Array<
-    {
-      _key: string
-    } & CategoryReference
-  >
-  body?: PortableText
-  featured?: boolean
-  seo?: Seo
-}
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
 }
 
 export type Page = {
@@ -1065,9 +1061,9 @@ export type AllSanitySchemaTypes =
   | BlogPage
   | Category
   | Slug
-  | Author
   | BlogPost
   | Code
+  | Author
   | Page
   | CompareFeature
   | SanityImagePaletteSwatch
@@ -1838,7 +1834,7 @@ export type PAGE_QUERY_RESULT = {
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: BLOG_POST_PAGE_QUERY
-// Query: *[  _type == "blogPost"  && slug.current == $slug  && language == $language][0]{  _id,  _type,  title,  slug,  publishedAt,  excerpt,  "seo": {    "title": coalesce(seo.title, title),    "description": coalesce(seo.description, excerpt),    "image": coalesce(seo.image, mainImage),    "noIndex": seo.noIndex == "true"  },  mainImage{    asset,    hotspot,    crop,    alt,    caption  },  body,  featured,  "authors": authors[]->{    _id,    name,    slug,    avatar,    bio,    email,    role,    socialLinks[]{      _key,      platform,      url,      username    }  },  "author": authors[0]->{    _id,    name,    slug,    avatar,    bio,    email,    role,    socialLinks[]{      _key,      platform,      url,      username    }  },  "categories": categories[]->{    _id,    title,    slug,    description  },  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{    _id,    title,    slug,    language  }}
+// Query: *[  _type == "blogPost"  && slug.current == $slug  && language == $language][0]{  _id,  _type,  title,  slug,  publishedAt,  excerpt,  "seo": {    "title": coalesce(seo.title, title),    "description": coalesce(seo.description, excerpt),    "image": coalesce(seo.image, mainImage),    "noIndex": seo.noIndex == "true"  },  mainImage{    asset,    hotspot,    crop,    alt,    caption  },  body,  featured,  "author": author->{    _id,    name,    slug,    avatar,    bio,    email,    role,    socialLinks[]{      _key,      platform,      url,      username    }  },  "categories": categories[]->{    _id,    title,    slug,    description  },  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{    _id,    title,    slug,    language  }}
 export type BLOG_POST_PAGE_QUERY_RESULT = {
   _id: string
   _type: 'blogPost'
@@ -1878,27 +1874,6 @@ export type BLOG_POST_PAGE_QUERY_RESULT = {
   } | null
   body: PortableText | null
   featured: boolean | null
-  authors: Array<{
-    _id: string
-    name: string | null
-    slug: Slug | null
-    avatar: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
-    bio: string | null
-    email: string | null
-    role: string | null
-    socialLinks: Array<{
-      _key: string
-      platform: 'github' | 'instagram' | 'linkedin' | 'twitter' | 'website' | 'youtube' | null
-      url: string | null
-      username: string | null
-    }> | null
-  }> | null
   author: {
     _id: string
     name: string | null
@@ -2061,7 +2036,7 @@ export type AUTHOR_PAGE_QUERY_RESULT = Array<{
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: CATEGORY_PAGE_QUERY
-// Query: *[  _type == "category"  && slug.current == $slug  && language == $language][0]{  _id,  _type,  _createdAt,  _updatedAt,  _rev,  language,  title,  slug,  description,  "posts": *[    _type == "blogPost"    && references(^._id)    && language == $language  ] | order(publishedAt desc) {    _id,    _type,    title,    slug,    publishedAt,    excerpt,    mainImage,    featured,    "author": authors[0]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      name,      slug,      avatar,      bio,      email,      role,      language    },    "authors": authors[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      name,      slug,      avatar,      bio,      email,      role,      language    },    "categories": categories[]->{      _id,      _type,      title,      slug,      description,      language,      _createdAt,      _updatedAt,      _rev    },    _createdAt,    _updatedAt,    _rev  },  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{    _id,    title,    slug,    language  }}
+// Query: *[  _type == "category"  && slug.current == $slug  && language == $language][0]{  _id,  _type,  _createdAt,  _updatedAt,  _rev,  language,  title,  slug,  description,  "posts": *[    _type == "blogPost"    && references(^._id)    && language == $language  ] | order(publishedAt desc) {    _id,    _type,    title,    slug,    publishedAt,    excerpt,    mainImage,    featured,    "author": author->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      name,      slug,      avatar,      bio,      email,      role,      language    },    "categories": categories[]->{      _id,      _type,      title,      slug,      description,      language,      _createdAt,      _updatedAt,      _rev    },    _createdAt,    _updatedAt,    _rev  },  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{    _id,    title,    slug,    language  }}
 export type CATEGORY_PAGE_QUERY_RESULT = {
   _id: string
   _type: 'category'
@@ -2109,26 +2084,6 @@ export type CATEGORY_PAGE_QUERY_RESULT = {
       role: string | null
       language: string | null
     } | null
-    authors: Array<{
-      _id: string
-      _type: 'author'
-      _createdAt: string
-      _updatedAt: string
-      _rev: string
-      name: string | null
-      slug: Slug | null
-      avatar: {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      } | null
-      bio: string | null
-      email: string | null
-      role: string | null
-      language: string | null
-    }> | null
     categories: Array<{
       _id: string
       _type: 'category'
@@ -2169,7 +2124,7 @@ export type CATEGORY_PAGE_QUERY_RESULT = {
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: BLOG_INDEX_PAGE_QUERY
-// Query: {  "config": *[    _type == "blogPage"    && language == $language  ][0]{    _id,    _type,    title,    description,    layout,    postsPerPage,    featuredPostsCount,    showOnlyFeaturedPosts,    seo{      metaTitle,      metaDescription    }  },  "posts": *[    _type == "blogPost"    && language == $language  ] | order(publishedAt desc)[$start...$end]{    _id,    _type,    title,    slug,    publishedAt,    excerpt,    mainImage,    featured,    "author": authors[0]->{      _id,      name,      avatar    },    "categories": categories[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      slug,      description,      language    }  },  "totalPosts": count(*[_type == "blogPost" && language == $language])}
+// Query: {  "config": *[    _type == "blogPage"    && language == $language  ][0]{    _id,    _type,    title,    description,    layout,    postsPerPage,    featuredPostsCount,    showOnlyFeaturedPosts,    seo{      metaTitle,      metaDescription    }  },  "posts": *[    _type == "blogPost"    && language == $language  ] | order(publishedAt desc)[$start...$end]{    _id,    _type,    title,    slug,    publishedAt,    excerpt,    mainImage,    featured,    "author": author->{      _id,      name,      avatar    },    "categories": categories[]->{      _id,      _type,      _createdAt,      _updatedAt,      _rev,      title,      slug,      description,      language    }  },  "totalPosts": count(*[_type == "blogPost" && language == $language])}
 export type BLOG_INDEX_PAGE_QUERY_RESULT = {
   config: {
     _id: string
@@ -2329,7 +2284,7 @@ export type REDIRECTS_QUERY_RESULT = Array<{
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: BLOG_POSTS_QUERY
-// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == true)] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": authors[0]->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
+// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == true)] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": author->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
 export type BLOG_POSTS_QUERY_RESULT = Array<{
   _id: string
   title: string | null
@@ -2379,15 +2334,15 @@ declare global {
     '*[\n  _type == "footer"\n  && language == $language\n][0]{\n  _id,\n  title,\n  logo,\n  variant,\n  description,\n  address,\n  legalLinks[]{\n    title,\n    url,\n    _key\n  },\n  navigationItems[]{\n    title,\n    href,\n    description,\n    items[]{\n      title,\n      href,\n      _key\n    },\n    _key\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    language\n  }\n}': LAYOUT_FOOTER_QUERY_RESULT
     '*[\n  _type == "page"\n  && slug.current == "/"\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  description,\n  ogImage,\n  "seo": {\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, description),\n    "image": coalesce(seo.image, ogImage),\n    "noIndex": seo.noIndex == "true"\n  },\n  pageBuilder[]{\n    _key,\n    _type,\n    ...,\n    _type == "compareFeaturesSection" => {\n      ...,\n      "features": features[]{\n        "_ref": _ref,\n        "_key": _key,\n        "_type": _type\n      },\n      "plans": plans[]{\n        ...,\n        "featureValues": featureValues[]{\n          ...,\n          "featureRef": {\n            "_ref": featureRef._ref,\n            "_type": featureRef._type\n          }\n        }\n      }\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': HOME_PAGE_QUERY_RESULT
     '*[\n  _type == "page"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  description,\n  ogImage,\n  "seo": {\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, description),\n    "image": coalesce(seo.image, ogImage),\n    "noIndex": seo.noIndex == "true"\n  },\n  pageBuilder[]{\n    _key,\n    _type,\n    ...,\n    _type == "compareFeaturesSection" => {\n      ...,\n      "features": features[]{\n        "_ref": _ref,\n        "_key": _key,\n        "_type": _type\n      },\n      "plans": plans[]{\n        ...,\n        "featureValues": featureValues[]{\n          ...,\n          "featureRef": {\n            "_ref": featureRef._ref,\n            "_type": featureRef._type\n          }\n        }\n      }\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': PAGE_QUERY_RESULT
-    '*[\n  _type == "blogPost"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  "seo": {\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, excerpt),\n    "image": coalesce(seo.image, mainImage),\n    "noIndex": seo.noIndex == "true"\n  },\n  mainImage{\n    asset,\n    hotspot,\n    crop,\n    alt,\n    caption\n  },\n  body,\n  featured,\n  "authors": authors[]->{\n    _id,\n    name,\n    slug,\n    avatar,\n    bio,\n    email,\n    role,\n    socialLinks[]{\n      _key,\n      platform,\n      url,\n      username\n    }\n  },\n  "author": authors[0]->{\n    _id,\n    name,\n    slug,\n    avatar,\n    bio,\n    email,\n    role,\n    socialLinks[]{\n      _key,\n      platform,\n      url,\n      username\n    }\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug,\n    description\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': BLOG_POST_PAGE_QUERY_RESULT
+    '*[\n  _type == "blogPost"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  "seo": {\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, excerpt),\n    "image": coalesce(seo.image, mainImage),\n    "noIndex": seo.noIndex == "true"\n  },\n  mainImage{\n    asset,\n    hotspot,\n    crop,\n    alt,\n    caption\n  },\n  body,\n  featured,\n  "author": author->{\n    _id,\n    name,\n    slug,\n    avatar,\n    bio,\n    email,\n    role,\n    socialLinks[]{\n      _key,\n      platform,\n      url,\n      username\n    }\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug,\n    description\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': BLOG_POST_PAGE_QUERY_RESULT
     '*[\n  _type == "author"\n  && defined(slug.current)\n  && defined(language)\n  && ($slug == null || slug.current == $slug)\n  && ($language == null || language == $language)\n]{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  name,\n  slug,\n  role,\n  bio,\n  fullBio,\n  email,\n  avatar,\n  featuredImage,\n  language,\n  socialLinks[]{\n    _key,\n    _type,\n    platform,\n    url,\n    username\n  },\n  "posts": *[\n    _type == "blogPost"\n    && references(^._id)\n    && language == ^.language\n  ] | order(publishedAt desc) {\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    "categories": categories[]->{\n      _id,\n      _type,\n      title,\n      "slug": slug.current,\n      description,\n      language,\n      _createdAt,\n      _updatedAt,\n      _rev\n    }\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    name,\n    slug,\n    language\n  }\n}': AUTHOR_PAGE_QUERY_RESULT
-    '*[\n  _type == "category"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  language,\n  title,\n  slug,\n  description,\n  "posts": *[\n    _type == "blogPost"\n    && references(^._id)\n    && language == $language\n  ] | order(publishedAt desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": authors[0]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      name,\n      slug,\n      avatar,\n      bio,\n      email,\n      role,\n      language\n    },\n    "authors": authors[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      name,\n      slug,\n      avatar,\n      bio,\n      email,\n      role,\n      language\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      description,\n      language,\n      _createdAt,\n      _updatedAt,\n      _rev\n    },\n    _createdAt,\n    _updatedAt,\n    _rev\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': CATEGORY_PAGE_QUERY_RESULT
-    '{\n  "config": *[\n    _type == "blogPage"\n    && language == $language\n  ][0]{\n    _id,\n    _type,\n    title,\n    description,\n    layout,\n    postsPerPage,\n    featuredPostsCount,\n    showOnlyFeaturedPosts,\n    seo{\n      metaTitle,\n      metaDescription\n    }\n  },\n  "posts": *[\n    _type == "blogPost"\n    && language == $language\n  ] | order(publishedAt desc)[$start...$end]{\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": authors[0]->{\n      _id,\n      name,\n      avatar\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      slug,\n      description,\n      language\n    }\n  },\n  "totalPosts": count(*[_type == "blogPost" && language == $language])\n}': BLOG_INDEX_PAGE_QUERY_RESULT
+    '*[\n  _type == "category"\n  && slug.current == $slug\n  && language == $language\n][0]{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  language,\n  title,\n  slug,\n  description,\n  "posts": *[\n    _type == "blogPost"\n    && references(^._id)\n    && language == $language\n  ] | order(publishedAt desc) {\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": author->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      name,\n      slug,\n      avatar,\n      bio,\n      email,\n      role,\n      language\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      title,\n      slug,\n      description,\n      language,\n      _createdAt,\n      _updatedAt,\n      _rev\n    },\n    _createdAt,\n    _updatedAt,\n    _rev\n  },\n  "_translations": *[_type == "translation.metadata" && references(^._id)].translations[].value->{\n    _id,\n    title,\n    slug,\n    language\n  }\n}': CATEGORY_PAGE_QUERY_RESULT
+    '{\n  "config": *[\n    _type == "blogPage"\n    && language == $language\n  ][0]{\n    _id,\n    _type,\n    title,\n    description,\n    layout,\n    postsPerPage,\n    featuredPostsCount,\n    showOnlyFeaturedPosts,\n    seo{\n      metaTitle,\n      metaDescription\n    }\n  },\n  "posts": *[\n    _type == "blogPost"\n    && language == $language\n  ] | order(publishedAt desc)[$start...$end]{\n    _id,\n    _type,\n    title,\n    slug,\n    publishedAt,\n    excerpt,\n    mainImage,\n    featured,\n    "author": author->{\n      _id,\n      name,\n      avatar\n    },\n    "categories": categories[]->{\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      title,\n      slug,\n      description,\n      language\n    }\n  },\n  "totalPosts": count(*[_type == "blogPost" && language == $language])\n}': BLOG_INDEX_PAGE_QUERY_RESULT
     '*[\n  _type in ["page", "blogPost", "author", "category"]\n  && defined(slug.current)\n  && language == $language\n]{\n  _type,\n  _updatedAt,\n  "slug": slug.current,\n  "noIndex": seo.noIndex == "true"\n}': SITEMAP_QUERY_RESULT
     '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
     '*[\n  _type == "translation.metadata"\n  && references(*[\n    _type in ["page", "blogPost", "author", "category"]\n    && slug.current == $slug\n    && language == $currentLanguage\n  ][0]._id)\n][0]{\n  "translations": translations[]{\n    "value": value->{ _type, language, "slug": slug.current }\n  }\n}': LANGUAGE_ALTERNATES_QUERY_RESULT
     '*[\n  _type == "redirect"\n  && defined(source)\n  && defined(destination)\n]{\n  source,\n  destination,\n  permanent\n}': REDIRECTS_QUERY_RESULT
-    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == true)\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
+    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == true)\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": author->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
     '*[\n  _type == "compareFeature" && _id in $ids\n]{ _id, title }': COMPARE_FEATURES_QUERY_RESULT
   }
 }

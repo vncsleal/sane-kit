@@ -192,22 +192,7 @@ export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
   },
   body,
   featured,
-  "authors": authors[]->{
-    _id,
-    name,
-    slug,
-    avatar,
-    bio,
-    email,
-    role,
-    socialLinks[]{
-      _key,
-      platform,
-      url,
-      username
-    }
-  },
-  "author": authors[0]->{
+  "author": author->{
     _id,
     name,
     slug,
@@ -329,21 +314,7 @@ export const CATEGORY_PAGE_QUERY = defineQuery(`*[
     excerpt,
     mainImage,
     featured,
-    "author": authors[0]->{
-      _id,
-      _type,
-      _createdAt,
-      _updatedAt,
-      _rev,
-      name,
-      slug,
-      avatar,
-      bio,
-      email,
-      role,
-      language
-    },
-    "authors": authors[]->{
+    "author": author->{
       _id,
       _type,
       _createdAt,
@@ -411,7 +382,7 @@ export const BLOG_INDEX_PAGE_QUERY = defineQuery(`{
     excerpt,
     mainImage,
     featured,
-    "author": authors[0]->{
+    "author": author->{
       _id,
       name,
       avatar
@@ -492,7 +463,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`*[
   excerpt,
   mainImage,
   featured,
-  "author": authors[0]->{
+  "author": author->{
     _id,
     name,
     avatar

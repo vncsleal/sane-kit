@@ -36,7 +36,7 @@ export const fields = {
   // BlogPost fields
   publishedAt: isPortuguese ? 'Publicado em' : 'Published at',
   excerpt: isPortuguese ? 'Resumo' : 'Excerpt',
-  authors: isPortuguese ? 'Autores' : 'Authors',
+  postAuthor: isPortuguese ? 'Autor' : 'Author',
   mainImage: isPortuguese ? 'Imagem Principal' : 'Main Image',
   categories: isPortuguese ? 'Categorias' : 'Categories',
   body: isPortuguese ? 'Conteúdo' : 'Content',

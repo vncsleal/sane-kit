@@ -18,6 +18,7 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | Data fetching | **All page/layout reads go through `sanityFetch`** (home, `[slug]`, blog index/post/author/category, layout globals) so `<SanityLive />` revalidates them on content change. The plain `client` is used only for build-time/metadata outputs (`generateStaticParams`, `sitemap`, `rss.xml`, i18n alternates) |
 | Page-builder types | `sanity/page-builder.ts` derives `PageBuilderSection` / `ExtractPageBuilderType` from the **query result** (official `sanity-template-nextjs-clean` pattern) and exposes `StegaAware<T>` (clean ∪ branded). Section components are typed from the query result so `sanityFetch`'s stega-branded data flows through with no casts |
 | Optimistic editing | Official client `PageBuilder` (`components/sections/PageBuilder.tsx`) with `useOptimistic` (`next-sanity/hooks`) — Studio edits apply to the preview instantly. Referenced data (blog posts, compare-features titles) is resolved server-side (`sanity/resolve-page-builder.ts`) and passed out-of-band, since the optimistic document carries references only; `RenderSection` is a client component |
+| Schema conformance | `blogPost.featured` is a **boolean** (was a `"true"/"false"` string radio) and `blogPost.authors[]` → a single **`author`** reference. Existing content was migrated with the official `sanity migrations` CLI (`studio/migrations/featured-boolean`, `studio/migrations/single-author`), committed alongside the schema |
 | Forms | **Resend-backed** contact + newsletter Server Actions — zod validation, honeypot, file attachments, server-only Resend env; wired via `useActionState` |
 | Locales | `locale` document type as the source of truth; the Studio fetches languages from Content Lake; seed via `studio/seed/locales.ndjson` |
 | stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
@@ -34,4 +35,4 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 ## Not done
 
 - **Interactive verification** of Visual Editing click-to-edit overlays is confirmed working inside the Studio's Presentation tool (section overlays render and open the correct schema). Live Content updates are wired via `<SanityLive />` + `sanityFetch`, and Studio edits now apply optimistically via the client `PageBuilder`.
-- Deferred: schema conformance, Sanity `locale` document type, Blueprints/Functions.
+- Deferred: Blueprints/Functions (see `docs/RELEASE.md` and the upgrade plan).

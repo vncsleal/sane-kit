@@ -28,7 +28,7 @@ export const validation = {
   postSlugRequired: isPortuguese ? 'O slug do post é obrigatório.' : 'Post slug is required.',
   excerptMaxLength: isPortuguese ? 'O resumo não pode exceder 300 caracteres.' : 'Excerpt cannot exceed 300 characters.',
   excerptMinLength: isPortuguese ? 'Um resumo ideal deve ter pelo menos 50 caracteres.' : 'An ideal excerpt should have at least 50 characters.',
-  authorsRequired: isPortuguese ? 'Pelo menos um autor deve ser selecionado para o post.' : 'At least one author must be selected for the post.',
+  authorRequired: isPortuguese ? 'Um autor deve ser selecionado para o post.' : 'An author must be selected for the post.',
   altRequiredForImage: isPortuguese ? 'O texto alternativo é importante para acessibilidade. Descreva a imagem.' : 'Alt text is important for accessibility. Describe the image.',
   // BlogSection validation messages
   blogSectionTitleRequired: isPortuguese ? 'O título da seção de blog é obrigatório.' : 'Blog section title is required.',

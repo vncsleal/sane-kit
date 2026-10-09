@@ -84,15 +84,12 @@ export const blogPost = defineType({
 			group: "basic",
 		}),
 		defineField({
-			name: "authors",
-			title: fields.authors,
-			type: "array",
-			of: [defineArrayMember({ type: "reference", to: [{ type: "author" }] })],
+			name: "author",
+			title: fields.postAuthor,
+			type: "reference",
+			to: [{ type: "author" }],
 			validation: (rule) =>
-				rule
-					.required()
-					.min(1)
-					.error(validation.authorsRequired),
+				rule.required().error(validation.authorRequired),
 			group: "metadata",
 		}),
 		defineField({
@@ -151,7 +148,7 @@ export const blogPost = defineType({
 	preview: {
 		select: {
 			title: "title",
-			authorName: "authors.0.name",
+			authorName: "author.name",
 			media: "mainImage",
 			date: "publishedAt",
 		},

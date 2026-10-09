@@ -36,6 +36,13 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
   `ExtractPageBuilderType`, `StegaAware`).
 - Visual Editing overlays, Draft Mode toast, and the official disable action.
 
+### Schema conformance
+
+- `blogPost.featured` is a boolean (was a `"true"/"false"` string radio).
+- `blogPost.authors[]` → a single `author` reference.
+- Existing content migrated with the official `sanity migrations` CLI
+  (`studio/migrations/*`).
+
 ### SEO & performance
 
 - `sitemap.xml`, `robots.txt`, RSS, dynamic OG images, JSON-LD, and a reusable
