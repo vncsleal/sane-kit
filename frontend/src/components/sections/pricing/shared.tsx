@@ -2,7 +2,7 @@
 
 import { MoveRight, PhoneCall, Plus, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import type { PricingSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Icon mapping used across components
 export const IconMap = {
@@ -11,14 +11,14 @@ export const IconMap = {
   plus: Plus,
 };
 
-export type PricingSectionProps = PricingSection;
+export type PricingSectionProps = ExtractPageBuilderType<"pricingSection">;
 
 // Common section header component
 export const SectionHeader = ({ 
   badgeText, 
   heading, 
   subheading 
-}: Pick<PricingSection, 'badgeText' | 'heading' | 'subheading'>) => (
+}: Pick<ExtractPageBuilderType<"pricingSection">, 'badgeText' | 'heading' | 'subheading'>) => (
   <>
     {badgeText && <Badge>{badgeText}</Badge>}
     <div className="flex gap-2 flex-col">
@@ -38,7 +38,7 @@ export const SectionHeader = ({
 export const FeatureItem = ({ 
   feature 
 }: { 
-  feature: NonNullable<NonNullable<PricingSection['plans']>[number]['features']>[number] 
+  feature: NonNullable<NonNullable<ExtractPageBuilderType<"pricingSection">['plans']>[number]['features']>[number] 
 }) => (
   <div className="flex flex-row gap-4">
     <Check className="w-4 h-4 mt-2 text-primary" />

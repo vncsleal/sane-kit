@@ -6,17 +6,21 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { cn } from "@/lib/utils";
 import { MoveRight } from "lucide-react";
-import type { Header as SanityHeaderType } from "@/sanity/types";
+import type { LAYOUT_HEADER_QUERY_RESULT } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import { Locale } from "@/i18n/i18n-config";
 import { stegaClean, type SanityDocument } from 'next-sanity';
 import { Dictionary } from "@/i18n/getDictionary";
 
-// Updated HeaderProps to include locale, dictionary, alternatePages and make SanityHeaderType fields optional
+/** Header document as returned by `LAYOUT_HEADER_QUERY`. */
+type HeaderData = StegaAware<NonNullable<LAYOUT_HEADER_QUERY_RESULT>>;
+
+// Updated HeaderProps to include locale, dictionary, alternatePages and make HeaderData fields optional
 export type HeaderProps = {
   alternatePages?: SanityDocument[];
   locale: Locale;
   dictionary: Dictionary;
-} & Partial<Omit<SanityHeaderType, 'language'>>;
+} & Partial<HeaderData>;
 
 // Remove locale from HeaderButtonProps
 export interface HeaderButtonProps {
@@ -48,7 +52,7 @@ export function HeaderLogo({
   className,
   locale, // Add locale here
 }: {
-  logo?: SanityHeaderType["logo"]; // Kept as is, as it's part of Partial<SanityHeaderType>
+  logo?: HeaderData["logo"]; // Kept as is, as it's part of Partial<HeaderData>
   title?: string; // Kept as is
   className?: string;
   locale?: Locale; // Add locale to props type

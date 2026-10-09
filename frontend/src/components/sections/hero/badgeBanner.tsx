@@ -1,6 +1,6 @@
 "use client";
 
-import type { HeroSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { renderBackgroundMedia, ButtonsGroup } from "./shared";
 import { Badge } from "@/components/ui/badge";
 
@@ -11,7 +11,7 @@ export default function BadgeBanner({
   badgeText,
   buttons = [],
   media,
-}: HeroSection) {
+}: ExtractPageBuilderType<"heroSection">) {
   return (
     <div className="w-full relative">
       {/* Background media */}

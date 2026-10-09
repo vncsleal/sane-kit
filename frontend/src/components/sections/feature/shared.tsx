@@ -4,7 +4,7 @@ import { Check, LucideProps, User, Settings, Lock, Star, Heart, BarChart, Dollar
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Icon mapping used across multiple variants
 export const IconMap: Record<string, React.ComponentType<LucideProps>> = {
@@ -25,7 +25,7 @@ export const SectionHeader = ({
   badgeText, 
   heading, 
   subheading 
-}: Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading'>) => (
+}: Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading'>) => (
   <div className="flex gap-4 flex-col">
     {badgeText && (
       <div>
@@ -50,7 +50,7 @@ export const FeatureImage = ({
   image, 
   heading = "" 
 }: { 
-  image?: FeatureSection['image'], 
+  image?: ExtractPageBuilderType<"featureSection">['image'], 
   heading?: string 
 }) => (
   <div className="bg-muted rounded-md w-full aspect-video h-full flex-1">
@@ -71,7 +71,7 @@ export const FeatureImage = ({
 export const FeatureItem = ({ 
   feature 
 }: { 
-  feature: NonNullable<FeatureSection['features']>[number] 
+  feature: NonNullable<ExtractPageBuilderType<"featureSection">['features']>[number] 
 }) => (
   <div className="flex flex-row gap-6 items-start">
     <Check className="w-4 h-4 mt-2 text-primary" />

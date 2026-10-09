@@ -1,9 +1,9 @@
 "use client";
 
-import type { NewsletterSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, SubscriptionForm } from "./shared";
 
-type HighlightProps = NewsletterSection;
+type HighlightProps = ExtractPageBuilderType<"newsletterSection">;
 
 export default function Highlight({
   variant = "highlight",

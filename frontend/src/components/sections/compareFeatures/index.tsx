@@ -1,4 +1,4 @@
-import type { CompareFeaturesSection as CompareFeaturesSectionType } from '@/sanity/types'
+import type { ExtractPageBuilderType } from '@/sanity/page-builder'
 import { sanityFetch } from '@/sanity/live'
 import { COMPARE_FEATURES_QUERY } from '@/sanity/queries'
 
@@ -14,7 +14,9 @@ export interface CompareFeatureWithTitle {
  * Server component: resolves the referenced feature documents with `sanityFetch`
  * and hands them to the variant (no client-side fetching).
  */
-export default async function CompareFeaturesRouter(props: CompareFeaturesSectionType) {
+export default async function CompareFeaturesRouter(
+  props: ExtractPageBuilderType<'compareFeaturesSection'>
+) {
   const refs = props.features ?? []
   const ids = refs.map((feature) => feature._ref).filter((ref): ref is string => Boolean(ref))
 
@@ -32,7 +34,5 @@ export default async function CompareFeaturesRouter(props: CompareFeaturesSectio
     }
   })
 
-  return <Default {...props} features={features} isLoading={false} />
+  return <Default {...props} plans={props.plans ?? []} features={features} isLoading={false} />
 }
-
-export type { CompareFeaturesSectionType as CompareFeaturesSection }

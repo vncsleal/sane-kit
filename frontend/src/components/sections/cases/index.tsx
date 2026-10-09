@@ -1,6 +1,6 @@
 "use client";
 
-import type { CasesSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import LogoCarousel from "./logoCarousel";
 import CompactSlider from "./compactSlider";
@@ -10,7 +10,7 @@ export default function CasesSection({
 	subheading,
 	variant = "logoCarousel",
 	cases = [],
-}: CasesSection) {
+}: ExtractPageBuilderType<"casesSection">) {
 	// Prepare just the props needed for variant components
 	const variantProps = { 
 		heading, 

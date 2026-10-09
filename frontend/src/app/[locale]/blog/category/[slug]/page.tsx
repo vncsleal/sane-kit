@@ -1,10 +1,8 @@
 import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import CategoryPageUI from "@/components/blog/CategoryPageUI";
 import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
 import { getDictionary } from "@/i18n/getDictionary";
-import type {
-  CATEGORY_PAGE_QUERY_RESULT,
-} from "@/sanity/types";
 import type { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CATEGORY_PAGE_QUERY } from "@/sanity/queries";
@@ -28,8 +26,12 @@ interface PageProps {
 }
 
 // Fetch the category by slug and locale using the composite query
-async function getCategory(slug: string, locale: Locale): Promise<CATEGORY_PAGE_QUERY_RESULT | null> {
-  return client.fetch<CATEGORY_PAGE_QUERY_RESULT | null>(CATEGORY_PAGE_QUERY, { slug, language: locale });
+async function getCategory(slug: string, locale: Locale) {
+  const { data } = await sanityFetch({
+    query: CATEGORY_PAGE_QUERY,
+    params: { slug, language: locale },
+  });
+  return data;
 }
 
 export async function generateMetadata(
@@ -39,7 +41,12 @@ export async function generateMetadata(
   const { slug, locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
   const dictionary = await getDictionary(locale);
-  const result = await getCategory(slug, locale);
+  const { data: result } = await sanityFetch({
+    query: CATEGORY_PAGE_QUERY,
+    params: { slug, language: locale },
+    // Metadata must never contain stega
+    stega: false,
+  });
 
   if (!result) {
     return {

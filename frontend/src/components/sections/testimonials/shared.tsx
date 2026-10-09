@@ -2,12 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { urlFor } from "@/sanity/client";
-import type { TestimonialsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
-export type TestimonialVariantProps = Pick<TestimonialsSection, 'heading' | 'subheading' | 'testimonials'>;
+export type TestimonialVariantProps = Pick<ExtractPageBuilderType<"testimonialsSection">, 'heading' | 'subheading' | 'testimonials'>;
 
 // Common section header component
-export const SectionHeader = ({ heading, subheading }: Pick<TestimonialsSection, 'heading' | 'subheading'>) => (
+export const SectionHeader = ({ heading, subheading }: Pick<ExtractPageBuilderType<"testimonialsSection">, 'heading' | 'subheading'>) => (
   <div className="flex flex-col gap-4">
     <h2 className="text-3xl md:text-5xl tracking-tighter lg:max-w-xl font-regular text-left">
       {heading || "Confiado por milhares de empresas em todo o mundo"}
@@ -24,7 +24,7 @@ export const SectionHeader = ({ heading, subheading }: Pick<TestimonialsSection,
 export const TestimonialAuthor = ({ 
   testimonial 
 }: { 
-  testimonial: NonNullable<TestimonialsSection['testimonials']>[0]
+  testimonial: NonNullable<ExtractPageBuilderType<"testimonialsSection">['testimonials']>[0]
 }) => (
   <div className="mt-6 pt-4 flex items-center gap-3">
     <Avatar className="h-10 w-10">

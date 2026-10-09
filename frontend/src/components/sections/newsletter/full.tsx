@@ -1,9 +1,9 @@
 "use client";
 
-import type { NewsletterSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, SubscriptionForm } from "./shared";
 
-type FullProps = NewsletterSection;
+type FullProps = ExtractPageBuilderType<"newsletterSection">;
 
 export default function Full({
   variant = "full",

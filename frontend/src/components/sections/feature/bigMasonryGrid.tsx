@@ -1,11 +1,11 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, IconMap } from "./shared";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 
-type BigMasonryGridProps = Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading' | 'features'>;
+type BigMasonryGridProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'features'>;
 
 export default function BigMasonryGrid({
   badgeText,

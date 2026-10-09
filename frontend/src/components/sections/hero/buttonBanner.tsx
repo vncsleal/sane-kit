@@ -1,6 +1,6 @@
 "use client";
 
-import type { HeroSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { renderBackgroundMedia, ButtonsGroup } from "./shared";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -12,7 +12,7 @@ export default function ButtonBanner({
   bannerButton,
   buttons = [],
   media,
-}: HeroSection) {
+}: ExtractPageBuilderType<"heroSection">) {
   return (
     <div className="w-full relative">
       {/* Background media */}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { stegaClean } from "next-sanity";
 import type { HeaderProps } from ".";
 import { HeaderLogo, HeaderCTAButton, createHeaderClassName } from "./shared";
 
@@ -21,7 +22,7 @@ export default function Minimal({
   const [scrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const siteName = title;
+  const siteName = title ?? undefined;
   const headerClasses = createHeaderClassName("minimal", scrolled);
 
   return (
@@ -35,7 +36,7 @@ export default function Minimal({
         {/* RIGHT SECTION */}
         <div className="flex justify-end w-full gap-4 items-center">
           <div className="hidden lg:flex gap-4 items-center">
-            {navigationItems.map((item) => (
+            {navigationItems?.map((item) => (
               <Link
                 key={item._key}
                 href={item.href || "#"}
@@ -44,10 +45,13 @@ export default function Minimal({
                 {item.title}
               </Link>
             ))}
-            {ctaButtons.map((button) => (
+            {ctaButtons?.map((button) => (
               <HeaderCTAButton
                 key={button._key}
-                {...button}
+                _key={button._key}
+                label={button.label ?? undefined}
+                url={button.url ?? undefined}
+                variant={stegaClean(button.variant) ?? undefined}
                 locale={locale}
               />
             ))}
@@ -71,7 +75,7 @@ export default function Minimal({
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-xs">
               <nav className="flex flex-col space-y-4 mt-8">
-                {navigationItems.map((item) => (
+                {navigationItems?.map((item) => (
                   <Link
                     key={item._key}
                     href={item.href || "#"}
@@ -81,10 +85,13 @@ export default function Minimal({
                     {item.title}
                   </Link>
                 ))}
-                {ctaButtons.map((button) => (
+                {ctaButtons?.map((button) => (
                   <HeaderCTAButton
                     key={button._key}
-                    {...button}
+                    _key={button._key}
+                    label={button.label ?? undefined}
+                    url={button.url ?? undefined}
+                    variant={stegaClean(button.variant) ?? undefined}
                     locale={locale}
                     className="w-full" // Make button full width in mobile menu
                   />

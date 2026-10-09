@@ -1,12 +1,12 @@
 "use client";
 
-import type { HeroSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import ButtonBanner from "./buttonBanner";
 import BadgeBanner from "./badgeBanner";
 import GridGallery from "./gridGallery";
 
-export default function HeroSectionRouter(props: HeroSection) {
+export default function HeroSectionRouter(props: ExtractPageBuilderType<"heroSection">) {
   const { variant = "buttonBanner" } = props;
 
   // Route to the appropriate variant component
@@ -20,6 +20,3 @@ export default function HeroSectionRouter(props: HeroSection) {
       return <ButtonBanner {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { HeroSection };

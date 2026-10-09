@@ -20,14 +20,14 @@ export default function TinyFooter({
           {/* Top row - Logo and Legal Links */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="flex items-center gap-4">
-              <LogoOrSiteTitle logo={logo} title={title} className="font-medium text-sm" />
+              <LogoOrSiteTitle logo={logo} title={title ?? undefined} className="font-medium text-sm" />
               <LegalLinks links={legalLinks} variant="tiny" />
             </div>
           </div>
           
           {/* Bottom row - Copyright and Language Switcher */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 pt-2 border-t text-xs">
-            <Copyright siteTitle={title} dictionary={dictionary} />
+            <Copyright siteTitle={title ?? undefined} dictionary={dictionary} />
             <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>

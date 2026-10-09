@@ -1,10 +1,11 @@
 "use client";
 
+import { stegaClean } from 'next-sanity';
 import { MoveUpRight, MoveDownLeft } from "lucide-react";
-import type { StatsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Type for individual stat
-type Stat = NonNullable<StatsSection['stats']>[number];
+type Stat = NonNullable<ExtractPageBuilderType<"statsSection">['stats']>[number];
 
 // Color mapping for stat trends
 export const colorClasses = {
@@ -19,7 +20,7 @@ export const colorClasses = {
 export const SectionHeader = ({ 
   heading, 
   subheading 
-}: Pick<StatsSection, 'heading' | 'subheading'>) => {
+}: Pick<ExtractPageBuilderType<"statsSection">, 'heading' | 'subheading'>) => {
   if (!heading && !subheading) return null;
   
   return (
@@ -46,7 +47,7 @@ export const StatCard = ({ stat }: { stat: Stat }) => {
   const Icon = stat.trendDirection === "down" ? MoveDownLeft : MoveUpRight;
 
   // Use 'primary' as fallback if stat.color is undefined
-  const iconColor = colorClasses[stat.color || "primary"];
+  const iconColor = colorClasses[stegaClean(stat.color) || "primary"];
 
   return (
     <div

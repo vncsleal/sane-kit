@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/client";
 import type { Author, BlogPost, Category } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import { portableTextComponents } from "./PortableTextComponents";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -15,13 +16,13 @@ import type { Dictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/i18n-config";
 
 export interface ExpandedBlogPost extends Omit<BlogPost, "categories" | "author"> {
-	categories?: Category[];
-	author?: Author;
+	categories?: StegaAware<Category>[];
+	author?: StegaAware<Author>;
 }
 
 export interface AuthorPageUIProps {
-	author: Author;
-	posts: ExpandedBlogPost[];
+	author: StegaAware<Author>;
+	posts: StegaAware<ExpandedBlogPost>[];
 	dictionary: Dictionary;
 	locale: Locale; // Add locale prop
 }

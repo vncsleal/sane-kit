@@ -1,6 +1,6 @@
 import { stegaClean } from 'next-sanity'
 
-import type { BlogSection as BlogSectionType } from '@/sanity/types'
+import type { ExtractPageBuilderType } from '@/sanity/page-builder'
 import type { Locale } from '@/i18n/i18n-config'
 import { sanityFetch } from '@/sanity/live'
 import { BLOG_POSTS_QUERY } from '@/sanity/queries'
@@ -9,7 +9,7 @@ import type { BlogPostWithData } from './shared'
 import Default from './default'
 import Grid from './grid'
 
-export interface BlogSectionComponentProps extends BlogSectionType {
+export type BlogSectionComponentProps = ExtractPageBuilderType<'blogSection'> & {
   locale: Locale
 }
 
@@ -42,4 +42,4 @@ export default async function BlogSectionComponent(props: BlogSectionComponentPr
   }
 }
 
-export type { BlogSectionType as BlogSection, BlogPostWithData }
+export type { BlogPostWithData }

@@ -1,12 +1,13 @@
 "use client";
 
-import type { CtaSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
+import { stegaClean } from 'next-sanity';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { IconMap, ButtonVariant } from "./shared";
 
-type FullProps = CtaSection;
+type FullProps = ExtractPageBuilderType<"ctaSection">;
 
 export default function Full({
   badgeText,
@@ -41,9 +42,10 @@ export default function Full({
           {buttons.length > 0 && (
             <div className="flex flex-row gap-4 flex-wrap justify-center">
               {buttons.map((button) => {
+                const iconName = stegaClean(button.icon);
                 const Icon =
-                  button.icon && button.icon !== "none"
-                    ? IconMap[button.icon]
+                  iconName && iconName !== "none"
+                    ? IconMap[iconName]
                     : null;
 
                 return (

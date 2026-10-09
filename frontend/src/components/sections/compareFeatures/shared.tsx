@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import type { VariantProps } from "class-variance-authority";
 import Link from "next/link";
-import type { CompareFeaturesSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Icon mapping
 export const IconMap = {
@@ -20,7 +20,7 @@ export const SectionHeader = ({
   badgeText, 
   heading, 
   subheading 
-}: Pick<CompareFeaturesSection, 'badgeText' | 'heading' | 'subheading'>) => (
+}: Pick<ExtractPageBuilderType<"compareFeaturesSection">, 'badgeText' | 'heading' | 'subheading'>) => (
   <div className="flex text-center justify-center items-center gap-4 flex-col">
     {badgeText && <Badge>{badgeText}</Badge>}
     <div className="flex gap-2 flex-col">

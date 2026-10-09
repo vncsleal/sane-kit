@@ -1,9 +1,9 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, FeatureImage } from "./shared";
 
-type LeftImageProps = Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading' | 'image'>;
+type LeftImageProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'image'>;
 
 export default function LeftImage({
   badgeText,

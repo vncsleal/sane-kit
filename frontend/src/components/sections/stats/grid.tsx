@@ -1,13 +1,13 @@
 "use client";
 
-import type { StatsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, StatCard } from "./shared";
 
 export default function Grid({
   heading,
   subheading,
   stats = [],
-}: StatsSection) {
+}: ExtractPageBuilderType<"statsSection">) {
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">

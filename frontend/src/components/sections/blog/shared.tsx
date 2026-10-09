@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
 import type { StegaBranded, StegaCleaned } from '@sanity/client/stega';
-import type { BlogSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import type { BLOG_POSTS_QUERY_RESULT } from "@/sanity/types";
 
 /** Accepts both clean and stega-branded `sanityFetch` results. */
@@ -37,7 +37,7 @@ export function getInitials(name: string) {
 export const SectionHeader = ({
   heading = "Artigos mais recentes",
   subheading
-}: Pick<BlogSection, 'heading' | 'subheading'>) => (
+}: Pick<ExtractPageBuilderType<"blogSection">, 'heading' | 'subheading'>) => (
   <div className="flex w-full flex-col sm:flex-row sm:justify-between sm:items-center gap-8">
     <div className="flex flex-col gap-2">
       <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular">
@@ -58,7 +58,7 @@ export const ViewAllButton = ({
   viewAllUrl = "/blog",
   viewAllButtonText = "Ver todos os artigos",
   locale,
-}: Pick<BlogSection, 'viewAllButton' | 'viewAllUrl' | 'viewAllButtonText'> & { locale: string }) => {
+}: Pick<ExtractPageBuilderType<"blogSection">, 'viewAllButton' | 'viewAllUrl' | 'viewAllButtonText'> & { locale: string }) => {
   if (stegaClean(viewAllButton) !== "true") return null;
 
   const localizedUrl = `/${locale}${viewAllUrl.startsWith("/") ? viewAllUrl : `/${viewAllUrl}`}`;

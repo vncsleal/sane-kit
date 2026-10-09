@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import type { Dictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/i18n-config";
 import type { CATEGORY_PAGE_QUERY_RESULT } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import {
 	Pagination,
 	PaginationContent,
@@ -44,8 +45,8 @@ type CategoryFromQuery = NonNullable<CATEGORY_PAGE_QUERY_RESULT>;
 type PostFromQuery = CategoryFromQuery["posts"][0];
 
 interface CategoryPageUIProps {
-	category: CategoryFromQuery;
-	posts: PostFromQuery[];
+	category: StegaAware<CategoryFromQuery>;
+	posts: StegaAware<PostFromQuery>[];
 	dictionary: Dictionary;
 	locale: Locale;
 }

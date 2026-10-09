@@ -1,13 +1,13 @@
 "use client";
 
-import type { NewsletterSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import Default from "./default";
 import Highlight from "./highlight";
 import Minimal from "./minimal";
 import Full from "./full";
 
-export default function NewsletterSectionRouter(props: NewsletterSection) {
+export default function NewsletterSectionRouter(props: ExtractPageBuilderType<"newsletterSection">) {
   const { variant = "default" } = props;
 
   // Route to the appropriate variant component
@@ -23,6 +23,3 @@ export default function NewsletterSectionRouter(props: NewsletterSection) {
       return <Default {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { NewsletterSection };

@@ -1,13 +1,15 @@
 "use client";
 
-import type { CompareFeaturesSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity'
 import { SectionHeader, FeatureValueCell, PlanButton } from "./shared";
 import type { CompareFeatureWithTitle } from "./index";
 import React from "react";
 
-export interface DefaultProps extends Omit<CompareFeaturesSection, 'features'> {
+export interface DefaultProps
+  extends Omit<ExtractPageBuilderType<"compareFeaturesSection">, 'features' | 'plans'> {
   features: CompareFeatureWithTitle[];
+  plans: NonNullable<ExtractPageBuilderType<"compareFeaturesSection">['plans']>;
   isLoading: boolean;
 }
 
@@ -63,8 +65,8 @@ export default function Default({
                 <PlanButton
                   buttonText={plan.buttonText}
                   buttonUrl={plan.buttonUrl}
-                  buttonVariant={plan.buttonVariant}
-                  buttonIcon={plan.buttonIcon}
+                  buttonVariant={stegaClean(plan.buttonVariant)}
+                  buttonIcon={stegaClean(plan.buttonIcon)}
                   highlighted={stegaClean(plan.highlighted) === "true"}
                 />
               </div>

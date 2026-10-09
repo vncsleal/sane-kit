@@ -16,13 +16,13 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import type { ContactSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import type { Dictionary } from "@/i18n/getDictionary";
 import { LanguageContext } from "@/components/global/LanguageProvider";
 import { getDictionary } from "@/i18n/getDictionary";
 import { submitContactForm, type FormState } from "@/app/actions/forms";
 
-type DefaultContactProps = Pick<ContactSection, 
+type DefaultContactProps = Pick<ExtractPageBuilderType<"contactSection">, 
 	'badgeText' | 'heading' | 'description' | 'features' | 
 	'formTitle' | 'formFields' | 'buttonText' | 'buttonIcon'
 >;

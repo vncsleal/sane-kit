@@ -18,13 +18,13 @@ export default function MinimalFooter({
         <div className="flex flex-col gap-6">
           {/* Top row - Logo and Legal Links */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <LogoOrSiteTitle logo={logo} title={title} className="font-semibold text-lg" />
+            <LogoOrSiteTitle logo={logo} title={title ?? undefined} className="font-semibold text-lg" />
             <LegalLinks links={legalLinks} variant="minimal" />
           </div>
 
           {/* Bottom row - Copyright and Language Switcher */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-4 border-t border-background/10">
-            <Copyright siteTitle={title} dictionary={dictionary} />
+            <Copyright siteTitle={title ?? undefined} dictionary={dictionary} />
             <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>

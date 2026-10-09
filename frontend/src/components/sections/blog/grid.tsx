@@ -3,11 +3,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { urlFor } from '@/sanity/image'
-import type { BlogSection } from '@/sanity/types'
+import type { ExtractPageBuilderType } from "@/sanity/page-builder"
 
 import { BlogPostWithData, SectionHeader, ViewAllButton } from './shared'
 
-interface BlogSectionProps extends BlogSection {
+type BlogSectionProps = ExtractPageBuilderType<'blogSection'> & {
   locale: string
   posts: BlogPostWithData[]
 }

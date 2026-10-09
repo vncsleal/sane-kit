@@ -1,13 +1,13 @@
 "use client";
 
-import type { CtaSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import Default from "./default";
 import Highlight from "./highlight";
 import Minimal from "./minimal";
 import Full from "./full";
 
-export default function CtaSectionRouter(props: CtaSection) {
+export default function CtaSectionRouter(props: ExtractPageBuilderType<"ctaSection">) {
   const { variant = "default" } = props;
 
   // Route to the appropriate variant component
@@ -23,6 +23,3 @@ export default function CtaSectionRouter(props: CtaSection) {
       return <Default {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { CtaSection };

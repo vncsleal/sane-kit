@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { stegaClean } from "next-sanity";
 import { Button } from "@/components/ui/button";
-import type { HeroSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { urlFor } from "@/sanity/client";
 import Link from "next/link";
 import Image from "next/image";
@@ -36,7 +36,7 @@ export const IconMap = {
 type IconKey = keyof typeof IconMap;
 
 // Function to render hero media (image or video)
-export const renderBackgroundMedia = (media: HeroSection['media']) => {
+export const renderBackgroundMedia = (media: ExtractPageBuilderType<"heroSection">['media']) => {
   if (!media || stegaClean(media.type) === "placeholder") return null;
 
   if (stegaClean(media.type) === "image" && media.image) {
@@ -81,7 +81,7 @@ export const renderBackgroundMedia = (media: HeroSection['media']) => {
 // Buttons group component
 export const ButtonsGroup = ({ 
   buttons = [] 
-}: Pick<HeroSection, 'buttons'>) => {
+}: Pick<ExtractPageBuilderType<"heroSection">, 'buttons'>) => {
   if (!buttons.length) return null;
 
   return (

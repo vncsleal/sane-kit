@@ -1,13 +1,13 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { useState } from "react";
 import { GripVertical } from "lucide-react";
 
-type SlidingComparisonProps = Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading' | 'image' | 'comparisonImage'>;
+type SlidingComparisonProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'image' | 'comparisonImage'>;
 
 export default function SlidingComparison({
   badgeText,

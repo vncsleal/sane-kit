@@ -1,9 +1,9 @@
 "use client";
 
-import type { CtaSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, ButtonsGroup } from "./shared";
 
-type HighlightProps = CtaSection;
+type HighlightProps = ExtractPageBuilderType<"ctaSection">;
 
 export default function Highlight({
   variant = "highlight",

@@ -1,9 +1,9 @@
 "use client";
 
-import type { FaqSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { ContentSection, FaqAccordion } from "./shared";
 
-type SideBySideProps = FaqSection;
+type SideBySideProps = ExtractPageBuilderType<"faqSection">;
 
 export default function SideBySide({
   badgeText = "FAQ",

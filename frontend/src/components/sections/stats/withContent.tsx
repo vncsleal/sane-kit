@@ -1,6 +1,6 @@
 "use client";
 
-import type { StatsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { Badge } from "@/components/ui/badge";
 import { StatCard } from "./shared";
 
@@ -9,7 +9,7 @@ export default function WithContent({
   contentHeading,
   contentText,
   stats = [],
-}: StatsSection) {
+}: ExtractPageBuilderType<"statsSection">) {
   return (
     <div className="w-full py-20 lg:py-40">
       <div className="container mx-auto">

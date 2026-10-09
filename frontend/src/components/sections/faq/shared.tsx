@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from 'next-sanity';
 import { PhoneCall, MoveRight, Plus, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { FaqSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Icon mapping used across variants
 export const IconMap = {
@@ -30,9 +31,10 @@ export const ContentSection = ({
   buttonUrl = "#",
   buttonIcon = "phone",
   isCenter = false 
-}: Pick<FaqSection, 'badgeText' | 'heading' | 'subheading' | 'buttonText' | 'buttonUrl' | 'buttonIcon'> & { isCenter?: boolean }) => {
+}: Pick<ExtractPageBuilderType<"faqSection">, 'badgeText' | 'heading' | 'subheading' | 'buttonText' | 'buttonUrl' | 'buttonIcon'> & { isCenter?: boolean }) => {
   // Get icon component if one is specified
-  const Icon = buttonIcon && buttonIcon !== "none" ? IconMap[buttonIcon] : null;
+  const cleanIcon = stegaClean(buttonIcon);
+  const Icon = cleanIcon && cleanIcon !== "none" ? IconMap[cleanIcon] : null;
 
   return (
     <div
@@ -74,7 +76,7 @@ export const ContentSection = ({
 // Common FAQ accordion component
 export const FaqAccordion = ({ 
   faqItems = [] 
-}: Pick<FaqSection, 'faqItems'>) => (
+}: Pick<ExtractPageBuilderType<"faqSection">, 'faqItems'>) => (
   <Accordion type="single" collapsible className="w-full">
     {faqItems.map((item) => (
       <AccordionItem key={item._key} value={item._key || ""}>

@@ -1,12 +1,13 @@
-import { client, urlFor } from "@/sanity/client";
-import { notFound } from "next/navigation";
-import BlogPostPage, { type ExpandedBlogPost } from "@/components/blog/BlogPostPage";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import BlogPostPage, { type ExpandedBlogPost } from "@/components/blog/BlogPostPage";
 import { getDictionary } from "@/i18n/getDictionary";
 import { i18n, hasLocale, type Locale } from "@/i18n/i18n-config";
-import type { BLOG_POST_PAGE_QUERY_RESULT } from "@/sanity/types";
-import { BLOG_POST_PAGE_QUERY } from "@/sanity/queries";
 import { siteUrl } from "@/sanity/env";
+import { sanityFetch } from "@/sanity/live";
+import { BLOG_POST_PAGE_QUERY } from "@/sanity/queries";
+import { urlFor } from "@/sanity/image";
 import { buildBlogPostingJsonLd } from "@/lib/structured-data";
 
 interface PageParams {
@@ -18,17 +19,17 @@ interface PageProps {
   params: Promise<PageParams>;
 }
 
-// Fetch raw page data from the composite query
-async function getPageData(slug: string, locale: Locale): Promise<BLOG_POST_PAGE_QUERY_RESULT | null> {
-  return client.fetch(BLOG_POST_PAGE_QUERY, { slug, language: locale });
-}
-
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const page = await getPageData(slug, locale);
+  const { data: page } = await sanityFetch({
+    query: BLOG_POST_PAGE_QUERY,
+    params: { slug, language: locale },
+    // Metadata must never contain stega
+    stega: false,
+  });
   const dict = await getDictionary(locale);
 
   if (!page || !page.title) {
@@ -59,7 +60,10 @@ export async function generateMetadata({
 export default async function Page({ params }: PageProps) {
   const { slug, locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const page = await getPageData(slug, locale);
+  const { data: page } = await sanityFetch({
+    query: BLOG_POST_PAGE_QUERY,
+    params: { slug, language: locale },
+  });
   const dictionary = await getDictionary(locale);
 
   if (!page || !page._id || !page.title || !page.slug || !page.publishedAt || !page.author) {
@@ -73,7 +77,7 @@ export default async function Page({ params }: PageProps) {
     slug: { current: page.slug.current || "" },
     publishedAt: page.publishedAt,
     ...(page.excerpt && { excerpt: page.excerpt }),
-    ...(page.mainImage && { 
+    ...(page.mainImage && {
       mainImage: {
         asset: page.mainImage.asset || undefined,
         hotspot: page.mainImage.hotspot || undefined,

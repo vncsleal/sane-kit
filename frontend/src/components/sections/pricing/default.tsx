@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from 'next-sanity';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -66,8 +67,8 @@ export default function DefaultPricing({
                     {plan.buttonText && plan.buttonUrl && (
                       <Button
                         variant={
-                          plan.buttonVariant ||
-                          (plan.highlighted === "true" ? "default" : "outline")
+                          stegaClean(plan.buttonVariant) ||
+                          (stegaClean(plan.highlighted) === "true" ? "default" : "outline")
                         }
                         className="gap-4"
                         asChild
@@ -76,8 +77,9 @@ export default function DefaultPricing({
                           {plan.buttonText}
                           {plan.buttonIcon &&
                             (() => {
-                              const Icon = plan.buttonIcon
-                                ? IconMap[plan.buttonIcon]
+                              const cleanIcon = stegaClean(plan.buttonIcon);
+                              const Icon = cleanIcon
+                                ? IconMap[cleanIcon]
                                 : null;
                               return Icon ? <Icon className="w-4 h-4" /> : null;
                             })()}

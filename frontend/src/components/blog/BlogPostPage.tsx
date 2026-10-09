@@ -27,6 +27,7 @@ import type {
   Slug as SanitySlug // Import Slug as SanitySlug to avoid naming conflicts if any
 } from "@/sanity/types";
 import { BlogShareButton } from "./BlogShareButton";
+import type { StegaAware } from "@/sanity/page-builder";
 
 // Define the structure that represents post data after it's been fetched
 // and references have been expanded - modified to match BlogPostData
@@ -46,15 +47,15 @@ export interface ExpandedBlogPost {
 		alt?: string;
 		_type: string;
 	};
-	body?: SanityPortableText;
+	body?: StegaAware<SanityPortableText>;
 	featured?: string | boolean;
-	authors?: Author[];
-	author: Author;
+	authors?: StegaAware<Author>[];
+	author: StegaAware<Author>;
 	categories?: Array<{
 		originalReferenceId?: string;
 		i18nId?: string;
     // localized is a full Category object, but we must ensure its _id and slug are what we expect.
-		localized?: Category & { _id: string; slug: SanitySlug }; 
+		localized?: StegaAware<Category & { _id: string; slug: SanitySlug }>; 
     // Fields from the direct reference as a fallback or for non-localized scenarios
     _id: string; 
     title?: string; 

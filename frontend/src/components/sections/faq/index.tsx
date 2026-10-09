@@ -1,11 +1,11 @@
 "use client";
 
-import type { FaqSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import SideBySide from "./sideBySide";
 import Centered from "./centered";
 
-export default function FaqSectionRouter(props: FaqSection) {
+export default function FaqSectionRouter(props: ExtractPageBuilderType<"faqSection">) {
   const { variant = "sideBySide" } = props;
 
   // Route to the appropriate variant component
@@ -17,6 +17,3 @@ export default function FaqSectionRouter(props: FaqSection) {
       return <SideBySide {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { FaqSection };

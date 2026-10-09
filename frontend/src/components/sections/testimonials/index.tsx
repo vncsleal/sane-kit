@@ -1,12 +1,12 @@
 "use client";
 
-import type { TestimonialsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import Carousel from "./carousel";
 import Grid from "./grid";
 import MasonryGrid from "./masonryGrid";
 
-export default function TestimonialsSectionRouter(props: TestimonialsSection) {
+export default function TestimonialsSectionRouter(props: ExtractPageBuilderType<"testimonialsSection">) {
   const {
     variant = "carousel",
     heading,
@@ -33,6 +33,3 @@ export default function TestimonialsSectionRouter(props: TestimonialsSection) {
       return <Carousel {...variantProps} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { TestimonialsSection };

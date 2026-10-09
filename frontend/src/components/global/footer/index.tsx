@@ -1,13 +1,16 @@
 "use client";
 
-import type { Footer } from "@/sanity/types";
+import type { LAYOUT_FOOTER_QUERY_RESULT } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import SimpleFooter from "./simple";
 import MinimalFooter from "./minimal";
 import TinyFooter from "./tiny";
 import type { Dictionary } from "@/i18n/getDictionary";
 import type { Locale } from "@/i18n/i18n-config";
 
-interface FooterProps extends Footer {
+type FooterData = StegaAware<NonNullable<LAYOUT_FOOTER_QUERY_RESULT>>;
+
+type FooterProps = FooterData & {
   dictionary: Dictionary['footer'];
   locale: Locale;
   alternates?: Record<string, string>;

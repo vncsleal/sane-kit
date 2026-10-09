@@ -12,44 +12,16 @@ import ContactSection from "./ContactSection";
 import NewsletterSection from "./NewsletterSection";
 import { logger } from "@/lib/logger";
 import type { Locale } from "@/i18n/i18n-config";
-import type {
-  HeroSection as HeroSectionType,
-  CasesSection as CasesSectionType,
-  TestimonialsSection as TestimonialsSectionType,
-  PricingSection as PricingSectionType,
-  CompareFeaturesSection as CompareFeaturesSectionType,
-  StatsSection as StatsSectionType,
-  CtaSection as CTASectionType,
-  FaqSection as FAQSectionType,
-  FeatureSection as FeatureSectionType,
-  BlogSection as BlogSectionType,
-  ContactSection as ContactSectionType,
-  NewsletterSection as NewsletterSectionType
-} from "@/sanity/types";
-
-// Create a union type for all section types
-export type SectionType =
-  | HeroSectionType
-  | CasesSectionType
-  | TestimonialsSectionType
-  | PricingSectionType
-  | CompareFeaturesSectionType
-  | StatsSectionType
-  | CTASectionType
-  | FAQSectionType
-  | FeatureSectionType
-  | BlogSectionType
-  | ContactSectionType
-  | NewsletterSectionType;
+import type { PageBuilderSection } from "@/sanity/page-builder";
 
 interface RenderSectionProps {
-	section: SectionType;
+	section: PageBuilderSection;
 	locale: Locale;
 }
 
 /**
- * Server component that maps a page-builder block to its section component.
- * Sections that need data fetch it on the server; the rest are presentational.
+ * Maps a page-builder block to its section component.
+ * Sections that need extra data fetch it on the server; the rest are presentational.
  */
 export default function RenderSection({ section, locale }: RenderSectionProps) {
 	switch (section._type) {

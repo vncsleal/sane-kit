@@ -15,7 +15,8 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 | Data layer | `next-sanity` 13, `sanity/{env,client,image,live,translations}`, `defineQuery` from `next-sanity` |
 | Live / VE | `defineLive` / `sanityFetch` / `<SanityLive />`, `<VisualEditing />`, Server-Action `<DisableDraftMode />`, draft-mode + revalidate routes, `parseBody` |
 | Draft-mode UX | Aligned with Sanity's official `sanity-template-nextjs-clean`: `DraftModeToast` (sonner) gated by `useIsPresentationTool`, `disableDraftMode` action, `SanityLive onError={handleError}` CORS handling, server-only `token.ts` |
-| Data fetching | **No client-side fetching** — blog + compare-features sections are server components that fetch via `sanityFetch` and pass data to presentational children; `RenderSection` is a server component (official page-builder pattern) |
+| Data fetching | **All page/layout reads go through `sanityFetch`** (home, `[slug]`, blog index/post/author/category, layout globals) so `<SanityLive />` revalidates them on content change. Blog + compare-features sections are server components that fetch via `sanityFetch` and pass data to presentational children. The plain `client` is used only for build-time/metadata outputs (`generateStaticParams`, `sitemap`, `rss.xml`, i18n alternates) |
+| Page-builder types | `sanity/page-builder.ts` derives `PageBuilderSection` / `ExtractPageBuilderType` from the **query result** (official `sanity-template-nextjs-clean` pattern) and exposes `StegaAware<T>` (clean ∪ branded). Section components are typed from the query result so `sanityFetch`'s stega-branded data flows through with no casts; `RenderSection` is a server component |
 | Forms | **Resend-backed** contact + newsletter Server Actions — zod validation, honeypot, file attachments, server-only Resend env; wired via `useActionState` |
 | Locales | `locale` document type as the source of truth; the Studio fetches languages from Content Lake; seed via `studio/seed/locales.ndjson` |
 | stega | `stegaClean` on all string-driven page-builder branches (40 call sites) |
@@ -31,5 +32,6 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 
 ## Not done
 
-- **Interactive verification** of Visual Editing (click-to-edit overlays) and Live Content updates inside the Studio — pages render against the live dataset and the draft-mode handshake is covered by a smoke test, but the editor overlay flow needs a manual Studio session (it is a browser + Studio-iframe interaction that Sanity MCP cannot drive).
+- **Interactive verification** of Visual Editing click-to-edit overlays is confirmed working inside the Studio's Presentation tool (section overlays render and open the correct schema). Live Content updates are wired via `<SanityLive />` + `sanityFetch`; the editor overlay flow is a browser + Studio-iframe interaction that Sanity MCP cannot drive.
+- **`useOptimistic` page builder** (instant, no-round-trip edits as in `sanity-template-nextjs-clean`) is not adopted: it requires the page builder to be a client component with all section data (blog posts, compare-features) resolved server-side into the page data. Live updates currently arrive via `<SanityLive />` revalidation instead.
 - Deferred: schema conformance, Sanity `locale` document type, Blueprints/Functions.

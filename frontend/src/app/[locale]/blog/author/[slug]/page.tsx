@@ -1,4 +1,5 @@
 import { client } from "@/sanity/client";
+import { sanityFetch } from "@/sanity/live";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 // Remove unused imports Image and Slug since they're not used
@@ -61,18 +62,24 @@ interface AuthorPageQueryResult {
 }
 
 // Fetch author + posts in one shot using consolidated query
-async function getPageData(slug: string, locale: Locale): Promise<AuthorPageQueryResult | null> {
-  const results = await client.fetch<AuthorPageQueryResult[]>(AUTHOR_PAGE_QUERY, { 
-    slug, 
-    language: locale 
+async function getPageData(slug: string, locale: Locale) {
+  const { data } = await sanityFetch({
+    query: AUTHOR_PAGE_QUERY,
+    params: { slug, language: locale },
   });
-  return results?.[0] || null;
+  return data?.[0] ?? null;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, locale: rawLocale } = await params;
   const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale;
-  const page = await getPageData(slug, locale);
+  const { data } = await sanityFetch({
+    query: AUTHOR_PAGE_QUERY,
+    params: { slug, language: locale },
+    // Metadata must never contain stega
+    stega: false,
+  });
+  const page = data?.[0] ?? null;
   const dict = await getDictionary(locale);
   if (!page?.name) {
     return { title: dict.notFound.authorTitle, description: dict.notFound.authorMessage };
@@ -105,41 +112,77 @@ export default async function AuthorPage({ params }: PageProps) {
   const dictionary = await getDictionary(locale);
   if (!page) notFound();
 
-  const author: Author = {
+  const author = {
     _id: page._id,
-    _type: "author",
+    _type: "author" as const,
     _createdAt: page._createdAt,
     _updatedAt: page._updatedAt,
     _rev: page._rev,
-    name: page.name,
-    slug: { ...page.slug, _type: 'slug' },
-    role: page.role,
-    bio: page.bio,
-    fullBio: page.fullBio ? page.fullBio.filter((block): block is Exclude<typeof block, { _type: "codeBlock" } | { _type: "image" }> => 
-      block._type === "block"
-    ) : undefined,
-    email: page.email,
-    avatar: page.avatar ? { ...page.avatar, _type: 'image', asset: page.avatar.asset ? { ...page.avatar.asset, _type: 'reference'} : undefined } : undefined,
-    featuredImage: page.featuredImage ? { ...page.featuredImage, _type: 'image', asset: page.featuredImage.asset ? { ...page.featuredImage.asset, _type: 'reference'} : undefined } : undefined,
-    socialLinks: page.socialLinks as Author['socialLinks'],
+    name: page.name ?? undefined,
+    slug: { ...page.slug, _type: "slug" as const },
+    role: page.role ?? undefined,
+    bio: page.bio ?? undefined,
+    fullBio: page.fullBio
+      ? page.fullBio.filter(
+          (block): block is Exclude<typeof block, { _type: "codeBlock" } | { _type: "image" }> =>
+            block._type === "block"
+        )
+      : undefined,
+    email: page.email ?? undefined,
+    avatar: page.avatar
+      ? {
+          ...page.avatar,
+          _type: "image" as const,
+          asset: page.avatar.asset
+            ? { ...page.avatar.asset, _type: "reference" as const }
+            : undefined,
+        }
+      : undefined,
+    featuredImage: page.featuredImage
+      ? {
+          ...page.featuredImage,
+          _type: "image" as const,
+          asset: page.featuredImage.asset
+            ? { ...page.featuredImage.asset, _type: "reference" as const }
+            : undefined,
+        }
+      : undefined,
+    socialLinks: page.socialLinks?.map((link) => ({
+      ...link,
+      _type: "socialLink" as const,
+      platform: link.platform ?? undefined,
+      url: link.url ?? undefined,
+      username: link.username ?? undefined,
+    })),
   };
 
-  const posts: ExpandedBlogPost[] = (page.posts || []).map((p: PostFromAuthorQuery): ExpandedBlogPost => {
-    const categories: Category[] | undefined = p.categories?.map((c: CategoryFromAuthorQuery): Category => ({
-      ...c, // Spread all fields from CategoryFromAuthorQuery
-      slug: { _type: 'slug', current: c.slug },
+  const posts = (page.posts || []).map((p) => {
+    const categories = p.categories?.map((c) => ({
+      ...c,
+      title: c.title ?? undefined,
+      description: c.description ?? undefined,
+      language: c.language ?? undefined,
+      slug: { _type: "slug" as const, current: c.slug ?? "" },
     }));
 
     return {
       _id: p._id,
-      _type: "blogPost",
-      title: p.title,
-      slug: { _type: 'slug', current: p.slug },
-      publishedAt: p.publishedAt,
-      excerpt: p.excerpt,
-      mainImage: p.mainImage ? { ...p.mainImage, _type: 'image', asset: p.mainImage.asset ? { ...p.mainImage.asset, _type: 'reference'} : undefined } : undefined,
-      featured: p.featured ? "true" : "false", // Convert boolean to "true"|"false"
-      author, // Use the mapped author object
+      _type: "blogPost" as const,
+      title: p.title ?? undefined,
+      slug: { _type: "slug" as const, current: p.slug ?? "" },
+      publishedAt: p.publishedAt ?? undefined,
+      excerpt: p.excerpt ?? undefined,
+      mainImage: p.mainImage
+        ? {
+            ...p.mainImage,
+            _type: "image" as const,
+            asset: p.mainImage.asset
+              ? { ...p.mainImage.asset, _type: "reference" as const }
+              : undefined,
+          }
+        : undefined,
+      featured: p.featured ?? undefined,
+      author,
       categories,
       _createdAt: p._createdAt,
       _updatedAt: p._updatedAt,

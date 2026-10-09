@@ -1,9 +1,9 @@
 "use client";
 
-import type { NewsletterSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, SubscriptionForm } from "./shared";
 
-type MinimalProps = NewsletterSection;
+type MinimalProps = ExtractPageBuilderType<"newsletterSection">;
 
 export default function Minimal({
   variant = "minimal",

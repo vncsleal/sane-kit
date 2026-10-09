@@ -1,9 +1,9 @@
 "use client";
 
-import type { FaqSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { ContentSection, FaqAccordion } from "./shared";
 
-type CenteredProps = FaqSection;
+type CenteredProps = ExtractPageBuilderType<"faqSection">;
 
 export default function Centered({
   badgeText = "FAQ",

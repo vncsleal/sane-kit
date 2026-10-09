@@ -1,10 +1,10 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { Badge } from "@/components/ui/badge";
 import { FeatureItem, FeatureImage } from "./shared";
 
-type WithImageProps = Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading' | 'features' | 'image'>;
+type WithImageProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'features' | 'image'>;
 
 export default function WithImage({
   badgeText,

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MoveRight, Plus, Mail } from "lucide-react";
 import React, { useActionState } from "react";
-import type { NewsletterSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { submitNewsletterForm, type FormState } from "@/app/actions/forms";
 
 // Map of icon names to components
@@ -23,7 +23,7 @@ export const SectionHeader = ({
   heading, 
   subheading,
   variant = "default"
-}: Pick<NewsletterSection, 'badgeText' | 'heading' | 'subheading'> & { variant?: string }) => (
+}: Pick<ExtractPageBuilderType<"newsletterSection">, 'badgeText' | 'heading' | 'subheading'> & { variant?: string }) => (
   <>
     {/* Badge */}
     {badgeText && (
@@ -58,13 +58,14 @@ export const SubscriptionForm = ({
   successMessage = "Obrigado por se inscrever!",
   privacyText,
   variant = "default"
-}: Pick<NewsletterSection, 'inputPlaceholder' | 'buttonText' | 'buttonIcon' | 'successMessage' | 'privacyText' | 'variant'>) => {
+}: Pick<ExtractPageBuilderType<"newsletterSection">, 'inputPlaceholder' | 'buttonText' | 'buttonIcon' | 'successMessage' | 'privacyText' | 'variant'>) => {
   const [state, formAction, pending] = useActionState(submitNewsletterForm, {
     status: "idle",
   } as FormState);
 
   // Get icon if specified
-  const Icon = buttonIcon && buttonIcon !== "none" ? IconMap[buttonIcon] : null;
+  const cleanIcon = stegaClean(buttonIcon);
+  const Icon = cleanIcon && cleanIcon !== "none" ? IconMap[cleanIcon] : null;
 
   // Apply different styles based on variant
   const isHighlightVariant = stegaClean(variant) === "highlight";

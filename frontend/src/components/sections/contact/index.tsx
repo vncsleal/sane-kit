@@ -1,9 +1,9 @@
 "use client";
 
-import type { ContactSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import DefaultContact from "./defaultContact";
 
-export default function ContactSection(props: ContactSection) {
+export default function ContactSection(props: ExtractPageBuilderType<"contactSection">) {
 	// For now, we only have one variant, but this structure allows for 
 	// adding more variants in the future
 	

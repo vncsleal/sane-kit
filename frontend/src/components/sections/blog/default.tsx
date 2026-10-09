@@ -1,10 +1,10 @@
 import { stegaClean } from 'next-sanity'
 
-import type { BlogSection } from '@/sanity/types'
+import type { ExtractPageBuilderType } from "@/sanity/page-builder"
 
 import { BlogPostWithData, SectionHeader, ViewAllButton, BlogPostCard } from './shared'
 
-interface BlogSectionProps extends BlogSection {
+type BlogSectionProps = ExtractPageBuilderType<'blogSection'> & {
   locale: string
   posts: BlogPostWithData[]
 }

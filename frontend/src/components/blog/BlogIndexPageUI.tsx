@@ -6,6 +6,7 @@ import { urlFor } from "@/sanity/client";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { BLOG_INDEX_PAGE_QUERY_RESULT } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import type { Dictionary } from "@/i18n/getDictionary";
 import { 
   Pagination, 
@@ -46,8 +47,8 @@ interface PaginationData {
 }
 
 interface BlogIndexPageUIProps {
-  config: NonNullable<BLOG_INDEX_PAGE_QUERY_RESULT>['config'];
-  posts: BlogIndexPagePost[];
+  config: StegaAware<NonNullable<BLOG_INDEX_PAGE_QUERY_RESULT>['config']>;
+  posts: StegaAware<BlogIndexPagePost>[];
   pagination: PaginationData;
   dictionary: Dictionary['blog'];
   locale: string;

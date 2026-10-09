@@ -1,11 +1,11 @@
 "use client";
 
-import type { StatsSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import Grid from "./grid";
 import WithContent from "./withContent";
 
-export default function StatsSectionRouter(props: StatsSection) {
+export default function StatsSectionRouter(props: ExtractPageBuilderType<"statsSection">) {
   const { variant = "grid" } = props;
 
   // Route to the appropriate variant component
@@ -17,6 +17,3 @@ export default function StatsSectionRouter(props: StatsSection) {
       return <Grid {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { StatsSection };

@@ -3,8 +3,7 @@ import { headers } from 'next/headers'
 import Header from '@/components/global/Header';
 import Footer from '@/components/global/Footer';
 import { CookieConsent } from '@/components/global/CookieConsent';
-import { client } from '@/sanity/client';
-import type { Footer as SanityFooter, Header as SanityHeader } from '@/sanity/types';
+import { sanityFetch } from '@/sanity/live';
 import { LanguageProvider } from '@/components/global/LanguageProvider';
 import { getDictionary } from '@/i18n/getDictionary';
 import { i18n, hasLocale, type Locale } from '@/i18n/i18n-config';
@@ -17,10 +16,10 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-async function getGlobals(locale: Locale): Promise<{ header: SanityHeader | null; footer: SanityFooter | null }> {
-  const [header, footer] = await Promise.all([
-    client.fetch<SanityHeader | null>(LAYOUT_HEADER_QUERY, { language: locale }),
-    client.fetch<SanityFooter | null>(LAYOUT_FOOTER_QUERY, { language: locale }),
+async function getGlobals(locale: Locale) {
+  const [{ data: header }, { data: footer }] = await Promise.all([
+    sanityFetch({ query: LAYOUT_HEADER_QUERY, params: { language: locale } }),
+    sanityFetch({ query: LAYOUT_FOOTER_QUERY, params: { language: locale } }),
   ]);
   return { header, footer };
 }

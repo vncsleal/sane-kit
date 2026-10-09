@@ -5,7 +5,7 @@ import { stegaClean } from 'next-sanity'
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { CtaSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 
 // Define the button variant type to match Shadcn's Button component
 export type ButtonVariant =
@@ -30,7 +30,7 @@ export const SectionHeader = ({
   heading, 
   subheading,
   variant = "default"
-}: Pick<CtaSection, 'badgeText' | 'heading' | 'subheading'> & { variant?: string }) => (
+}: Pick<ExtractPageBuilderType<"ctaSection">, 'badgeText' | 'heading' | 'subheading'> & { variant?: string }) => (
   <>
     {/* Badge */}
     {badgeText && (
@@ -67,15 +67,16 @@ export const SectionHeader = ({
 export const ButtonsGroup = ({ 
   buttons = [], 
   variant = "default" 
-}: Pick<CtaSection, 'buttons'> & { variant?: string }) => (
+}: Pick<ExtractPageBuilderType<"ctaSection">, 'buttons'> & { variant?: string }) => (
   <>
     {buttons && buttons.length > 0 && (
       <div className="flex flex-row gap-4 flex-wrap justify-center">
         {buttons.map((button) => {
           // Map icon name to component
+          const iconName = stegaClean(button.icon);
           const Icon =
-            button.icon && button.icon !== "none"
-              ? IconMap[button.icon]
+            iconName && iconName !== "none"
+              ? IconMap[iconName]
               : null;
 
           // Adjust button variants for highlight background

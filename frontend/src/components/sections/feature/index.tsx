@@ -1,6 +1,6 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { stegaClean } from 'next-sanity';
 import SlidingComparison from "./slidingComparison";
 import CarouselFeature from "./carouselFeature";
@@ -12,7 +12,7 @@ import RightImage from "./rightImage";
 import WithImage from "./withImage";
 import Default from "./default";
 
-export default function FeatureSectionRouter(props: FeatureSection) {
+export default function FeatureSectionRouter(props: ExtractPageBuilderType<"featureSection">) {
   const { variant = "default" } = props;
 
   // Route to the appropriate variant component
@@ -38,6 +38,3 @@ export default function FeatureSectionRouter(props: FeatureSection) {
       return <Default {...props} />;
   }
 }
-
-// Re-export the main component types for convenience
-export type { FeatureSection };

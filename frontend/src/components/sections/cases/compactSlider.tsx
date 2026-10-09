@@ -7,11 +7,11 @@ import {
 	CarouselContent,
 	CarouselItem,
 } from "@/components/ui/carousel";
-import type { CasesSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { urlFor } from "@/sanity/client";
 import Image from "next/image";
 
-type CompactSliderProps = Pick<CasesSection, 'heading' | 'subheading' | 'cases'>;
+type CompactSliderProps = Pick<ExtractPageBuilderType<"casesSection">, 'heading' | 'subheading' | 'cases'>;
 
 export default function CompactSlider({
 	heading,

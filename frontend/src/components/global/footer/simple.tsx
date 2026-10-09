@@ -23,7 +23,7 @@ export default function SimpleFooter({
           <div className="flex gap-8 flex-col items-start">
             <div className="flex gap-2 flex-col">
               <div className="text-3xl md:text-5xl tracking-tighter max-w-xl font-regular text-left">
-                <LogoOrSiteTitle logo={logo} title={title} />
+                <LogoOrSiteTitle logo={logo} title={title ?? undefined} />
               </div>
               {description && (
                 <p className="text-lg max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
@@ -54,7 +54,7 @@ export default function SimpleFooter({
         {/* Copyright and Language Switcher */}
         <div className="mt-16 py-8 border-t border-background/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <Copyright siteTitle={title} dictionary={dictionary} />
+            <Copyright siteTitle={title ?? undefined} dictionary={dictionary} />
             <LanguageSwitcher variant="minimal" locale={locale} alternates={alternates} languageNames={languageNames} />
           </div>
         </div>

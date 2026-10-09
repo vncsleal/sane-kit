@@ -3,11 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
-import type { Footer } from "@/sanity/types";
+import type { LAYOUT_FOOTER_QUERY_RESULT } from "@/sanity/types";
+import type { StegaAware } from "@/sanity/page-builder";
 import type { Locale } from "@/i18n/i18n-config";
 import type { Dictionary } from "@/i18n/getDictionary";
 
-export type FooterProps = Footer & {
+/** Footer document as returned by `LAYOUT_FOOTER_QUERY`. */
+type FooterData = StegaAware<NonNullable<LAYOUT_FOOTER_QUERY_RESULT>>;
+
+export type FooterProps = FooterData & {
   dictionary: Dictionary['footer'];
   locale: Locale;
   alternates?: Record<string, string>;
@@ -20,7 +24,7 @@ export const LogoOrSiteTitle = ({
   title,
   className = "" 
 }: { 
-  logo?: Footer['logo'],
+  logo?: FooterData['logo'],
   title?: string,
   className?: string 
 }) => (
@@ -57,8 +61,8 @@ export const LegalLinks = ({
   links,
   variant = "simple"
 }: {
-  links?: Footer['legalLinks'],
-  variant?: Footer['variant']
+  links?: FooterData['legalLinks'],
+  variant?: FooterData['variant']
 }) => {
   if (!links || links.length === 0) return null;
 
@@ -103,7 +107,7 @@ export const LegalLinks = ({
 export const NavigationItems = ({ 
   items 
 }: { 
-  items?: Footer['navigationItems'] 
+  items?: FooterData['navigationItems'] 
 }) => {
   if (!items || items.length === 0) return null;
   

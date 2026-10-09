@@ -1,6 +1,6 @@
 "use client";
 
-import type { HeroSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { ButtonsGroup } from "./shared";
 import { Badge } from "@/components/ui/badge";
 import { urlFor } from "@/sanity/client";
@@ -13,7 +13,7 @@ export default function GridGallery({
   badgeText,
   buttons = [],
   media,
-}: HeroSection) {
+}: ExtractPageBuilderType<"heroSection">) {
   const additionalImages = media?.additionalImages || [];
   const mainImage = media?.type === "image" && media.image ? 1 : 0;
   const additionalImagesCount = additionalImages.length;

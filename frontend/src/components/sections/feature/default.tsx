@@ -1,9 +1,9 @@
 "use client";
 
-import type { FeatureSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, FeatureItem } from "./shared";
 
-type DefaultProps = Pick<FeatureSection, 'badgeText' | 'heading' | 'subheading' | 'features'>;
+type DefaultProps = Pick<ExtractPageBuilderType<"featureSection">, 'badgeText' | 'heading' | 'subheading' | 'features'>;
 
 export default function Default({ 
   badgeText, 

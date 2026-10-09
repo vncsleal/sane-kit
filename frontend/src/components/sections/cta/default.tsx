@@ -1,9 +1,9 @@
 "use client";
 
-import type { CtaSection } from "@/sanity/types";
+import type { ExtractPageBuilderType } from "@/sanity/page-builder";
 import { SectionHeader, ButtonsGroup } from "./shared";
 
-type DefaultProps = CtaSection;
+type DefaultProps = ExtractPageBuilderType<"ctaSection">;
 
 export default function Default({
   variant = "default",

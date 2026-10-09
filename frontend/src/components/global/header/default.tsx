@@ -8,6 +8,7 @@ import { useState } from "react";
 import { HeaderLogo, createHeaderClassName, ensureAbsoluteUrl, HeaderProps, HeaderCTAButton } from "./shared";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { stegaClean } from "next-sanity";
 
 export default function Default({
   title,
@@ -21,7 +22,7 @@ export default function Default({
 }: HeaderProps) {
   const [scrolled] = useState(false);
   
-  const siteName = title;
+  const siteName = title ?? undefined;
   const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || "Book a call today";
   const headerClasses = createHeaderClassName("default", scrolled);
 
@@ -37,7 +38,7 @@ export default function Default({
         <div className="hidden lg:flex flex-1 justify-center">
           <NavigationMenu>
             <NavigationMenuList className="flex justify-center gap-4">
-              {navigationItems.map((item) => (
+              {navigationItems?.map((item) => (
                 <NavigationMenuItem key={item._key}>
                   {item.href ? (
                     <NavigationMenuLink asChild>
@@ -64,7 +65,7 @@ export default function Default({
                               </p>
                             </div>
                             <Button size="sm" className="mt-10" asChild>
-                              <Link href={ensureAbsoluteUrl(dropdownCTAUrl, locale)}>
+                              <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
                                 {ctaLabel}
                               </Link>
                             </Button>
@@ -72,7 +73,7 @@ export default function Default({
                           <div className="flex flex-col text-sm h-full justify-end">
                             {item.items?.map((subItem) => (
                               <NavigationMenuLink
-                                href={ensureAbsoluteUrl(subItem.href, locale)}
+                                href={ensureAbsoluteUrl(subItem.href ?? undefined, locale)}
                                 key={subItem._key}
                                 className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
                               >
@@ -96,12 +97,12 @@ export default function Default({
         {/* RIGHT SECTION */}
         <div className="flex justify-end w-full gap-4 items-center">
           <div className="hidden lg:flex gap-4">
-            {ctaButtons.map((button) => (
+            {ctaButtons?.map((button) => (
               <HeaderCTAButton
                 key={button._key}
-                label={button.label}
-                url={button.url}
-                variant={button.variant}
+                label={button.label ?? undefined}
+                url={button.url ?? undefined}
+                variant={stegaClean(button.variant) ?? undefined}
                 locale={locale} 
               />
             ))}
@@ -126,7 +127,7 @@ export default function Default({
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 py-6">
-                {navigationItems.map((item) => (
+                {navigationItems?.map((item) => (
                   <div key={item._key} className="flex flex-col gap-2">
                     {item.href ? (
                       <Link
@@ -153,7 +154,7 @@ export default function Default({
                     {item.items?.map((subItem) => (
                       <Link
                         key={subItem._key}
-                        href={ensureAbsoluteUrl(subItem.href, locale)}
+                        href={ensureAbsoluteUrl(subItem.href ?? undefined, locale)}
                         className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
                       >
                         <span>
@@ -165,12 +166,12 @@ export default function Default({
                   </div>
                 ))}
                 <div className="mt-6 flex flex-col gap-3 border-t pt-6">
-                  {ctaButtons.map((button) => (
+                  {ctaButtons?.map((button) => (
                     <HeaderCTAButton
                       key={button._key}
-                      label={button.label}
-                      url={button.url}
-                      variant={button.variant}
+                      label={button.label ?? undefined}
+                      url={button.url ?? undefined}
+                      variant={stegaClean(button.variant) ?? undefined}
                       locale={locale}
                     />
                   ))}

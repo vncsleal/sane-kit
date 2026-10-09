@@ -23,7 +23,7 @@ export default function Transparent({
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const siteName = title;
+  const siteName = title ?? undefined;
   const ctaLabel = dropdownCTALabel || dictionary?.header?.dropdownCTALabel || "Book a call today";
   
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Transparent({
         <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
           <NavigationMenu className="flex justify-start items-start">
             <NavigationMenuList className="flex justify-start gap-4 flex-row">
-              {navigationItems.map((item) => {
+              {navigationItems?.map((item) => {
                 const navTitle = item.title;
                 return (
                   <NavigationMenuItem key={item._key}>
@@ -76,7 +76,7 @@ export default function Transparent({
                                 </p>
                               </div>
                               <Button size="sm" className="mt-10" asChild>
-                                <Link href={ensureAbsoluteUrl(dropdownCTAUrl, locale)}>
+                                <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
                                   {ctaLabel}
                                 </Link>
                               </Button>
@@ -84,7 +84,7 @@ export default function Transparent({
                             <div className="flex flex-col text-sm h-full justify-end">
                               {item.items?.map((subItem) => (
                                 <NavigationMenuLink
-                                  href={ensureAbsoluteUrl(subItem.href, locale)}
+                                  href={ensureAbsoluteUrl(subItem.href ?? undefined, locale)}
                                   key={subItem._key}
                                   className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded"
                                 >
@@ -121,17 +121,17 @@ export default function Transparent({
         {/* RIGHT COLUMN */}
         <div className="flex justify-end w-full gap-4 items-center">
           <div className="hidden lg:flex gap-4">
-            {ctaButtons.map((button) => (
+            {ctaButtons?.map((button) => (
               <Button
                 key={button._key}
-                variant={button.variant || "default"}
+                variant={stegaClean(button.variant) || "default"}
                 className={cn({
                   "bg-white text-primary hover:bg-white/90": !scrolled && stegaClean(button.variant) === "default",
                   "border-white text-white hover:bg-white/10 hover:text-white": !scrolled && stegaClean(button.variant) === "outline",
                 })}
                 asChild
               >
-                <Link href={ensureAbsoluteUrl(button.url, locale)}>
+                <Link href={ensureAbsoluteUrl(button.url ?? undefined, locale)}>
                   {button.label}
                 </Link>
               </Button>
@@ -163,7 +163,7 @@ export default function Transparent({
                 </SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 py-6">
-                {navigationItems.map((item) => (
+                {navigationItems?.map((item) => (
                   <div key={item._key} className="flex flex-col gap-2">
                     {item.href ? (
                       <Link
@@ -191,7 +191,7 @@ export default function Transparent({
                     {item.items?.map((subItem) => (
                       <Link
                         key={subItem._key}
-                        href={ensureAbsoluteUrl(subItem.href, locale)}
+                        href={ensureAbsoluteUrl(subItem.href ?? undefined, locale)}
                         className="ml-3 flex justify-between items-center py-1 text-muted-foreground hover:text-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -204,15 +204,15 @@ export default function Transparent({
                   </div>
                 ))}
                 <div className="mt-6 flex flex-col gap-3 border-t pt-6">
-                  {ctaButtons.map((button) => (
+                  {ctaButtons?.map((button) => (
                     <Button
                       key={button._key}
-                      variant={button.variant || "default"}
+                      variant={stegaClean(button.variant) || "default"}
                       asChild
                       className="w-full"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Link href={ensureAbsoluteUrl(button.url, locale)}>
+                      <Link href={ensureAbsoluteUrl(button.url ?? undefined, locale)}>
                         {button.label}
                       </Link>
                     </Button>
