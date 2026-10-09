@@ -1,15 +1,16 @@
 import { defineLive } from 'next-sanity/live'
 
 import { client } from './client'
-import { readToken } from './env.server'
+import { token } from './token'
 
 /**
- * Live Content API binding. `sanityFetch` returns `{ data, ... }` and handles
- * caching, revalidation, stega and draft/published perspectives automatically.
- * `SanityLive` streams content updates into the UI.
+ * Automatic revalidation and refreshing of fetched content.
+ * https://github.com/sanity-io/next-sanity#1-configure-definelive
  */
 export const { sanityFetch, SanityLive } = defineLive({
   client,
-  serverToken: readToken ?? false,
-  browserToken: readToken ?? false,
+  // Required for showing draft content when the Presentation Tool is used.
+  serverToken: token,
+  // Only shared to the browser during a valid Next.js Draft Mode session.
+  browserToken: token,
 })

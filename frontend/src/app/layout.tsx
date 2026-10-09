@@ -9,7 +9,8 @@ import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/global/ThemeProvider'
 import { ThemeToggle } from '@/components/global/ThemeToggle'
 import { PostHogProvider } from '@/components/PostHogProvider'
-import { DisableDraftMode } from '@/components/global/DisableDraftMode'
+import DraftModeToast from '@/components/global/DraftModeToast'
+import { handleError } from '@/app/client-utils'
 import { SanityLive } from '@/sanity/live'
 import { env } from '@/sanity/env'
 import { buildOrganizationJsonLd } from '@/lib/structured-data'
@@ -57,11 +58,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <ThemeToggle />
             </div>
             <Toaster position="top-center" />
-            <SanityLive />
+            <SanityLive onError={handleError} />
             {isEnabled && (
               <>
+                <DraftModeToast />
                 <VisualEditing />
-                <DisableDraftMode />
               </>
             )}
           </ThemeProvider>

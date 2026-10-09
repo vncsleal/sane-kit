@@ -1,11 +1,11 @@
 'use server'
 
 import { draftMode } from 'next/headers'
-import { redirect } from 'next/navigation'
 
-/** Leave Sanity preview mode. Invoked from the <DisableDraftMode /> button. */
 export async function disableDraftMode() {
-  const draft = await draftMode()
-  draft.disable()
-  redirect('/')
+  await Promise.allSettled([
+    (await draftMode()).disable(),
+    // Simulate a delay to show the loading state
+    new Promise((resolve) => setTimeout(resolve, 1000)),
+  ])
 }
