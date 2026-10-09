@@ -2,7 +2,6 @@ import {
   defineBlueprint,
   defineCorsOrigin,
   defineDocumentFunction,
-  defineDocumentWebhook,
   type BlueprintResource,
 } from '@sanity/blueprints'
 
@@ -14,23 +13,21 @@ import {
  *
  *   - CORS origins for the frontend (`:3000`) and Studio (`:3333`) dev servers,
  *     with credentials so Draft Mode and click-to-edit work.
- *   - A GROQ-powered webhook that calls the frontend's `/api/revalidate` route
- *     for on-demand (tag) revalidation. Only declared when `SANITY_SITE_URL`
- *     points at a publicly reachable site — a webhook cannot call `localhost`.
+ *   - An illustrative Sanity Function (see `functions/derive-excerpt`).
+ *
+ * On-demand revalidation is handled by `<SanityLive />` (the Live Content API),
+ * not a webhook — see `frontend/src/app/layout.tsx`.
  *
  * Configure with environment variables, then deploy:
  *
- *   SANITY_PROJECT_ID=… SANITY_DATASET=production SANITY_SITE_URL=https://… \
- *     SANITY_REVALIDATE_SECRET=… pnpm blueprint:deploy
+ *   SANITY_PROJECT_ID=… SANITY_DATASET=production pnpm blueprint:deploy
  *
  * See `docs/RELEASE.md`. Deploying requires a role with the
- * `sanity-project-cors` / `sanity-project-webhooks` permissions.
+ * `sanity-project-cors` permission.
  */
 
 const projectId = process.env.SANITY_PROJECT_ID ?? process.env.SANITY_STUDIO_PROJECT_ID
 const dataset = process.env.SANITY_DATASET ?? process.env.SANITY_STUDIO_DATASET ?? 'production'
-const siteUrl = process.env.SANITY_SITE_URL?.replace(/\/+$/, '')
-const revalidateSecret = process.env.SANITY_REVALIDATE_SECRET
 
 if (!projectId) {
   throw new Error('SANITY_PROJECT_ID is required to deploy the blueprint (see docs/RELEASE.md).')
@@ -62,23 +59,6 @@ const resources: BlueprintResource[] = [
     },
   }),
 ]
-
-if (siteUrl && !/localhost|127\.0\.0\.1/.test(siteUrl)) {
-  resources.push(
-    defineDocumentWebhook({
-      name: 'revalidate',
-      project: '$.values.projectId',
-      dataset: '$.values.dataset',
-      apiVersion: 'v2025-02-19',
-      url: `${siteUrl}/api/revalidate`,
-      on: ['create', 'update', 'delete'],
-      filter:
-        '_type in ["page", "blogPost", "blogPage", "author", "category", "header", "footer", "redirect", "locale"]',
-      projection: '{ "tags": [_type, _type + ":" + slug.current] }',
-      ...(revalidateSecret ? {secret: revalidateSecret} : {}),
-    }),
-  )
-}
 
 export default defineBlueprint({
   values: {projectId, dataset},

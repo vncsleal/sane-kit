@@ -79,9 +79,9 @@ In short, it requires:
 ## Project setup as code (Blueprints)
 
 `sanity.blueprint.ts` (repo root) declares the resources a project needs — the
-frontend/Studio CORS origins and the `/api/revalidate` webhook — so a fresh
-project is configured from code instead of dashboard clicks. It is validated in
-CI via `pnpm typecheck:blueprint`, and the illustrative Sanity Function in
+frontend/Studio CORS origins — so a fresh project is configured from code
+instead of dashboard clicks. It is validated in CI via
+`pnpm typecheck:blueprint`, and the illustrative Sanity Function in
 `functions/derive-excerpt` is deployed with it.
 
 One-time, per project:
@@ -94,18 +94,12 @@ pnpm exec sanity blueprints init . --type ts --project-id <project-id> --stack-n
 Then preview and apply:
 
 ```bash
-SANITY_PROJECT_ID=<id> \
-SANITY_SITE_URL=https://your-site.example \
-SANITY_REVALIDATE_SECRET=<secret> \
-  pnpm blueprint:plan
-
-# …then the same env with:
-pnpm blueprint:deploy
+SANITY_PROJECT_ID=<id> pnpm blueprint:plan
+SANITY_PROJECT_ID=<id> pnpm blueprint:deploy
 ```
 
-This replaces the manual "add CORS origins" and "create a webhook" steps. The
-webhook is only declared when `SANITY_SITE_URL` is a publicly reachable URL (a
-webhook cannot call `localhost`).
+This replaces the manual "add CORS origins" step. On-demand revalidation is
+handled by `<SanityLive />`, so no webhook is declared.
 
 ## Post-release
 

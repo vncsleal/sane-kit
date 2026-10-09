@@ -2,6 +2,15 @@ name: Validate
 
 on: push
 
+env:
+  # Public, non-secret Sanity config used by `next build` and the E2E suite.
+  # Set these as repository *variables* (Settings → Secrets and variables → Actions → Variables).
+  NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+  NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+  NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+  SANITY_STUDIO_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+  SANITY_STUDIO_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -17,7 +26,28 @@ jobs:
       - run: pnpm typecheck:blueprint
       - run: pnpm lint
       - run: pnpm format:check
+      - run: pnpm build
       - run: pnpm test
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter frontend exec playwright install --with-deps chromium
+      # Builds and starts the production server (see playwright.config.ts).
+      - run: pnpm --filter frontend test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 7
 
   template:
     runs-on: ubuntu-latest

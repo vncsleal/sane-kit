@@ -27,7 +27,7 @@ customizable Studio. Built on the 2026 stack.
 - **Live Content API** (`defineLive` / `<SanityLive />`) — published changes appear without a redeploy.
 - **Visual Editing + Presentation** — click-to-edit overlays and draft preview, with block-level updates.
 - **Document internationalization** (English / Portuguese) via the official Sanity plugin.
-- **Live Content & revalidation** — `<SanityLive />` streams published changes without a redeploy; a Sanity webhook (declared in `sanity.blueprint.ts`) drives tag-based revalidation.
+- **Live Content & revalidation** — `<SanityLive />` streams published changes and revalidates cached content without a redeploy.
 - **SEO** — `sitemap.xml`, `robots.txt`, RSS feed, Open Graph metadata.
 - **Analytics** — GA4 via `@next/third-parties`, PostHog, both consent-gated.
 
@@ -39,7 +39,7 @@ sane-kit/
 │   └── src/sanity/   # env, client, live, image, queries, generated types
 ├── studio/     # Sanity Studio (schemas, structure, presentation resolver)
 ├── functions/  # Sanity Functions (deployed via the Blueprint)
-├── sanity.blueprint.ts   # project setup as code (CORS, webhook, functions)
+├── sanity.blueprint.ts   # project setup as code (CORS, functions)
 ├── turbo.json
 └── pnpm-workspace.yaml
 ```
@@ -70,7 +70,6 @@ pnpm dev
 | `NEXT_PUBLIC_SANITY_STUDIO_URL`     | no           | Studio URL for click-to-edit (default `http://localhost:3333`) |
 | `NEXT_PUBLIC_SITE_URL`              | no           | Canonical site URL (sitemap, RSS, OG)                          |
 | `SANITY_API_READ_TOKEN`             | for previews | Viewer token — enables Draft Mode + Live Content               |
-| `SANITY_REVALIDATE_SECRET`          | for webhooks | Shared secret for `/api/revalidate`                            |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`     | no           | Google Analytics 4                                             |
 | `NEXT_PUBLIC_POSTHOG_KEY` / `_HOST` | no           | PostHog                                                        |
 | `RESEND_API_KEY`                    | for forms    | Resend API key (contact + newsletter forms)                    |
@@ -100,7 +99,7 @@ pnpm lint         # eslint across workspaces
 pnpm test         # Vitest unit tests
 pnpm test:e2e     # Playwright smoke tests (builds + starts the production server)
 pnpm typegen      # extract schema + regenerate frontend/src/sanity/types.ts
-pnpm blueprint:plan    # preview Blueprint changes (CORS, webhook, functions)
+pnpm blueprint:plan    # preview Blueprint changes (CORS, functions)
 pnpm blueprint:deploy  # apply the Blueprint to your Sanity project
 pnpm verify       # typecheck + typecheck:blueprint + lint + build + test
 ```
@@ -123,23 +122,11 @@ Types are generated from the Studio schema and the GROQ queries in
 3. Open the **Presentation** tool in the Studio — the site loads in an iframe
    with click-to-edit overlays.
 
-## On-demand revalidation
+## Live updates
 
-Create a Sanity webhook pointing at `https://your-site/api/revalidate` with the
-secret set to `SANITY_REVALIDATE_SECRET`, and a projection that returns the
-tags to invalidate, e.g.:
-
-```json
-{ "tags": [_type, _type + ":" + slug.current] }
-```
-
-Or declare it in code with Blueprints (`sanity.blueprint.ts` at the repo root,
-which also sets up CORS) — see [`docs/RELEASE.md`](./docs/RELEASE.md):
-
-```bash
-pnpm blueprint:plan
-pnpm blueprint:deploy
-```
+On-demand revalidation is handled by the **Live Content API**: `<SanityLive />`
+(in `app/[locale]/layout.tsx`) subscribes to content changes and revalidates the
+cache tags `sanityFetch` produces — no webhook required.
 
 ## Redirects
 

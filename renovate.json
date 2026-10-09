@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits"],
+  "timezone": "America/Sao_Paulo",
+  "schedule": ["before 8am on monday"],
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Group non-major bumps into a single PR",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "non-major dependencies"
+    },
+    {
+      "description": "Keep the framework stack in lockstep",
+      "matchPackageNames": ["next", "react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "next + react"
+    },
+    {
+      "description": "Keep the Sanity stack in lockstep",
+      "matchPackageNames": ["sanity", "next-sanity", "@sanity/**"],
+      "groupName": "sanity"
+    },
+    {
+      "description": "Major bumps get reviewed individually",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["major"],
+      "dependencyDashboardApproval": true
+    }
+  ]
+}

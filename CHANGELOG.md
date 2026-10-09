@@ -65,8 +65,8 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 ### Project setup (Blueprints + Functions)
 
-- `sanity.blueprint.ts` declares the CORS origins and the `/api/revalidate`
-  webhook as code, deployed with `pnpm blueprint:deploy`.
+- `sanity.blueprint.ts` declares the CORS origins as code, deployed with
+  `pnpm blueprint:deploy`. On-demand revalidation is handled by `<SanityLive />`.
 - An illustrative Sanity Function (`functions/derive-excerpt`) fills an empty
   blog post excerpt from the body on publish.
 
