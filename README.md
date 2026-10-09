@@ -1,7 +1,17 @@
 # Sane-Kit
 
+[![Next.js](https://img.shields.io/badge/Next.js-20232A?style=for-the-badge&logo=Next.js)](https://nextjs.org/) [![Sanity](https://img.shields.io/badge/Sanity-20232A?style=for-the-badge&logo=sanity&logoColor=F97316)](https://www.sanity.io/) [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-20232A?style=for-the-badge&logo=tailwindcss&logoColor=319795)](https://tailwindcss.com/) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-20232A?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/)
+
 A Sanity + Next.js starter kit: a monorepo with a page-builder frontend and a
 customizable Studio. Built on the 2026 stack.
+
+<!-- Add a 1200×750 screenshot (Sanity Exchange requirement) and uncomment:
+![Sane-Kit Studio using Presentation tool to do Visual Editing](./docs/preview.png)
+-->
+
+> **2026 release.** Upgraded to Next.js 16 · React 19 · Sanity 6 · next-sanity 13,
+> with `sanityFetch` live content and an optimistic page builder. See
+> [`CHANGELOG.md`](./CHANGELOG.md) and [`docs/RELEASE.md`](./docs/RELEASE.md).
 
 | | |
 | --- | --- |
