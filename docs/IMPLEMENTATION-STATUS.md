@@ -36,4 +36,4 @@ Plan: [`UPGRADE-PLAN.md`](./UPGRADE-PLAN.md).
 ## Not done
 
 - **Interactive verification** of Visual Editing click-to-edit overlays is confirmed working inside the Studio's Presentation tool (section overlays render and open the correct schema). Live Content updates are wired via `<SanityLive />` + `sanityFetch`, and Studio edits now apply optimistically via the client `PageBuilder`.
-- Deferred: organization-scoped Blueprint features (e.g. scheduled functions), Base UI / React Aria migration, and Cache Components.
+- Deferred: **Cache Components** ([`docs/CACHE-COMPONENTS.md`](./CACHE-COMPONENTS.md) — a whole-app pass), organization-scoped Blueprint features (e.g. scheduled functions), and the Base UI / React Aria migration.
