@@ -48,7 +48,7 @@ export interface ExpandedBlogPost {
 		_type: string;
 	};
 	body?: StegaAware<SanityPortableText>;
-	featured?: string | boolean;
+	featured?: boolean;
 	authors?: StegaAware<Author>[];
 	author: StegaAware<Author>;
 	categories?: Array<{

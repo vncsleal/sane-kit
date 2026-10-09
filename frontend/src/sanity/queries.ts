@@ -483,7 +483,7 @@ export const REDIRECTS_QUERY = defineQuery(`*[
 export const BLOG_POSTS_QUERY = defineQuery(`*[
   _type == "blogPost"
   && language == $language
-  && ($featuredOnly == false || featured == "true")
+  && ($featuredOnly == false || featured == true)
 ] | order(publishedAt desc)[$start...$end]{
   _id,
   title,

@@ -5427,17 +5427,7 @@
       "featured": {
         "type": "objectAttribute",
         "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "true"
-            },
-            {
-              "type": "string",
-              "value": "false"
-            }
-          ]
+          "type": "boolean"
         },
         "optional": true
       },

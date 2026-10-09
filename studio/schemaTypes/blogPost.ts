@@ -4,7 +4,7 @@ import { ImageIcon } from '@sanity/icons/Image'
 import { TagIcon } from '@sanity/icons/Tag'
 import { defineField, defineType, defineArrayMember } from "sanity";
 import { isUniqueOtherThanLanguage } from "../utils/isUniqueOtherThanLanguage";
-import { fields, groups, documents, descriptions, validation, sanityOptions } from "../dictionary";
+import { fields, groups, documents, descriptions, validation } from "../dictionary";
 
 // Define field groups
 const blogPostGroups = [
@@ -136,13 +136,9 @@ export const blogPost = defineType({
 		defineField({
 			name: "featured",
 			title: fields.featured,
-			type: "string",
+			type: "boolean",
 			description: descriptions.featuredPost,
-			initialValue: "false",
-			options: {
-				list: sanityOptions.yesNo,
-				layout: "radio",
-			},
+			initialValue: false,
 			group: "metadata",
 		}),
 		defineField({

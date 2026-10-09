@@ -830,7 +830,7 @@ export type BlogPost = {
     } & CategoryReference
   >
   body?: PortableText
-  featured?: 'true' | 'false'
+  featured?: boolean
   seo?: Seo
 }
 
@@ -1877,7 +1877,7 @@ export type BLOG_POST_PAGE_QUERY_RESULT = {
     caption: string | null
   } | null
   body: PortableText | null
-  featured: 'false' | 'true' | null
+  featured: boolean | null
   authors: Array<{
     _id: string
     name: string | null
@@ -2020,7 +2020,7 @@ export type AUTHOR_PAGE_QUERY_RESULT = Array<{
       caption?: string
       _type: 'image'
     } | null
-    featured: 'false' | 'true' | null
+    featured: boolean | null
     _createdAt: string
     _updatedAt: string
     _rev: string
@@ -2088,7 +2088,7 @@ export type CATEGORY_PAGE_QUERY_RESULT = {
       caption?: string
       _type: 'image'
     } | null
-    featured: 'false' | 'true' | null
+    featured: boolean | null
     author: {
       _id: string
       _type: 'author'
@@ -2201,7 +2201,7 @@ export type BLOG_INDEX_PAGE_QUERY_RESULT = {
       caption?: string
       _type: 'image'
     } | null
-    featured: 'false' | 'true' | null
+    featured: boolean | null
     author: {
       _id: string
       name: string | null
@@ -2329,7 +2329,7 @@ export type REDIRECTS_QUERY_RESULT = Array<{
 
 // Source: ../frontend/src/sanity/queries.ts
 // Variable: BLOG_POSTS_QUERY
-// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == "true")] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": authors[0]->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
+// Query: *[  _type == "blogPost"  && language == $language  && ($featuredOnly == false || featured == true)] | order(publishedAt desc)[$start...$end]{  _id,  title,  slug,  publishedAt,  excerpt,  mainImage,  featured,  "author": authors[0]->{    _id,    name,    avatar  },  "categories": categories[]->{    _id,    title,    slug  }}
 export type BLOG_POSTS_QUERY_RESULT = Array<{
   _id: string
   title: string | null
@@ -2345,7 +2345,7 @@ export type BLOG_POSTS_QUERY_RESULT = Array<{
     caption?: string
     _type: 'image'
   } | null
-  featured: 'false' | 'true' | null
+  featured: boolean | null
   author: {
     _id: string
     name: string | null
@@ -2387,7 +2387,7 @@ declare global {
     '*[\n  _type == "blogPost"\n  && defined(slug.current)\n  && language == $language\n] | order(publishedAt desc)[0...50]{\n  title,\n  excerpt,\n  publishedAt,\n  "slug": slug.current\n}': RSS_QUERY_RESULT
     '*[\n  _type == "translation.metadata"\n  && references(*[\n    _type in ["page", "blogPost", "author", "category"]\n    && slug.current == $slug\n    && language == $currentLanguage\n  ][0]._id)\n][0]{\n  "translations": translations[]{\n    "value": value->{ _type, language, "slug": slug.current }\n  }\n}': LANGUAGE_ALTERNATES_QUERY_RESULT
     '*[\n  _type == "redirect"\n  && defined(source)\n  && defined(destination)\n]{\n  source,\n  destination,\n  permanent\n}': REDIRECTS_QUERY_RESULT
-    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == "true")\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
+    '*[\n  _type == "blogPost"\n  && language == $language\n  && ($featuredOnly == false || featured == true)\n] | order(publishedAt desc)[$start...$end]{\n  _id,\n  title,\n  slug,\n  publishedAt,\n  excerpt,\n  mainImage,\n  featured,\n  "author": authors[0]->{\n    _id,\n    name,\n    avatar\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    slug\n  }\n}': BLOG_POSTS_QUERY_RESULT
     '*[\n  _type == "compareFeature" && _id in $ids\n]{ _id, title }': COMPARE_FEATURES_QUERY_RESULT
   }
 }
