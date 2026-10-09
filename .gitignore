@@ -17,6 +17,7 @@
 .DS_Store
 *.pem
 /studio/dist
+/studio/.sanity
 
 # debug
 npm-debug.log*
