@@ -57,12 +57,14 @@ export function BlogShareButton({title, className, dictionary = {}}: BlogShareBu
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="outline" className={className}>
-          <Share2 className="h-4 w-4 mr-2" />
-          {dictionary.share || 'Share'}
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <Button size="sm" variant="outline" className={className}>
+            <Share2 className="h-4 w-4 mr-2" />
+            {dictionary.share || 'Share'}
+          </Button>
+        }
+      />
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => handleShare('copy')}>
           <LinkIcon className="h-4 w-4 mr-2" />

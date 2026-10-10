@@ -9,7 +9,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import {stegaClean} from 'next-sanity'
-import {Button} from '@/components/ui/button'
+import {Button, buttonVariants} from '@/components/ui/button'
 import {MoveRight, Menu, X} from 'lucide-react'
 import Link from 'next/link'
 import {useEffect, useState} from 'react'
@@ -55,16 +55,13 @@ export default function Transparent({
                 return (
                   <NavigationMenuItem key={item._key}>
                     {item.href ? (
-                      <NavigationMenuLink asChild>
-                        <Button
-                          variant="ghost"
-                          asChild
-                          className={cn({
-                            'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
-                          })}
-                        >
-                          <Link href={ensureAbsoluteUrl(item.href, locale)}>{navTitle}</Link>
-                        </Button>
+                      <NavigationMenuLink
+                        render={<Link href={ensureAbsoluteUrl(item.href, locale)} />}
+                        className={cn(buttonVariants({variant: 'ghost'}), {
+                          'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
+                        })}
+                      >
+                        {navTitle}
                       </NavigationMenuLink>
                     ) : (
                       <>
@@ -82,11 +79,12 @@ export default function Transparent({
                                 <p className="text-base">{navTitle}</p>
                                 <p className="text-muted-foreground text-sm">{item.description}</p>
                               </div>
-                              <Button size="sm" className="mt-10" asChild>
-                                <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
-                                  {ctaLabel}
-                                </Link>
-                              </Button>
+                              <Link
+                                href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}
+                                className={cn(buttonVariants({size: 'sm'}), 'mt-10')}
+                              >
+                                {ctaLabel}
+                              </Link>
                             </div>
                             <div className="flex flex-col text-sm h-full justify-end">
                               {item.items?.map((subItem) => (
@@ -127,37 +125,36 @@ export default function Transparent({
         <div className="flex justify-end w-full gap-4 items-center">
           <div className="hidden lg:flex gap-4">
             {ctaButtons?.map((button) => (
-              <Button
+              <Link
                 key={button._key}
-                variant={stegaClean(button.variant) || 'default'}
-                className={cn({
+                href={ensureAbsoluteUrl(button.url ?? undefined, locale)}
+                className={cn(buttonVariants({variant: stegaClean(button.variant) || 'default'}), {
                   'bg-white text-primary hover:bg-white/90':
                     !scrolled && stegaClean(button.variant) === 'default',
                   'border-white text-white hover:bg-white/10 hover:text-white':
                     !scrolled && stegaClean(button.variant) === 'outline',
                 })}
-                asChild
               >
-                <Link href={ensureAbsoluteUrl(button.url ?? undefined, locale)}>
-                  {button.label}
-                </Link>
-              </Button>
+                {button.label}
+              </Link>
             ))}
           </div>
 
           {/* MOBILE MENU */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn('lg:hidden', {
-                  'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
-                })}
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={cn('lg:hidden', {
+                    'text-white hover:text-white/80 hover:bg-white/10': !scrolled,
+                  })}
+                  aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                />
+              }
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </SheetTrigger>
             <SheetContent className="w-[300px] sm:w-[350px] px-4 sm:px-6">
               <SheetHeader>
@@ -200,17 +197,17 @@ export default function Transparent({
                 ))}
                 <div className="mt-6 flex flex-col gap-3 border-t pt-6">
                   {ctaButtons?.map((button) => (
-                    <Button
+                    <Link
                       key={button._key}
-                      variant={stegaClean(button.variant) || 'default'}
-                      asChild
-                      className="w-full"
+                      href={ensureAbsoluteUrl(button.url ?? undefined, locale)}
+                      className={cn(
+                        buttonVariants({variant: stegaClean(button.variant) || 'default'}),
+                        'w-full',
+                      )}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Link href={ensureAbsoluteUrl(button.url ?? undefined, locale)}>
-                        {button.label}
-                      </Link>
-                    </Button>
+                      {button.label}
+                    </Link>
                   ))}
                 </div>
               </div>

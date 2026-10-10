@@ -3,7 +3,8 @@
 import {Check, Minus, MoveRight, PhoneCall, Plus} from 'lucide-react'
 import {stegaClean} from 'next-sanity'
 import {Badge} from '@/components/ui/badge'
-import {Button, type buttonVariants} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import type {VariantProps} from 'class-variance-authority'
 import Link from 'next/link'
 import type {ExtractPageBuilderType} from '@/sanity/page-builder'
@@ -75,22 +76,23 @@ export const PlanButton = ({
   if (!buttonText) return null
 
   return (
-    <Button
-      variant={
-        (buttonVariant as VariantProps<typeof buttonVariants>['variant']) ||
-        (highlighted ? 'default' : 'outline')
-      }
-      className="gap-4 mt-8"
-      asChild
+    <Link
+      href={buttonUrl}
+      className={cn(
+        buttonVariants({
+          variant:
+            (buttonVariant as VariantProps<typeof buttonVariants>['variant']) ||
+            (highlighted ? 'default' : 'outline'),
+        }),
+        'gap-4 mt-8',
+      )}
     >
-      <Link href={buttonUrl}>
-        {buttonText}{' '}
-        {buttonIcon &&
-          (() => {
-            const Icon = IconMap[buttonIcon]
-            return Icon ? <Icon className="w-4 h-4" /> : null
-          })()}
-      </Link>
-    </Button>
+      {buttonText}{' '}
+      {buttonIcon &&
+        (() => {
+          const Icon = IconMap[buttonIcon]
+          return Icon ? <Icon className="w-4 h-4" /> : null
+        })()}
+    </Link>
   )
 }

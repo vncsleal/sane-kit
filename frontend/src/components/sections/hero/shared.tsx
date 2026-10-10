@@ -13,7 +13,8 @@ import {
   Calendar,
 } from 'lucide-react'
 import {stegaClean} from 'next-sanity'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 import {urlFor} from '@/sanity/client'
 import Link from 'next/link'
@@ -93,21 +94,22 @@ export const ButtonsGroup = ({
             : null
 
         return (
-          <Button
+          <Link
             key={button._key}
-            variant={
-              (button.variant as 'default' | 'secondary' | 'outline' | 'ghost' | 'link') ||
-              'default'
-            }
-            asChild
-            size="lg"
-            className="gap-4"
+            href={button.url || '#'}
+            className={cn(
+              buttonVariants({
+                variant:
+                  (button.variant as 'default' | 'secondary' | 'outline' | 'ghost' | 'link') ||
+                  'default',
+                size: 'lg',
+              }),
+              'gap-4',
+            )}
           >
-            <Link href={button.url || '#'}>
-              {button.label}
-              {Icon && <Icon className="h-4 w-4" />}
-            </Link>
-          </Button>
+            {button.label}
+            {Icon && <Icon className="h-4 w-4" />}
+          </Link>
         )
       })}
     </>

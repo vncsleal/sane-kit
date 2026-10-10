@@ -17,7 +17,7 @@ customizable Studio. Built on the 2026 stack.
 | -------- | -------------------------------------------------------------------------- |
 | Frontend | **Next.js 16** (App Router, Turbopack) · **React 19** · **next-sanity 13** |
 | Studio   | **Sanity 6** · `@sanity/document-internationalization` · Presentation tool |
-| UI       | **Tailwind CSS v4** · shadcn/ui (Radix)                                    |
+| UI       | **Tailwind CSS v4** · shadcn/ui (Base UI)                                  |
 | Tooling  | **pnpm 10 workspaces** · **Turborepo** · TypeScript · ESLint (flat config) |
 
 ## Features

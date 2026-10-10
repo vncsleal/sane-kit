@@ -3,7 +3,8 @@
 import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 import {stegaClean} from 'next-sanity'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import Link from 'next/link'
 import {IconMap, ButtonVariant} from './shared'
 
@@ -41,17 +42,17 @@ export default function Full({badgeText, heading, subheading, buttons = []}: Ful
                 const Icon = iconName && iconName !== 'none' ? IconMap[iconName] : null
 
                 return (
-                  <Button
+                  <Link
                     key={button._key}
-                    variant={(button.variant as ButtonVariant) || 'default'}
-                    className="gap-4"
-                    asChild
+                    href={button.url || '#'}
+                    className={cn(
+                      buttonVariants({variant: (button.variant as ButtonVariant) || 'default'}),
+                      'gap-4',
+                    )}
                   >
-                    <Link href={button.url || '#'}>
-                      {button.label}
-                      {Icon && <Icon className="w-4 h-4" />}
-                    </Link>
-                  </Button>
+                    {button.label}
+                    {Icon && <Icon className="w-4 h-4" />}
+                  </Link>
                 )
               })}
             </div>

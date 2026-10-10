@@ -1,6 +1,6 @@
 'use client'
 
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
 import {urlFor} from '@/sanity/client'
@@ -102,12 +102,14 @@ export function HeaderCTAButton({
   if (!label) return null
 
   return (
-    <Button key={_key} asChild variant={variant} size="default" className={cn(className)}>
-      <Link href={ensureAbsoluteUrl(url, locale)}>
-        {label}
-        <MoveRight className="ml-2 h-4 w-4" />
-      </Link>
-    </Button>
+    <Link
+      key={_key}
+      href={ensureAbsoluteUrl(url, locale)}
+      className={cn(buttonVariants({variant, size: 'default'}), className)}
+    >
+      {label}
+      <MoveRight className="ml-2 h-4 w-4" />
+    </Link>
   )
 }
 

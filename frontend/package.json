@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@base-ui/react": "1.6.0",
     "@formatjs/intl-localematcher": "^0.6.2",
     "@next/third-parties": "^16.4.0",
     "@portabletext/react": "^8.0.1",
@@ -30,7 +31,6 @@
     "next-themes": "^0.4.6",
     "posthog-js": "^1.438.2",
     "posthog-node": "^5.55.0",
-    "radix-ui": "^1.7.0",
     "react": "19.3.0",
     "react-code-blocks": "^0.1.6",
     "react-day-picker": "^10.0.2",

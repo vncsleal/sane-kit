@@ -8,7 +8,8 @@ import type {Author, BlogPost, Category} from '@/sanity/types'
 import type {StegaAware} from '@/sanity/page-builder'
 import {portableTextComponents} from './PortableTextComponents'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import {Badge} from '@/components/ui/badge'
 import {Globe, Mail} from 'lucide-react'
 import {Github, Instagram, Linkedin, Twitter, Youtube} from '@/components/icons/social'
@@ -100,25 +101,30 @@ export default function AuthorPageUI({author, posts, dictionary, locale}: Author
                 const Icon = SocialIcons[platform]
                 if (!Icon) return null
                 return (
-                  <Button key={link._key} variant="ghost" size="sm" className="h-8 px-2" asChild>
-                    <Link href={link.url || '#'} target="_blank" rel="noopener noreferrer">
-                      <span className="flex items-center">
-                        <Icon className="h-4 w-4 mr-2" />
-                        <span>{platform.charAt(0).toUpperCase() + platform.slice(1)}</span>
-                      </span>
-                    </Link>
-                  </Button>
+                  <Link
+                    key={link._key}
+                    href={link.url || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(buttonVariants({variant: 'ghost', size: 'sm'}), 'h-8 px-2')}
+                  >
+                    <span className="flex items-center">
+                      <Icon className="h-4 w-4 mr-2" />
+                      <span>{platform.charAt(0).toUpperCase() + platform.slice(1)}</span>
+                    </span>
+                  </Link>
                 )
               })}
               {author.email && (
-                <Button variant="ghost" size="sm" className="h-8 px-2" asChild>
-                  <Link href={`mailto:${author.email}`}>
-                    <span className="flex items-center">
-                      <Mail className="h-4 w-4 mr-2" />
-                      <span>{staticText.email}</span>
-                    </span>
-                  </Link>
-                </Button>
+                <Link
+                  href={`mailto:${author.email}`}
+                  className={cn(buttonVariants({variant: 'ghost', size: 'sm'}), 'h-8 px-2')}
+                >
+                  <span className="flex items-center">
+                    <Mail className="h-4 w-4 mr-2" />
+                    <span>{staticText.email}</span>
+                  </span>
+                </Link>
               )}
             </div>
           )}
@@ -197,9 +203,9 @@ export default function AuthorPageUI({author, posts, dictionary, locale}: Author
           )}
 
           <div className="flex justify-center pt-8">
-            <Button asChild>
-              <Link href={`/${locale}/blog`}>{staticText.viewAllBlogPosts}</Link>
-            </Button>
+            <Link href={`/${locale}/blog`} className={buttonVariants()}>
+              {staticText.viewAllBlogPosts}
+            </Link>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
 import {usePathname} from 'next/navigation'
 import {i18n, type Locale} from '@/i18n/i18n-config'
 import type {Dictionary} from '@/i18n/getDictionary'
@@ -34,9 +34,9 @@ export default function NotFound({title, message, linkHref, linkText, dictionary
       <p className="text-xl text-muted-foreground mb-8">
         {message || dictionary.notFound.pageMessage}
       </p>
-      <Button asChild>
-        <Link href={localizedHref}>{linkText || dictionary.notFound.backToHome}</Link>
-      </Button>
+      <Link href={localizedHref} className={buttonVariants()}>
+        {linkText || dictionary.notFound.backToHome}
+      </Link>
     </div>
   )
 }

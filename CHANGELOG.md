@@ -60,7 +60,8 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 ### UI
 
-- shadcn v4 refresh, consolidated `radix-ui`, lucide v1, Tailwind CSS v4.
+- shadcn/ui on **Base UI** (`@base-ui/react`, migrated from `radix-ui`), lucide
+  v1, Tailwind CSS v4.
 
 ### Tests
 

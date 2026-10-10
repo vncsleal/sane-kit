@@ -8,7 +8,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import {Button} from '@/components/ui/button'
+import {Button, buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import {MoveRight} from 'lucide-react'
 import Link from 'next/link'
 import {useState} from 'react'
@@ -54,10 +55,11 @@ export default function Default({
               {navigationItems?.map((item) => (
                 <NavigationMenuItem key={item._key}>
                   {item.href ? (
-                    <NavigationMenuLink asChild>
-                      <Button variant="ghost" asChild>
-                        <Link href={ensureAbsoluteUrl(item.href, locale)}>{item.title}</Link>
-                      </Button>
+                    <NavigationMenuLink
+                      render={<Link href={ensureAbsoluteUrl(item.href, locale)} />}
+                      className={buttonVariants({variant: 'ghost'})}
+                    >
+                      {item.title}
                     </NavigationMenuLink>
                   ) : (
                     <>
@@ -71,11 +73,12 @@ export default function Default({
                               <p className="text-base">{item.title}</p>
                               <p className="text-muted-foreground text-sm">{item.description}</p>
                             </div>
-                            <Button size="sm" className="mt-10" asChild>
-                              <Link href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}>
-                                {ctaLabel}
-                              </Link>
-                            </Button>
+                            <Link
+                              href={ensureAbsoluteUrl(dropdownCTAUrl ?? undefined, locale)}
+                              className={cn(buttonVariants({size: 'sm'}), 'mt-10')}
+                            >
+                              {ctaLabel}
+                            </Link>
                           </div>
                           <div className="flex flex-col text-sm h-full justify-end">
                             {item.items?.map((subItem) => (
@@ -115,11 +118,9 @@ export default function Default({
 
           {/* MOBILE MENU */}
           <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
+            <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" />}>
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
             </SheetTrigger>
             <SheetContent className="w-[300px] sm:w-[350px] px-4 sm:px-6">
               <SheetHeader>

@@ -134,16 +134,18 @@ export function CodeBlock({
       {/* Copy button with tooltip */}
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute text-white hover:text-primary hover:bg-transparent top-1.5 right-2 h-8 w-8 p-0 z-10"
-              onClick={handleCopy}
-            >
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              <span className="sr-only">Copy code</span>
-            </Button>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute text-white hover:text-primary hover:bg-transparent top-1.5 right-2 h-8 w-8 p-0 z-10"
+                onClick={handleCopy}
+              />
+            }
+          >
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            <span className="sr-only">Copy code</span>
           </TooltipTrigger>
           <TooltipContent>
             <p>{copied ? dictionary.code.copied : dictionary.code.copyCode}</p>

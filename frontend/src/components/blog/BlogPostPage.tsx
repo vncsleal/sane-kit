@@ -2,7 +2,8 @@
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import {CodeBlock} from './CodeBlock'
 import type {Dictionary} from '@/i18n/getDictionary'
 import type {Locale} from '@/i18n/i18n-config'
@@ -393,27 +394,32 @@ export default function BlogPostPage({post, dictionary, locale}: BlogPostPagePro
                       const platform = link.platform as keyof typeof SocialIcons
                       const Icon = SocialIcons[platform]
                       return (
-                        <Button
+                        <Link
                           key={link._key}
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 rounded"
-                          asChild
+                          href={link.url || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            buttonVariants({variant: 'ghost', size: 'sm'}),
+                            'h-8 w-8 p-0 rounded',
+                          )}
                         >
-                          <Link href={link.url || '#'} target="_blank" rel="noopener noreferrer">
-                            <Icon className="h-4 w-4" />
-                            <span className="sr-only">{platform}</span>
-                          </Link>
-                        </Button>
+                          <Icon className="h-4 w-4" />
+                          <span className="sr-only">{platform}</span>
+                        </Link>
                       )
                     })}
                     {post.author.email && (
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded" asChild>
-                        <Link href={`mailto:${post.author.email}`}>
-                          <Mail className="h-4 w-4" />
-                          <span className="sr-only">{staticText.email}</span>
-                        </Link>
-                      </Button>
+                      <Link
+                        href={`mailto:${post.author.email}`}
+                        className={cn(
+                          buttonVariants({variant: 'ghost', size: 'sm'}),
+                          'h-8 w-8 p-0 rounded',
+                        )}
+                      >
+                        <Mail className="h-4 w-4" />
+                        <span className="sr-only">{staticText.email}</span>
+                      </Link>
                     )}
                   </div>
                 )}

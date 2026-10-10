@@ -45,11 +45,15 @@ export function LanguageSwitcher({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
+      <DropdownMenuTrigger render={triggerButton} />
       <DropdownMenuContent align="end">
         {i18n.locales.map((lang) => (
-          <DropdownMenuItem key={lang} asChild disabled={lang === locale}>
-            <Link href={hrefFor(lang)}>{label(lang)}</Link>
+          <DropdownMenuItem
+            key={lang}
+            disabled={lang === locale}
+            render={<Link href={hrefFor(lang)} />}
+          >
+            {label(lang)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

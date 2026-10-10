@@ -3,7 +3,8 @@
 import {MoveRight, PhoneCall, Plus} from 'lucide-react'
 import {stegaClean} from 'next-sanity'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import Link from 'next/link'
 import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 
@@ -76,17 +77,14 @@ export const ButtonsGroup = ({
           }
 
           return (
-            <Button
+            <Link
               key={button._key}
-              variant={buttonVariant as ButtonVariant}
-              className="gap-4"
-              asChild
+              href={button.url || '#'}
+              className={cn(buttonVariants({variant: buttonVariant as ButtonVariant}), 'gap-4')}
             >
-              <Link href={button.url || '#'}>
-                {button.label}
-                {Icon && <Icon className="w-4 h-4" />}
-              </Link>
-            </Button>
+              {button.label}
+              {Icon && <Icon className="w-4 h-4" />}
+            </Link>
           )
         })}
       </div>

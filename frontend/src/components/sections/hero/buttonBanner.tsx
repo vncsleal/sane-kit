@@ -2,7 +2,8 @@
 
 import type {ExtractPageBuilderType} from '@/sanity/page-builder'
 import {renderBackgroundMedia, ButtonsGroup} from './shared'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import Link from 'next/link'
 
 export default function ButtonBanner({
@@ -23,9 +24,12 @@ export default function ButtonBanner({
           {/* Banner button */}
           {bannerButton?.label && (
             <div>
-              <Button variant="secondary" size="sm" className="gap-4" asChild>
-                <Link href={bannerButton.url || '#'}>{bannerButton.label}</Link>
-              </Button>
+              <Link
+                href={bannerButton.url || '#'}
+                className={cn(buttonVariants({variant: 'secondary', size: 'sm'}), 'gap-4')}
+              >
+                {bannerButton.label}
+              </Link>
             </div>
           )}
 

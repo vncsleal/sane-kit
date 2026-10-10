@@ -139,21 +139,23 @@ export default function DefaultContact({
                 <div className="grid w-full max-w-sm items-center gap-1">
                   <Label htmlFor="date">{dictionary?.form?.dateLabel || 'Data'}</Label>
                   <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !date && 'text-muted-foreground',
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? (
-                          format(date, 'PPP')
-                        ) : (
-                          <span>{dictionary?.form?.datePlaceholder || 'Escolha uma data'}</span>
-                        )}
-                      </Button>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full justify-start text-left font-normal',
+                            !date && 'text-muted-foreground',
+                          )}
+                        />
+                      }
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? (
+                        format(date, 'PPP')
+                      ) : (
+                        <span>{dictionary?.form?.datePlaceholder || 'Escolha uma data'}</span>
+                      )}
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
                       <Calendar mode="single" selected={date} onSelect={setDate} />

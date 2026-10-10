@@ -3,7 +3,8 @@
 import {stegaClean} from 'next-sanity'
 import {PhoneCall, MoveRight, Plus, Check} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import Link from 'next/link'
 import {
   Accordion,
@@ -62,12 +63,13 @@ export const ContentSection = ({
       </div>
       {buttonText && (
         <div>
-          <Button className="gap-4" variant="outline" asChild>
-            <Link href={buttonUrl || '#'}>
-              {buttonText}
-              {Icon && <Icon className="w-4 h-4" />}
-            </Link>
-          </Button>
+          <Link
+            href={buttonUrl || '#'}
+            className={cn(buttonVariants({variant: 'outline'}), 'gap-4')}
+          >
+            {buttonText}
+            {Icon && <Icon className="w-4 h-4" />}
+          </Link>
         </div>
       )}
     </div>
@@ -78,7 +80,7 @@ export const ContentSection = ({
 export const FaqAccordion = ({
   faqItems = [],
 }: Pick<ExtractPageBuilderType<'faqSection'>, 'faqItems'>) => (
-  <Accordion type="single" collapsible className="w-full">
+  <Accordion className="w-full">
     {faqItems.map((item) => (
       <AccordionItem key={item._key} value={item._key || ''}>
         <AccordionTrigger>{item.question}</AccordionTrigger>

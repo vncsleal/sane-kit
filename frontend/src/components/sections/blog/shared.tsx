@@ -1,6 +1,7 @@
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import {urlFor} from '@/sanity/image'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -57,12 +58,10 @@ export const ViewAllButton = ({
   const localizedUrl = `/${locale}${viewAllUrl.startsWith('/') ? viewAllUrl : `/${viewAllUrl}`}`
 
   return (
-    <Button className="gap-4" asChild>
-      <Link href={localizedUrl}>
-        {viewAllButtonText}
-        <MoveRight className="w-4 h-4" />
-      </Link>
-    </Button>
+    <Link href={localizedUrl} className={cn(buttonVariants(), 'gap-4')}>
+      {viewAllButtonText}
+      <MoveRight className="w-4 h-4" />
+    </Link>
   )
 }
 

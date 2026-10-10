@@ -1,7 +1,8 @@
 'use client'
 
 import {stegaClean} from 'next-sanity'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import Link from 'next/link'
 import {SectionHeader, FeatureItem, IconMap, type PricingSectionProps} from './shared'
@@ -45,24 +46,25 @@ export default function DefaultPricing({
                       ))}
                     </div>
                     {plan.buttonText && plan.buttonUrl && (
-                      <Button
-                        variant={
-                          stegaClean(plan.buttonVariant) ||
-                          (plan.highlighted === true ? 'default' : 'outline')
-                        }
-                        className="gap-4"
-                        asChild
+                      <Link
+                        href={plan.buttonUrl || '#'}
+                        className={cn(
+                          buttonVariants({
+                            variant:
+                              stegaClean(plan.buttonVariant) ||
+                              (plan.highlighted === true ? 'default' : 'outline'),
+                          }),
+                          'gap-4',
+                        )}
                       >
-                        <Link href={plan.buttonUrl || '#'}>
-                          {plan.buttonText}
-                          {plan.buttonIcon &&
-                            (() => {
-                              const cleanIcon = stegaClean(plan.buttonIcon)
-                              const Icon = cleanIcon ? IconMap[cleanIcon] : null
-                              return Icon ? <Icon className="w-4 h-4" /> : null
-                            })()}
-                        </Link>
-                      </Button>
+                        {plan.buttonText}
+                        {plan.buttonIcon &&
+                          (() => {
+                            const cleanIcon = stegaClean(plan.buttonIcon)
+                            const Icon = cleanIcon ? IconMap[cleanIcon] : null
+                            return Icon ? <Icon className="w-4 h-4" /> : null
+                          })()}
+                      </Link>
                     )}
                   </div>
                 </CardContent>

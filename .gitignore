@@ -25,6 +25,9 @@
 /functions/**/node_modules
 /functions/**/.env*
 
+# shadcn migration reports (skill output, not part of the template)
+/.migration
+
 # debug
 npm-debug.log*
 yarn-debug.log*

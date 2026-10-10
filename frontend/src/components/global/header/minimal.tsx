@@ -59,19 +59,21 @@ export default function Minimal({
 
           {/* Mobile Menu Trigger */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                aria-label={
-                  mobileMenuOpen
-                    ? (dictionary?.header?.closeMenu ?? 'Close menu')
-                    : (dictionary?.header?.openMenu ?? 'Open menu')
-                }
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  aria-label={
+                    mobileMenuOpen
+                      ? (dictionary?.header?.closeMenu ?? 'Close menu')
+                      : (dictionary?.header?.openMenu ?? 'Open menu')
+                  }
+                />
+              }
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-xs">
               <nav className="flex flex-col space-y-4 mt-8">

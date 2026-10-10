@@ -6,7 +6,7 @@ import Image from 'next/image'
 import {urlFor} from '@/sanity/client'
 import {Badge} from '@/components/ui/badge'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
-import {Button} from '@/components/ui/button'
+import {buttonVariants} from '@/components/ui/button'
 import type {Dictionary} from '@/i18n/getDictionary'
 import type {Locale} from '@/i18n/i18n-config'
 import type {CATEGORY_PAGE_QUERY_RESULT} from '@/sanity/types'
@@ -164,11 +164,9 @@ export default function CategoryPageUI({category, posts, dictionary, locale}: Ca
           <p className="text-lg text-muted-foreground mb-4">
             {dictionary.category?.noArticlesFound || 'No articles found in this category'}
           </p>
-          <Button variant="outline" asChild>
-            <Link href={`/${locale}/blog`}>
-              {dictionary.category?.viewAllBlogPosts || 'View all posts'}
-            </Link>
-          </Button>
+          <Link href={`/${locale}/blog`} className={buttonVariants({variant: 'outline'})}>
+            {dictionary.category?.viewAllBlogPosts || 'View all posts'}
+          </Link>
         </div>
       )}
 
