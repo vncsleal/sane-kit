@@ -25,6 +25,7 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const dictionary = await getDictionary(i18n.defaultLocale)
   return {
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     title: dictionary.app.title,
     description: dictionary.app.description,
   }
