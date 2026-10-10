@@ -4,7 +4,7 @@ import {stegaClean} from 'next-sanity'
 
 import type {Locale} from '@/i18n/i18n-config'
 
-import {sanityFetch} from './live'
+import {cachedSanity, type DynamicFetchOptions} from './live'
 import type {PageBuilderSection, ResolvedSectionData} from './page-builder'
 import {BLOG_POSTS_QUERY, COMPARE_FEATURES_QUERY} from './queries'
 
@@ -14,18 +14,23 @@ import {BLOG_POSTS_QUERY, COMPARE_FEATURES_QUERY} from './queries'
  *
  * Runs on the server so the client page builder receives plain, serializable
  * data. See {@link ResolvedSectionData} for why this is passed out-of-band.
+ *
+ * `options` carries the request's perspective/variant/stega so the fetched
+ * content matches the page that requested it (published vs drafts).
  */
 export async function resolvePageBuilderData(
   sections: PageBuilderSection[],
   locale: Locale,
+  options: DynamicFetchOptions,
 ): Promise<Record<string, ResolvedSectionData>> {
+  const {perspective, variant, stega} = options
   const entries = await Promise.all(
     sections.map(async (section): Promise<[string, ResolvedSectionData] | null> => {
       switch (section._type) {
         case 'blogSection': {
-          const variant = stegaClean(section.variant)
-          const end = section.postsToShow ?? (variant === 'grid' ? 6 : 3)
-          const {data} = await sanityFetch({
+          const sectionVariant = stegaClean(section.variant)
+          const end = section.postsToShow ?? (sectionVariant === 'grid' ? 6 : 3)
+          const {data} = await cachedSanity({
             query: BLOG_POSTS_QUERY,
             params: {
               language: locale,
@@ -33,6 +38,9 @@ export async function resolvePageBuilderData(
               start: 0,
               end,
             },
+            perspective,
+            variant,
+            stega,
           })
           return [section._key, {posts: data ?? []}]
         }
@@ -41,9 +49,12 @@ export async function resolvePageBuilderData(
           const ids = refs
             .map((feature) => feature._ref)
             .filter((ref): ref is string => Boolean(ref))
-          const {data} = await sanityFetch({
+          const {data} = await cachedSanity({
             query: COMPARE_FEATURES_QUERY,
             params: {ids},
+            perspective,
+            variant,
+            stega,
           })
           const features = refs.map((feature) => ({
             _id: feature._ref ?? '',

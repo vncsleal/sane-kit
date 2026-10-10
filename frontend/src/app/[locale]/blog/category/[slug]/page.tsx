@@ -1,11 +1,12 @@
-import {client} from '@/sanity/client'
-import {sanityFetch} from '@/sanity/live'
 import CategoryPageUI from '@/components/blog/CategoryPageUI'
 import {i18n, hasLocale, type Locale} from '@/i18n/i18n-config'
 import {getDictionary} from '@/i18n/getDictionary'
 import type {Metadata, ResolvingMetadata} from 'next'
+import {draftMode} from 'next/headers'
 import {notFound} from 'next/navigation'
-import {CATEGORY_PAGE_QUERY} from '@/sanity/queries'
+import {Suspense} from 'react'
+import {cachedSanity, getDynamicFetchOptions, type DynamicFetchOptions} from '@/sanity/live'
+import {CATEGORY_PAGE_QUERY, CATEGORY_SLUGS_QUERY} from '@/sanity/queries'
 
 // Define PageParams interface
 interface PageParams {
@@ -13,24 +14,30 @@ interface PageParams {
   locale: string
 }
 
-// Define SearchParams interface
-interface SearchParams {
-  [key: string]: string | string[] | undefined
-}
-
 // Define PageProps to expect a Promise of PageParams
 interface PageProps {
   params: Promise<PageParams>
-  searchParams: Promise<SearchParams>
 }
 
-// Fetch the category by slug and locale using the composite query
-async function getCategory(slug: string, locale: Locale) {
-  const {data} = await sanityFetch({
-    query: CATEGORY_PAGE_QUERY,
-    params: {slug, language: locale},
+function resolveLocale(rawLocale: string): Locale {
+  return hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+}
+
+// Generate static paths for all categories and locales
+export async function generateStaticParams(): Promise<PageParams[]> {
+  const {data} = await cachedSanity({
+    query: CATEGORY_SLUGS_QUERY,
+    perspective: 'published',
+    stega: false,
   })
-  return data
+
+  const params: PageParams[] = []
+  for (const category of data) {
+    if (category.slug && category.locale && hasLocale(category.locale)) {
+      params.push({slug: category.slug, locale: category.locale})
+    }
+  }
+  return params
 }
 
 export async function generateMetadata(
@@ -38,12 +45,13 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+  const locale = resolveLocale(rawLocale)
   const dictionary = await getDictionary(locale)
-  const {data: result} = await sanityFetch({
+  const {data: result} = await cachedSanity({
     query: CATEGORY_PAGE_QUERY,
     params: {slug, language: locale},
     // Metadata must never contain stega
+    perspective: 'published',
     stega: false,
   })
 
@@ -67,38 +75,49 @@ export async function generateMetadata(
   }
 }
 
-// Generate static paths for all categories and locales
-export async function generateStaticParams(): Promise<PageParams[]> {
-  const locales = i18n.locales
-  const allParams: PageParams[] = []
+export default async function CategoryPage({params}: PageProps) {
+  const {isEnabled: isDraftMode} = await draftMode()
 
-  for (const locale of locales) {
-    const categoriesForLocale = await client.fetch<Array<{slug: {current: string}}>>(
-      `*[
-        _type == "category"
-        && language == $language
-      ]{
-        _id,
-        title,
-        slug,
-        description
-      }`,
-      {language: locale},
+  if (isDraftMode) {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <DraftCategoryPage params={params} />
+      </Suspense>
     )
-    categoriesForLocale.forEach((category) => {
-      if (category.slug?.current) {
-        allParams.push({slug: category.slug.current, locale})
-      }
-    })
   }
-  return allParams
+
+  const {slug, locale: rawLocale} = await params
+  return (
+    <CachedCategoryPage
+      slug={slug}
+      locale={resolveLocale(rawLocale)}
+      perspective="published"
+      stega={false}
+    />
+  )
 }
 
-export default async function CategoryPage({params}: PageProps) {
+async function DraftCategoryPage({params}: Pick<PageProps, 'params'>) {
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+  const dynamicOptions = await getDynamicFetchOptions()
+  return <CachedCategoryPage slug={slug} locale={resolveLocale(rawLocale)} {...dynamicOptions} />
+}
+
+async function CachedCategoryPage({
+  slug,
+  locale,
+  perspective,
+  variant,
+  stega,
+}: {slug: string; locale: Locale} & DynamicFetchOptions) {
   const dictionary = await getDictionary(locale)
-  const result = await getCategory(slug, locale)
+  const {data: result} = await cachedSanity({
+    query: CATEGORY_PAGE_QUERY,
+    params: {slug, language: locale},
+    perspective,
+    variant,
+    stega,
+  })
 
   if (!result) {
     notFound()
@@ -111,5 +130,13 @@ export default async function CategoryPage({params}: PageProps) {
       dictionary={dictionary}
       locale={locale}
     />
+  )
+}
+
+function PageFallback() {
+  return (
+    <div className="container mx-auto min-h-[60vh] animate-pulse px-4 py-24">
+      <div className="mx-auto h-10 w-2/3 rounded bg-muted" />
+    </div>
   )
 }

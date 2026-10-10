@@ -1,14 +1,14 @@
-import {client} from '@/sanity/client'
-import {sanityFetch} from '@/sanity/live'
+import {draftMode} from 'next/headers'
 import {notFound} from 'next/navigation'
+import {Suspense} from 'react'
 import type {Metadata} from 'next'
-// Remove unused imports Image and Slug since they're not used
-import type {Author, Category, PortableText} from '@/sanity/types'
+import type {PortableText} from '@/sanity/types'
 import type {ExpandedBlogPost} from '@/components/blog/AuthorPageUI'
 import AuthorPageUI from '@/components/blog/AuthorPageUI'
-import {getDictionary} from '@/i18n/getDictionary'
+import {getDictionary, type Dictionary} from '@/i18n/getDictionary'
 import {i18n, hasLocale, type Locale} from '@/i18n/i18n-config'
-import {AUTHOR_PAGE_QUERY} from '@/sanity/queries'
+import {cachedSanity, getDynamicFetchOptions, type DynamicFetchOptions} from '@/sanity/live'
+import {AUTHOR_PAGE_QUERY, AUTHOR_SLUGS_QUERY} from '@/sanity/queries'
 
 interface PageParams {
   slug: string
@@ -71,22 +71,34 @@ interface AuthorPageQueryResult {
   posts?: PostFromAuthorQuery[]
 }
 
-// Fetch author + posts in one shot using consolidated query
-async function getPageData(slug: string, locale: Locale) {
-  const {data} = await sanityFetch({
-    query: AUTHOR_PAGE_QUERY,
-    params: {slug, language: locale},
+function resolveLocale(rawLocale: string): Locale {
+  return hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+}
+
+export async function generateStaticParams(): Promise<PageParams[]> {
+  const {data} = await cachedSanity({
+    query: AUTHOR_SLUGS_QUERY,
+    perspective: 'published',
+    stega: false,
   })
-  return data?.[0] ?? null
+
+  const params: PageParams[] = []
+  for (const author of data) {
+    if (author.slug && author.locale && hasLocale(author.locale)) {
+      params.push({slug: author.slug, locale: author.locale})
+    }
+  }
+  return params
 }
 
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
-  const {data} = await sanityFetch({
+  const locale = resolveLocale(rawLocale)
+  const {data} = await cachedSanity({
     query: AUTHOR_PAGE_QUERY,
     params: {slug, language: locale},
     // Metadata must never contain stega
+    perspective: 'published',
     stega: false,
   })
   const page = data?.[0] ?? null
@@ -100,25 +112,49 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  // Use the same consolidated query but without filters to get all authors
-  const authors = await client.fetch<Array<{slug: {current: string}; language: Locale}>>(
-    AUTHOR_PAGE_QUERY,
-    {slug: null, language: null},
+export default async function AuthorPage({params}: PageProps) {
+  const {isEnabled: isDraftMode} = await draftMode()
+
+  if (isDraftMode) {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <DraftAuthorPage params={params} />
+      </Suspense>
+    )
+  }
+
+  const {slug, locale: rawLocale} = await params
+  return (
+    <CachedAuthorPage
+      slug={slug}
+      locale={resolveLocale(rawLocale)}
+      perspective="published"
+      stega={false}
+    />
   )
-
-  if (!authors) return []
-
-  return authors.map((author) => ({
-    slug: author.slug.current,
-    locale: author.language,
-  }))
 }
 
-export default async function AuthorPage({params}: PageProps) {
+async function DraftAuthorPage({params}: Pick<PageProps, 'params'>) {
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
-  const page = await getPageData(slug, locale)
+  const dynamicOptions = await getDynamicFetchOptions()
+  return <CachedAuthorPage slug={slug} locale={resolveLocale(rawLocale)} {...dynamicOptions} />
+}
+
+async function CachedAuthorPage({
+  slug,
+  locale,
+  perspective,
+  variant,
+  stega,
+}: {slug: string; locale: Locale} & DynamicFetchOptions) {
+  const {data} = await cachedSanity({
+    query: AUTHOR_PAGE_QUERY,
+    params: {slug, language: locale},
+    perspective,
+    variant,
+    stega,
+  })
+  const page = data?.[0] ?? null
   const dictionary = await getDictionary(locale)
   if (!page) notFound()
 
@@ -201,4 +237,12 @@ export default async function AuthorPage({params}: PageProps) {
   })
 
   return <AuthorPageUI author={author} posts={posts} dictionary={dictionary} locale={locale} />
+}
+
+function PageFallback() {
+  return (
+    <div className="container mx-auto min-h-[60vh] animate-pulse px-4 py-24">
+      <div className="mx-auto h-10 w-2/3 rounded bg-muted" />
+    </div>
+  )
 }

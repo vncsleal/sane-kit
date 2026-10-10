@@ -1,82 +1,57 @@
-# Cache Components migration (deferred)
+# Cache Components migration
 
-Enabling `cacheComponents: true` (Next 16) turns the app from fully dynamic SSR
-into static shells + tag-revalidated content — the official 2026 direction, and
-what makes `sanityFetch`'s cache tags and `<SanityLive />` actually pay off.
+**Status: complete.** `cacheComponents: true` is on and the frontend follows the
+next-sanity strict `defineLive` pattern. Every content route now prerenders a
+partial static shell (`◐`) instead of rendering fully dynamically (`ƒ`); only the
+root locale-redirect (`/`), the draft-mode API routes, the RSS/sitemap routes and
+the OpenGraph image render on demand.
 
-It is a **whole-app** change, so it is tracked here as a dedicated pass rather
-than half-applied.
+## What changed
 
-## Why it's not a one-line flag
+1. **`frontend/next.config.ts`** — `cacheComponents: true`,
+   `partialPrefetching: true` (the documented companion for a new project), and
+   `cacheLife: {default: sanityCacheLife}` (`next-sanity/live/cache-life`), which
+   widens the default profile because Sanity Live revalidates on demand.
 
-With Cache Components on, Next validates that every route renders instantly and
-fails the build on "uncached or runtime data during prerendering". In this app
-that surfaces on `/[locale]/[slug]` (and every other route) because
-`sanityFetch` is uncached and `params` is runtime data.
+2. **`frontend/src/sanity/live.ts`** — `defineLive({..., strict: true})`, the
+   shared `cachedSanity: StrictDefinedFetchType` (`'use cache'`) boundary, and
+   `getDynamicFetchOptions()`, which resolves `perspective`/`variant`/`stega`
+   from `draftMode()`/`cookies()` **outside** any cache boundary.
 
-next-sanity's `defineLive({ strict: true })` is the intended pairing, and it
-requires resolving dynamic values **outside** a `use cache` boundary.
+3. **Every content route** (`[locale]/layout`, `page`, `[slug]`, `blog/*`)
+   adopts the draft/cached split: it reads `draftMode()`; when enabled it renders
+   a `Draft*` component inside `<Suspense>` that calls `getDynamicFetchOptions()`;
+   otherwise it renders a `Cached*` component with
+   `perspective: 'published', stega: false`. `generateMetadata` uses
+   `cachedSanity` with the same published options.
 
-## Plan
+4. **`[locale]/layout.tsx`** renders `<SanityLive includeDrafts={isDraftMode} />`
+   and streams the header/footer (which read `headers()`/`draftMode()`) inside
+   `<Suspense>`. Draft-mode UI moved here from the root layout so the root shell
+   prerenders.
 
-1. **`frontend/next.config.ts`**
+5. **`generateStaticParams`** added for the `page` (`[slug]`) and `blogPost`
+   (`blog/[slug]`) content types, and for the blog index / home locale segment.
+   Author and category reuse typed `*_SLUGS_QUERY`s and return real params.
 
-   ```ts
-   import {sanity as sanityCacheLife} from 'next-sanity/live/cache-life'
-   const nextConfig: NextConfig = {
-     cacheComponents: true,
-     cacheLife: {default: sanityCacheLife},
-   }
-   ```
+6. **`resolve-page-builder.ts`** threads `perspective`/`variant`/`stega` into its
+   `cachedSanity` calls.
 
-2. **`frontend/src/sanity/live.ts`** — strict mode + the shared `use cache`
-   boundary (see the `defineLive` JSDoc in `next-sanity/dist/live/...`):
+The root `/` redirect keeps `export const instant = false`: a redirect must read
+request headers before it can decide where to send the visitor, so it is allowed
+to block rather than prerender a shell. The proxy negotiates the locale first in
+normal traffic.
 
-   ```ts
-   export const {sanityFetch, SanityLive} = defineLive({
-     client,
-     serverToken: token,
-     browserToken: token,
-     strict: true,
-   })
-   export const cachedSanity: StrictDefinedFetchType = async (options) => {
-     'use cache'
-     return sanityFetch(options)
-   }
-   export async function getDynamicFetchOptions(): Promise<DynamicFetchOptions> {
-     const {isEnabled} = await draftMode()
-     if (!isEnabled) return {perspective: 'published', stega: false}
-     const jar = await cookies()
-     const perspective = await resolvePerspectiveFromCookies({cookies: jar})
-     const variant = await resolveVariantFromCookies({cookies: jar})
-     return {perspective: perspective ?? 'drafts', variant, stega: true}
-   }
-   ```
+## Caveats
 
-3. **Every route** (`[locale]/layout`, `page`, `[slug]`, `blog/*`) adopts the
-   draft/cached split: read `draftMode()`; when enabled render the dynamic path
-   inside `<Suspense>`; otherwise render a `cachedSanity(...)` component with
-   `perspective: 'published', stega: false`. `generateMetadata` follows the
-   same rule.
-
-4. **`<SanityLive includeDrafts={isDraftMode} />`** in the locale layout.
-
-5. **`generateStaticParams`** for `page` and `blogPost` (the plan's Phase 5).
-
-6. The section resolvers (`resolve-page-builder.ts`, blog/compare-features)
-   take `perspective`/`variant`/`stega` and use `cachedSanity`.
+- **A project needs content to build.** With Cache Components,
+  `generateStaticParams` must return at least one param — an empty array is a
+  build error (`empty-generate-static-params`). A brand-new, empty dataset will
+  therefore fail the build until at least one page / post / author / category
+  exists. Seed some content (or import the demo dataset) before building.
 
 ## References
 
 - `node_modules/next/dist/docs/01-app/02-guides/migrating-to-cache-components.md`
 - `node_modules/next/dist/docs/01-app/02-guides/incremental-static-regeneration-cache-components.md`
 - next-sanity `defineLive` JSDoc (`next-sanity/dist/live/conditions/*/index.js`)
-- Official adoption skill: `npx skills add vercel/next.js --skill next-cache-components-adoption`
-
-## Incremental alternative
-
-If adopting all at once is too large, the official incremental flow is to enable
-the flag, add `export const instant = false` to each route (or run
-`npx @next/codemod@canary cache-components-instant-false ./src/app`), then convert
-routes one at a time. That ships the flag on with validation deferred — not ideal
-for a starter, so the direct migration above is preferred.

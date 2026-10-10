@@ -40,6 +40,10 @@ function getLocaleFromAcceptLanguage(acceptLanguage: string): Locale {
   return i18n.defaultLocale
 }
 
+// A redirect has to read request headers before it can decide where to send the
+// visitor, so this route is allowed to block rather than prerender a shell.
+export const instant = false
+
 export default async function RootPage() {
   const headersList = await headers()
   let detectedLocale: Locale = i18n.defaultLocale

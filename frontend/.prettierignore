@@ -1,0 +1,8 @@
+node_modules
+.next
+dist
+.turbo
+pnpm-lock.yaml
+package-lock.json
+test-results
+playwright-report

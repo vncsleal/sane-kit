@@ -1,12 +1,14 @@
 import type {Metadata} from 'next'
+import {draftMode} from 'next/headers'
 import {notFound} from 'next/navigation'
+import {Suspense} from 'react'
 
 import BlogPostPage, {type ExpandedBlogPost} from '@/components/blog/BlogPostPage'
 import {getDictionary} from '@/i18n/getDictionary'
 import {i18n, hasLocale, type Locale} from '@/i18n/i18n-config'
 import {siteUrl} from '@/sanity/env'
-import {sanityFetch} from '@/sanity/live'
-import {BLOG_POST_PAGE_QUERY} from '@/sanity/queries'
+import {cachedSanity, getDynamicFetchOptions, type DynamicFetchOptions} from '@/sanity/live'
+import {BLOG_POST_PAGE_QUERY, BLOG_POST_SLUGS_QUERY} from '@/sanity/queries'
 import {urlFor} from '@/sanity/image'
 import {buildBlogPostingJsonLd} from '@/lib/structured-data'
 
@@ -19,13 +21,34 @@ interface PageProps {
   params: Promise<PageParams>
 }
 
+function resolveLocale(rawLocale: string): Locale {
+  return hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
+}
+
+export async function generateStaticParams(): Promise<PageParams[]> {
+  const {data} = await cachedSanity({
+    query: BLOG_POST_SLUGS_QUERY,
+    perspective: 'published',
+    stega: false,
+  })
+
+  const params: PageParams[] = []
+  for (const doc of data) {
+    if (doc.slug && doc.locale && hasLocale(doc.locale)) {
+      params.push({slug: doc.slug, locale: doc.locale})
+    }
+  }
+  return params
+}
+
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
-  const {data: page} = await sanityFetch({
+  const locale = resolveLocale(rawLocale)
+  const {data: page} = await cachedSanity({
     query: BLOG_POST_PAGE_QUERY,
     params: {slug, language: locale},
     // Metadata must never contain stega
+    perspective: 'published',
     stega: false,
   })
   const dict = await getDictionary(locale)
@@ -56,11 +79,46 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 }
 
 export default async function Page({params}: PageProps) {
+  const {isEnabled: isDraftMode} = await draftMode()
+
+  if (isDraftMode) {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <DraftBlogPost params={params} />
+      </Suspense>
+    )
+  }
+
   const {slug, locale: rawLocale} = await params
-  const locale = hasLocale(rawLocale) ? rawLocale : i18n.defaultLocale
-  const {data: page} = await sanityFetch({
+  return (
+    <CachedBlogPost
+      slug={slug}
+      locale={resolveLocale(rawLocale)}
+      perspective="published"
+      stega={false}
+    />
+  )
+}
+
+async function DraftBlogPost({params}: Pick<PageProps, 'params'>) {
+  const {slug, locale: rawLocale} = await params
+  const dynamicOptions = await getDynamicFetchOptions()
+  return <CachedBlogPost slug={slug} locale={resolveLocale(rawLocale)} {...dynamicOptions} />
+}
+
+async function CachedBlogPost({
+  slug,
+  locale,
+  perspective,
+  variant,
+  stega,
+}: {slug: string; locale: Locale} & DynamicFetchOptions) {
+  const {data: page} = await cachedSanity({
     query: BLOG_POST_PAGE_QUERY,
     params: {slug, language: locale},
+    perspective,
+    variant,
+    stega,
   })
   const dictionary = await getDictionary(locale)
 
@@ -144,5 +202,13 @@ export default async function Page({params}: PageProps) {
       />
       <BlogPostPage post={finalData} dictionary={dictionary} locale={locale} />
     </>
+  )
+}
+
+function PageFallback() {
+  return (
+    <div className="container mx-auto min-h-[60vh] animate-pulse px-4 py-24">
+      <div className="mx-auto h-10 w-2/3 rounded bg-muted" />
+    </div>
   )
 }

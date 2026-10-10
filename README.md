@@ -27,7 +27,7 @@ customizable Studio. Built on the 2026 stack.
 - **Live Content API** (`defineLive` / `<SanityLive />`) — published changes appear without a redeploy.
 - **Visual Editing + Presentation** — click-to-edit overlays and draft preview, with block-level updates.
 - **Document internationalization** (English / Portuguese) via the official Sanity plugin.
-- **Live Content & revalidation** — `<SanityLive />` streams published changes and revalidates cached content without a redeploy.
+- **Live Content & caching** — **Cache Components** prerenders a partial static shell per route, and `<SanityLive />` streams published changes and revalidates the cached content without a redeploy.
 - **SEO** — `sitemap.xml`, `robots.txt`, RSS feed, Open Graph metadata.
 - **Analytics** — GA4 via `@next/third-parties`, PostHog, both consent-gated.
 

@@ -124,6 +124,16 @@ export const HOME_PAGE_QUERY = defineQuery(`*[
 {
   /* frontend/src/app/[locale]/[slug]/page.tsx */
 }
+export const PAGE_SLUGS_QUERY = defineQuery(`*[
+  _type == "page"
+  && defined(slug.current)
+  && slug.current != "/"
+  && defined(language)
+]{
+  "slug": slug.current,
+  "locale": language
+}`)
+
 export const PAGE_QUERY = defineQuery(`*[
   _type == "page"
   && slug.current == $slug
@@ -174,6 +184,15 @@ export const PAGE_QUERY = defineQuery(`*[
 {
   /* frontend/src/app/[locale]/blog/[slug]/page.tsx*/
 }
+export const BLOG_POST_SLUGS_QUERY = defineQuery(`*[
+  _type == "blogPost"
+  && defined(slug.current)
+  && defined(language)
+]{
+  "slug": slug.current,
+  "locale": language
+}`)
+
 export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
   _type == "blogPost"
   && slug.current == $slug
@@ -232,6 +251,15 @@ export const BLOG_POST_PAGE_QUERY = defineQuery(`*[
 {
   /* frontend/src/app/[locale]/blog/author/[slug]/page.tsx */
 }
+export const AUTHOR_SLUGS_QUERY = defineQuery(`*[
+  _type == "author"
+  && defined(slug.current)
+  && defined(language)
+]{
+  "slug": slug.current,
+  "locale": language
+}`)
+
 export const AUTHOR_PAGE_QUERY = defineQuery(`*[
   _type == "author"
   && defined(slug.current)
@@ -299,6 +327,15 @@ export const AUTHOR_PAGE_QUERY = defineQuery(`*[
 {
   /* frontend/src/app/[locale]/blog/category/[slug]/page.tsx */
 }
+export const CATEGORY_SLUGS_QUERY = defineQuery(`*[
+  _type == "category"
+  && defined(slug.current)
+  && defined(language)
+]{
+  "slug": slug.current,
+  "locale": language
+}`)
+
 export const CATEGORY_PAGE_QUERY = defineQuery(`*[
   _type == "category"
   && slug.current == $slug

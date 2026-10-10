@@ -48,7 +48,10 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 - `sitemap.xml`, `robots.txt`, RSS, dynamic OG images, JSON-LD, and a reusable
   `seo` schema type.
-- Sanity-managed redirects, tag-based on-demand revalidation, React Compiler.
+- Sanity-managed redirects and **Cache Components** (`cacheComponents: true`):
+  content routes prerender a partial static shell, cached via `cachedSanity`
+  (`'use cache'`) and revalidated by `<SanityLive />`.
+- React Compiler.
 
 ### Forms
 

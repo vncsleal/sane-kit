@@ -1,17 +1,12 @@
 import type {Metadata} from 'next'
-import {draftMode} from 'next/headers'
 import {Geist, Geist_Mono} from 'next/font/google'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {VisualEditing} from 'next-sanity/visual-editing'
 
 import './globals.css'
 import {Toaster} from 'sonner'
 import {ThemeProvider} from '@/components/global/ThemeProvider'
 import {ThemeToggle} from '@/components/global/ThemeToggle'
 import {PostHogProvider} from '@/components/PostHogProvider'
-import DraftModeToast from '@/components/global/DraftModeToast'
-import {handleError} from '@/app/client-utils'
-import {SanityLive} from '@/sanity/live'
 import {env} from '@/sanity/env'
 import {buildOrganizationJsonLd} from '@/lib/structured-data'
 import {getDictionary} from '@/i18n/getDictionary'
@@ -35,8 +30,12 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function RootLayout({children}: {children: React.ReactNode}) {
-  const {isEnabled} = await draftMode()
+/**
+ * Root shell. Draft-mode UI and `<SanityLive />` live in the locale layout,
+ * where the `[locale]` request-time values are available; keeping them out of
+ * here lets this shell prerender.
+ */
+export default function RootLayout({children}: {children: React.ReactNode}) {
   const organizationJsonLd = buildOrganizationJsonLd({
     name: 'Sane Kit',
     url: env.NEXT_PUBLIC_SITE_URL,
@@ -63,13 +62,6 @@ export default async function RootLayout({children}: {children: React.ReactNode}
               <ThemeToggle />
             </div>
             <Toaster position="top-center" />
-            <SanityLive onError={handleError} />
-            {isEnabled && (
-              <>
-                <DraftModeToast />
-                <VisualEditing />
-              </>
-            )}
           </ThemeProvider>
         </PostHogProvider>
       </body>

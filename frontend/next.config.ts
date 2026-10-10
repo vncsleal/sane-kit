@@ -1,5 +1,6 @@
 import type {NextConfig} from 'next'
 import {createClient} from 'next-sanity'
+import {sanity as sanityCacheLife} from 'next-sanity/live/cache-life'
 
 import {REDIRECTS_QUERY} from './src/sanity/queries'
 import {toNextRedirect} from './src/lib/redirects'
@@ -15,6 +16,15 @@ const sanity = createClient({
 })
 
 const nextConfig: NextConfig = {
+  // Cache Components: every route prerenders a static shell, with cached
+  // content tag-revalidated by Sanity Live and dynamic content streamed in.
+  cacheComponents: true,
+  // Documented companion to Cache Components for a new project: unlisted dynamic
+  // params serve the App Shell and upgrade in the background.
+  partialPrefetching: true,
+  // Sanity Live handles on-demand revalidation, so the default profile is
+  // widened to a year to avoid redundant time-based revalidation.
+  cacheLife: {default: sanityCacheLife},
   // Stable since Next 16.0.0 (SWC-optimized). The experimental Rust/Turbopack
   // variant (experimental.turbopackRustReactCompiler) is intentionally not used.
   reactCompiler: true,
