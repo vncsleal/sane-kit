@@ -51,10 +51,12 @@ In short, it requires:
    the version/tag.
 
 3. **Preview image** — `docs/preview.png`, **1200 × 750**, referenced from the
-   README and used on the Exchange card. It is a marketing frame composed from a
-   real screenshot of the deployed frontend hero (captured with Playwright at 2×
-   and scaled to the exact Exchange size), so it reflects the actual template
-   rather than a mockup. Re-capture after a visual redesign:
+   README and used on the Exchange card. It is a marketing frame built to match
+   the product exactly: the colours and radii come from the app's own `:root`
+   tokens in `frontend/src/app/globals.css` (read verbatim at generation time),
+   the type mirrors the hero section's classes, and the real header logo is
+   reused with the exact filter/blend the site applies to it — over a real
+   screenshot of the running frontend. Re-capture after a visual redesign:
 
    ```bash
    SITE_URL=https://sane-kit-demo.vercel.app/en pnpm --filter frontend preview:image
