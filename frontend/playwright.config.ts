@@ -13,7 +13,8 @@ export default defineConfig({
   },
   projects: [{name: 'chromium', use: {...devices['Desktop Chrome']}}],
   webServer: {
-    command: 'pnpm build && pnpm start',
+    // In CI the build is a separate step, so the server is only started here.
+    command: process.env.CI ? 'pnpm start' : 'pnpm build && pnpm start',
     url: 'http://localhost:3000/robots.txt',
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,

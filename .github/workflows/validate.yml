@@ -2,18 +2,15 @@ name: Validate
 
 on: push
 
+# Cancel superseded runs on the same ref — the single biggest CI-minute saver.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Fast checks. No build, no secrets, no live project.
   verify:
     runs-on: ubuntu-latest
-    env:
-      # Public, non-secret Sanity config used by `next build` and the studio
-      # build. Set these as repository *variables* (Settings → Secrets and
-      # variables → Actions → Variables).
-      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
-      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-      SANITY_STUDIO_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-      SANITY_STUDIO_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -26,15 +23,21 @@ jobs:
       - run: pnpm typecheck:blueprint
       - run: pnpm lint
       - run: pnpm format:check
-      - run: pnpm build
       - run: pnpm test
 
-  e2e:
+  # One production build (frontend + studio) + Playwright against it.
+  # Playwright's webServer runs `pnpm start` in CI, so the frontend is built once.
+  build-e2e:
     runs-on: ubuntu-latest
     env:
+      # Public, non-secret Sanity config. Set as repository *variables*.
       NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
       NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
       NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      SANITY_STUDIO_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      SANITY_STUDIO_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+      # Viewer token (secret) — `defineLive` requires one to build.
+      SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -43,8 +46,15 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The Sanity CLI reads studio env from a file, not the process env.
+      - run: printf 'SANITY_STUDIO_PROJECT_ID=%s\nSANITY_STUDIO_DATASET=%s\n' "$SANITY_STUDIO_PROJECT_ID" "$SANITY_STUDIO_DATASET" > studio/.env
+      - uses: actions/cache@v4
+        with:
+          path: frontend/.next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-next-${{ hashFiles('pnpm-lock.yaml') }}-
+      - run: pnpm build
       - run: pnpm --filter frontend exec playwright install --with-deps chromium
-      # Builds and starts the production server (see playwright.config.ts).
       - run: pnpm --filter frontend test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
