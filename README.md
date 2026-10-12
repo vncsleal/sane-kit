@@ -5,9 +5,7 @@
 A Sanity + Next.js starter kit: a monorepo with a page-builder frontend and a
 customizable Studio. Built on the 2026 stack.
 
-<!-- Add a 1200×750 screenshot (Sanity Exchange requirement) and uncomment:
-![Sane-Kit Studio using Presentation tool to do Visual Editing](./docs/preview.png)
--->
+![Sane-Kit — the Sanity + Next.js starter kit with a page builder](./docs/preview.png)
 
 > **2026 release.** Upgraded to Next.js 16 · React 19 · Sanity 6 · next-sanity 13,
 > with `sanityFetch` live content and an optimistic page builder. See

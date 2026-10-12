@@ -67,6 +67,16 @@ production patterns. See [`docs/UPGRADE-PLAN.md`](./docs/UPGRADE-PLAN.md) and
 
 - Vitest unit tests and a Playwright smoke suite.
 
+### Docs & release
+
+- `docs/RELEASE.md` covers the Sanity Exchange submission; the **1200 × 750**
+  preview (`docs/preview.png`) is generated reproducibly with
+  `pnpm --filter frontend preview:image`, composing a real screenshot of the
+  running frontend into a branded frame.
+- CI is tuned for GitHub Actions minutes: superseded runs are cancelled, a fast
+  `verify` job runs alongside a single `build-e2e` job, and `.next/cache` is
+  cached.
+
 ### Project setup (Blueprints + Functions)
 
 - `sanity.blueprint.ts` declares the CORS origins as code, deployed with

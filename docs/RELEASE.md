@@ -50,8 +50,18 @@ In short, it requires:
 2. **Version & changelog** — update [`CHANGELOG.md`](../CHANGELOG.md) and bump
    the version/tag.
 
-3. **Preview image** — a **1200 × 750** screenshot of the Studio's Presentation
-   tool. Used on the Exchange card and referenced from the README.
+3. **Preview image** — `docs/preview.png`, **1200 × 750**, referenced from the
+   README and used on the Exchange card. It is a marketing frame composed from a
+   real screenshot of the deployed frontend hero (captured with Playwright at 2×
+   and scaled to the exact Exchange size), so it reflects the actual template
+   rather than a mockup. Re-capture after a visual redesign:
+
+   ```bash
+   SITE_URL=https://sane-kit-demo.vercel.app/en pnpm --filter frontend preview:image
+   ```
+
+   (Swap in a Studio Presentation-tool screenshot if the listing should showcase
+   Visual Editing instead of the frontend.)
 
 4. **GitHub release** — tag the release commit and publish notes.
 
